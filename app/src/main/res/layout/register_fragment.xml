@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tell us your profile information"
+        android:id="@+id/txtVwProfileHeader"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="20sp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/edTxtFullName"
+        android:layout_below="@+id/txtVwProfileHeader"
+        android:hint="Enter your name"
+        android:paddingTop="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="For privacy, you name will appear to other as: John S."
+        android:id="@+id/txtVwFullName"
+        android:layout_below="@+id/edTxtFullName"
+        android:paddingTop="20dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/edTxtAddress1"
+        android:layout_below="@+id/txtVwFullName"
+        android:hint="Enter street address"
+        android:paddingTop="20dp"/>
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/edTxtAddress2"
+        android:layout_below="@+id/edTxtAddress1"
+        android:hint="Enter Apt no"
+        android:paddingTop="20dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edTxtCity"
+        android:layout_alignBottom="@+id/edTxtAddress2"
+        android:layout_toRightOf="@+id/edTxtAddress2"
+        android:layout_alignRight="@+id/edTxtAddress1"
+        android:layout_alignEnd="@+id/edTxtAddress1"
+        android:layout_below="@+id/edTxtAddress1"
+        android:hint="City"/>
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/sprState"
+        android:layout_below="@+id/edTxtAddress2"
+        android:layout_alignLeft="@+id/edTxtAddress2"
+        android:layout_alignStart="@+id/edTxtAddress2"
+        android:layout_alignRight="@+id/edTxtAddress2"
+        android:layout_alignEnd="@+id/edTxtAddress2"
+        android:entries="@array/state_arrays"
+        android:prompt="@string/state_prompt"
+        android:minHeight="50dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edTxtZipCode"
+        android:hint="Zip Code"
+        android:layout_alignBottom="@+id/sprState"
+        android:layout_alignLeft="@+id/edTxtCity"
+        android:layout_alignStart="@+id/edTxtCity"
+        android:layout_alignRight="@+id/txtVwAddress"
+        android:layout_alignEnd="@+id/txtVwAddress"
+        android:layout_below="@+id/edTxtCity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your address will be shown after help is accepted."
+        android:id="@+id/txtVwAddress"
+        android:textSize="20sp"
+        android:layout_below="@+id/edTxtZipCode" />
 
 </RelativeLayout>
