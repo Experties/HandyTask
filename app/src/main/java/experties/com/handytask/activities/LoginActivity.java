@@ -65,7 +65,7 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public class LoginPagerAdaptor extends FragmentPagerAdapter /*implements PagerSlidingTabStrip.IconTabProvider*/ {
-        private String[] tabTitle = {"Login", "Register"};
+        private String[] tabTitle = {"LOGIN", "SIGN UP"};
         //private int tabIcons[] = {R.drawable.ic_launcher, R.drawable.ic_compose};
         public LoginPagerAdaptor(FragmentManager fm) {
             super(fm);

@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:textColor="#29A5D8"
-        app:pstsDividerColor="#ECECEC"
+        app:pstsDividerColor="#A8A7A8"
         app:pstsIndicatorColor="#29A5D8"
         app:pstsUnderlineColor="#B5B5B5"
         app:pstsTabPaddingLeftRight="14dp">
