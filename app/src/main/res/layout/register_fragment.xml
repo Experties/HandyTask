@@ -25,13 +25,88 @@
                 android:paddingBottom="20dp"/>
 
             <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/edVwPhoneNo"
+                android:hint="Enter your phone #"
+                android:layout_below="@+id/txtVwProfileHeader"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:minHeight="50dp"
+                android:background="#ffffff"/>
+
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
+                android:layout_below="@+id/edVwPhoneNo"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:id="@+id/layoutImg"
+                android:layout_marginRight="10dp">
+
+                <ImageView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/imgVwProfile"
+                    android:minHeight="175dp"
+                    android:src="@drawable/ic_profilee"
+                    android:scaleType="centerCrop"
+                    android:paddingEnd="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingBottom="15dp"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:drawableLeft="@android:drawable/ic_input_add"
+                    android:background="#70ffffff"
+                    android:paddingLeft="10dp"
+                    android:text="@string/upload_btn"
+                    android:gravity="center_vertical|left"
+                    android:textSize="14sp"
+                    android:textColor="#ff0e3cab"
+                    android:drawablePadding="5dp"
+                    android:maxHeight="30dp"
+                    android:layout_height="30dip"
+                    android:typeface="normal"
+                    android:textStyle="bold"
+                    android:textAllCaps="false"/>
+
+            </RelativeLayout>
+
+            <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
-                android:id="@+id/edTxtFullName"
-                android:layout_below="@+id/txtVwProfileHeader"
-                android:hint="Enter your name"
+                android:id="@+id/edTxtFirstName"
+                android:layout_toRightOf="@+id/layoutImg"
+                android:layout_below="@+id/edVwPhoneNo"
+                android:hint="@string/first_name"
+                android:minHeight="50dp"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:layout_marginBottom="20dp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/edTxtLastName"
+                android:layout_toRightOf="@+id/layoutImg"
+                android:layout_below="@+id/edTxtFirstName"
+                android:hint="@string/last_name"
                 android:minHeight="50dp"
                 android:background="#ffffff"
                 android:gravity="center_vertical"
@@ -42,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:text="For privacy, you name will appear to other as: John S."
                 android:id="@+id/txtVwFullName"
-                android:layout_below="@+id/edTxtFullName"
+                android:layout_below="@+id/layoutImg"
                 android:paddingTop="20dp"
                 android:textSize="20sp"
                 android:paddingBottom="20dp"/>
@@ -99,9 +174,8 @@
                 android:layout_alignEnd="@+id/edTxtAddress2"
                 android:entries="@array/state_arrays"
                 android:prompt="@string/state_prompt"
-                android:minHeight="50dp"
                 android:layout_marginTop="20dp"
-                android:background="#ffffff"/>
+                style="@style/spinner_style"/>
 
             <EditText
                 android:layout_width="wrap_content"
@@ -129,17 +203,6 @@
                 android:layout_below="@+id/edTxtZipCode"
                 android:layout_marginTop="20dp"/>
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/imgVwProfile"
-                android:layout_below="@+id/txtVwAddress"
-                android:layout_alignLeft="@+id/txtVwAddress"
-                android:layout_alignStart="@+id/txtVwAddress"
-                android:minHeight="175dp"
-                android:minWidth="175dp"
-                android:layout_marginTop="20dp"
-                android:src="@drawable/ic_launcher"/>
         </RelativeLayout>
     </ScrollView>
 
