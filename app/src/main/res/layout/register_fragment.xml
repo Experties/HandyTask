@@ -7,10 +7,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:id="@+id/scrVwSignUp"
+        android:layout_above="@+id/btnContainer">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,7 +121,7 @@
                 android:id="@+id/txtVwFullName"
                 android:layout_below="@+id/layoutImg"
                 android:paddingTop="20dp"
-                android:textSize="20sp"
+                android:textSize="14sp"
                 android:paddingBottom="20dp"/>
             <EditText
                 android:layout_width="match_parent"
@@ -183,8 +185,6 @@
                 android:id="@+id/edTxtZipCode"
                 android:hint="Zip Code"
                 android:layout_alignBottom="@+id/sprState"
-                android:layout_alignRight="@+id/txtVwAddress"
-                android:layout_alignEnd="@+id/txtVwAddress"
                 android:layout_below="@+id/edTxtCity"
                 android:minHeight="50dp"
                 android:background="#ffffff"
@@ -192,18 +192,45 @@
                 android:layout_marginTop="20dp"
                 android:padding="10dp"
                 android:layout_alignLeft="@+id/edTxtCity"
-                android:layout_alignStart="@+id/edTxtCity" />
+                android:layout_alignStart="@+id/edTxtCity"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Your address will be shown after task is accepted."
                 android:id="@+id/txtVwAddress"
-                android:textSize="20sp"
+                android:textSize="14sp"
                 android:layout_below="@+id/edTxtZipCode"
                 android:layout_marginTop="20dp"/>
-
         </RelativeLayout>
     </ScrollView>
+    <LinearLayout
+        android:id="@+id/btnContainer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="10dp"
+        android:background="#00F5F6F1">
 
+        <Button
+            android:id="@+id/cancelBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel"
+            android:background="@drawable/secondary_button_style"
+            android:layout_marginRight="20dp"/>
+
+        <Button
+            android:id="@+id/signUpBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Sign Up"
+            android:textColor="#ffffff"
+            android:background="@drawable/primary_button_style"
+            android:alpha="0.3"/>
+    </LinearLayout>
 </RelativeLayout>

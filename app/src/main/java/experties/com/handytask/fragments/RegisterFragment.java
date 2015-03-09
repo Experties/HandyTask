@@ -16,6 +16,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+
 import experties.com.handytask.R;
 
 /**
@@ -42,7 +48,10 @@ public class RegisterFragment extends Fragment {
         //state.setSelection(spImageSizeAdapter.getPosition(settings.getImgSize()));
 
         edVwPhoneNo = (EditText)v.findViewById(R.id.edVwPhoneNo);
-        edVwPhoneNo.setText(phoneNumber);
+        if(phoneNumber != null) {
+            edVwPhoneNo.setText(phoneNumber);
+            edVwPhoneNo.setSelection(phoneNumber.length());
+        }
     }
 
 
@@ -51,11 +60,10 @@ public class RegisterFragment extends Fragment {
         super.onCreate(savedInstanceState);
         TelephonyManager tMgr = (TelephonyManager)getActivity().getSystemService(Context.TELEPHONY_SERVICE);
         phoneNumber = tMgr.getLine1Number();
-        int apiLevel = android.os.Build.VERSION.SDK_INT;
-        if(apiLevel >= 21) {
-            phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber, "US");
-        } else {
-            phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
-        }
+        try {
+            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+            PhoneNumber usPhoneNumber = phoneUtil.parse(phoneNumber, "US");
+            phoneNumber = phoneUtil.format(usPhoneNumber, PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {}
     }
 }
