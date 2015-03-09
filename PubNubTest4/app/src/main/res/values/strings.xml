@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">PubNubTest4</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="Say_something">Say something...</string>
+    <string name="Send">Send</string>
+</resources>
