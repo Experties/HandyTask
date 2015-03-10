@@ -1,5 +1,6 @@
 package experties.com.handytask.activities;
 
+import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -8,11 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 
 import experties.com.handytask.R;
 import experties.com.handytask.fragments.LoginFragment;
@@ -23,11 +28,20 @@ public class LoginActivity extends ActionBarActivity {
     private ViewPager pager;
     private LoginPagerAdaptor pagerAdaptor;
     private TextView mTitle;
+    private String phoneNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneNumber = tMgr.getLine1Number();
+        try {
+            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+            Phonenumber.PhoneNumber usPhoneNumber = phoneUtil.parse(phoneNumber, "US");
+            phoneNumber = phoneUtil.format(usPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {}
 
         Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
 
@@ -75,10 +89,9 @@ public class LoginActivity extends ActionBarActivity {
         public Fragment getItem(int position) {
             switch(position) {
                 case 0:
-                    LoginFragment tweetFragment = new LoginFragment();
-                    return tweetFragment;
+                    return LoginFragment.newInstance(phoneNumber);
                 case 1:
-                    return new RegisterFragment();
+                    return RegisterFragment.newInstance(phoneNumber);
                 default:
                     return null;
             }

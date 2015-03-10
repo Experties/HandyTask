@@ -49,6 +49,14 @@ public class RegisterFragment extends Fragment {
     private Button cancelBtn;
     private Button signUpBtn;
 
+    public static RegisterFragment newInstance(String phoneNumber){
+        RegisterFragment fragment = new RegisterFragment();
+        Bundle args = new Bundle();
+        args.putString("phoneNumber", phoneNumber);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.register_fragment, parent, false);
@@ -107,12 +115,6 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TelephonyManager tMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        phoneNumber = tMgr.getLine1Number();
-        try {
-            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-            PhoneNumber usPhoneNumber = phoneUtil.parse(phoneNumber, "US");
-            phoneNumber = phoneUtil.format(usPhoneNumber, PhoneNumberFormat.NATIONAL);
-        } catch (NumberParseException e) {}
+        phoneNumber = getArguments().getString("phoneNumber");
     }
 }
