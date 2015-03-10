@@ -29,6 +29,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="phone"
                 android:id="@+id/edVwPhoneNo"
                 android:hint="Enter your phone #"
                 android:layout_below="@+id/txtVwProfileHeader"
@@ -41,11 +42,20 @@
                 android:minHeight="50dp"
                 android:background="#ffffff"/>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="For privacy, you name will appear to other as: John S."
+                android:id="@+id/txtVwFullName"
+                android:layout_below="@+id/edVwPhoneNo"
+                android:textSize="14sp"
+                android:layout_marginBottom="20dp"/>
+
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="125dp"
                 android:layout_height="125dp"
-                android:layout_below="@+id/edVwPhoneNo"
+                android:layout_below="@+id/txtVwFullName"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:id="@+id/layoutImg"
@@ -92,7 +102,7 @@
                 android:ems="10"
                 android:id="@+id/edTxtFirstName"
                 android:layout_toRightOf="@+id/layoutImg"
-                android:layout_below="@+id/edVwPhoneNo"
+                android:layout_below="@+id/txtVwFullName"
                 android:hint="@string/first_name"
                 android:minHeight="50dp"
                 android:background="#ffffff"
@@ -117,19 +127,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="For privacy, you name will appear to other as: John S."
-                android:id="@+id/txtVwFullName"
-                android:layout_below="@+id/layoutImg"
-                android:paddingTop="20dp"
+                android:text="Your address will be shown after task is accepted."
+                android:id="@+id/txtVwAddress"
                 android:textSize="14sp"
-                android:paddingBottom="20dp"/>
+                android:layout_below="@+id/layoutImg"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"/>
+
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPersonName"
                 android:ems="10"
                 android:id="@+id/edTxtAddress1"
-                android:layout_below="@+id/txtVwFullName"
+                android:layout_below="@+id/txtVwAddress"
                 android:hint="Enter street address"
                 android:minHeight="50dp"
                 android:background="#ffffff"
@@ -182,6 +193,7 @@
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:inputType="textPostalAddress"
                 android:id="@+id/edTxtZipCode"
                 android:hint="Zip Code"
                 android:layout_alignBottom="@+id/sprState"
@@ -195,15 +207,6 @@
                 android:layout_alignStart="@+id/edTxtCity"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Your address will be shown after task is accepted."
-                android:id="@+id/txtVwAddress"
-                android:textSize="14sp"
-                android:layout_below="@+id/edTxtZipCode"
-                android:layout_marginTop="20dp"/>
         </RelativeLayout>
     </ScrollView>
     <LinearLayout
@@ -219,7 +222,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancel"
+            android:text="Clear Entries"
             android:background="@drawable/secondary_button_style"
             android:layout_marginRight="20dp"/>
 
