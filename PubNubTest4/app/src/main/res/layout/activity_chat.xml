@@ -74,17 +74,18 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="onAcceptOfferClick" />
+        android:onClick="onAcceptOfferClick"
+        android:width="150dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/Decline_Offer"
         android:id="@+id/btnDeclineOffer"
+        android:onClick="onDeclineOfferClick"
+        android:width="150dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/btnAcceptOffer"
-        android:onClick="onDeclineOfferClick" />
+        android:layout_alignRight="@+id/btnSend"
+        android:layout_alignEnd="@+id/btnSend" />
 
 </RelativeLayout>

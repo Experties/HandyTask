@@ -19,6 +19,7 @@ public class StarterActivity extends ActionBarActivity {
         i.putExtra("thisUsername", "Alice");
         i.putExtra("otherUsername", "Bob");
         i.putExtra("otherUserPhoneNumber", "5126997597");
+        i.putExtra("isSeller", true);
         startActivityForResult(i, CHAT_ACTIVITY_LAUNCH_ID);
     }
 

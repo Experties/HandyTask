@@ -28,6 +28,7 @@ public class ChatActivity extends ActionBarActivity {
     private String otherUserPhoneNumber;
     private String thisUsername; // local user's username
     private String otherUsername; // username of the person you are chatting with
+    private boolean thisUserIsSeller;
     private String chatChannel; // name of the chat channel, made from the two usernames.
     private byte[] thisUserPhoto;
     private byte[] otherUserPhoto;
@@ -37,6 +38,8 @@ public class ChatActivity extends ActionBarActivity {
     private ChatListAdapter mAdapter;
     private EditText etMessageToSend;
     private Button btnSend;
+    private Button btnAcceptOffer;
+    private Button btnDeclineOffer;
     private TextView tvOtherUserUsername;
     private ImageView ivOtherUserPhoto;
 
@@ -53,6 +56,7 @@ public class ChatActivity extends ActionBarActivity {
         otherUserPhoneNumber = getIntent().getStringExtra("otherUserPhoneNumber");
         thisUserPhoto = getIntent().getByteArrayExtra("thisUserPhoto");
         otherUserPhoto = getIntent().getByteArrayExtra("otherUserPhoto");
+        thisUserIsSeller = getIntent().getBooleanExtra("isSeller", false);
 
         if (thisUsername.compareTo(otherUsername) <= 0) { // chatChannel is derived from alphabetical order of the two usernames
             chatChannel = thisUsername + CHAT_DIV + otherUsername;
@@ -64,11 +68,16 @@ public class ChatActivity extends ActionBarActivity {
         btnSend = (Button) findViewById(R.id.btnSend);
         tvOtherUserUsername = (TextView) findViewById(R.id.tvOtherUserUsername);
         ivOtherUserPhoto = (ImageView) findViewById(R.id.ivOtherUserPhoto);
+        btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
+        btnDeclineOffer = (Button) findViewById(R.id.btnDeclineOffer);
+
+        if (!thisUserIsSeller) {
+            btnAcceptOffer.setVisibility(View.INVISIBLE); // hide accept button from the buyer
+        }
 
         tvOtherUserUsername.setText(otherUsername);
         //ivTODO.setImageBitmap(BitmapFactory.decodeByteArray(thisUserPhoto, 0, thisUserPhoto.length));
         //ivOtherUserPhoto.setImageBitmap(BitmapFactory.decodeByteArray(otherUserPhoto, 0, otherUserPhoto.length));
-
 
         lvChat = (ListView) findViewById(R.id.lvChat);
         mMessages = new ArrayList<ChatMessage>();
