@@ -1,13 +1,10 @@
 package experties.com.handytask.fragments;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.PhoneNumberUtils;
-import android.telephony.TelephonyManager;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.google.i18n.phonenumbers.Phonenumber;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 import experties.com.handytask.R;
 
@@ -48,6 +38,7 @@ public class RegisterFragment extends Fragment {
 
     private Button cancelBtn;
     private Button signUpBtn;
+    private Button uploadBtn;
 
     public static RegisterFragment newInstance(String phoneNumber){
         RegisterFragment fragment = new RegisterFragment();
@@ -109,6 +100,15 @@ public class RegisterFragment extends Fragment {
         });
         signUpBtn = (Button)v.findViewById(R.id.signUpBtn);
 
+        uploadBtn = (Button) v.findViewById(R.id.uploadBtn);
+        uploadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                UploadImageFragment uploadDialog = new UploadImageFragment();
+                uploadDialog.show(fm, "fragment_settings_dialog");
+            }
+        });
     }
 
 
