@@ -28,6 +28,7 @@ import com.parse.ParseUser;
 import experties.com.handytask.R;
 import experties.com.handytask.activities.LoginActivity;
 import experties.com.handytask.activities.TaskCreatedActivity;
+import experties.com.handytask.helpers.FragmentHelpers;
 
 /**
  * Created by hetashah on 3/7/15.
@@ -56,7 +57,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.login_fragment, parent, false);
-        final LoginFragment instance = this;
         phoneUtil = PhoneNumberUtil.getInstance();
         pbLogin = (ProgressBar) v.findViewById(R.id.pbLogin);
         edTxtPhone = (EditText) v.findViewById(R.id.edTxtPhone);
@@ -76,7 +76,7 @@ public class LoginFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!isInAfterTextChanged) {
                     isInAfterTextChanged = true;
-                    edTxtPhone.setText(instance.updateNationalNumber(s.toString()));
+                    edTxtPhone.setText(FragmentHelpers.updateNationalNumber(s.toString()));
                     edTxtPhone.setSelection(edTxtPhone  .getText().length());
                     isInAfterTextChanged = false;
                 }
@@ -111,7 +111,6 @@ public class LoginFragment extends Fragment {
                         if (isValid) {
                             pbLogin.setVisibility(ProgressBar.VISIBLE);
                             String username = String.valueOf(notFormatted);
-                            final View viewInstance = v;
                             ParseUser.logInInBackground(username, "password", new LogInCallback() {
                                 public void done(ParseUser user, ParseException e) {
                                     pbLogin.setVisibility(ProgressBar.GONE);
@@ -169,28 +168,5 @@ public class LoginFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         phoneNumber = getArguments().getString("phoneNumber");
-    }
-
-    public String updateNationalNumber(String s){
-        String fNationalNumber = null;
-        if(s != null && s.length() > 0){
-            AsYouTypeFormatter aytf = phoneUtil.getAsYouTypeFormatter("US");
-            String digitString = new String(s.replaceAll("(^[1?])|([^\\d.])", ""));
-            if(digitString != null){
-                for(int i = 0; i < digitString.length(); i++){
-                    fNationalNumber = aytf.inputDigit(digitString.charAt(i));
-                }
-            }
-
-            aytf.clear();
-            try {
-                PhoneNumber phNumberProto = phoneUtil.parse(fNationalNumber, "US");
-                fNationalNumber = phoneUtil.format(phNumberProto, PhoneNumberFormat.NATIONAL);
-            } catch (NumberParseException e) {
-                System.err.println("NumberParseException was thrown: " + e.toString());
-            }
-        }
-        //Return the formatted phone number
-        return fNationalNumber;
     }
 }

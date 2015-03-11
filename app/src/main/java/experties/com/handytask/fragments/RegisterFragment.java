@@ -38,6 +38,7 @@ import com.parse.SignUpCallback;
 
 import experties.com.handytask.R;
 import experties.com.handytask.activities.TaskCreatedActivity;
+import experties.com.handytask.helpers.FragmentHelpers;
 
 /**
  * Created by hetashah on 3/7/15.
@@ -97,6 +98,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
     }
 
     private void setupView(View v) {
+        final RegisterFragment instance = this;
         //myButton.getBackground().setAlpha(0.5f);
         uploadDialog = new UploadImageFragment();
         userData = new ParseUser();
@@ -161,6 +163,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             edVwPhoneNo.setSelection(phoneNumber.length());
         }
         edVwPhoneNo.addTextChangedListener(new TextWatcher() {
+            boolean isInAfterTextChanged = false;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -169,6 +172,12 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                if (!isInAfterTextChanged) {
+                    isInAfterTextChanged = true;
+                    edVwPhoneNo.setText(FragmentHelpers.updateNationalNumber(s.toString()));
+                    edVwPhoneNo.setSelection(edVwPhoneNo.getText().length());
+                    isInAfterTextChanged = false;
+                }
             }
 
             @Override
