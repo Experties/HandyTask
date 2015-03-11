@@ -31,6 +31,5 @@ Optional stories:
  ![Chat screen to accept help offer](elderly_chat.png)
  
 # Week1 Progress:
- 
- #Hetang's Work
+### Hetang's Work
  ![Hetang's Work](HandyTaskLogin.gif)
