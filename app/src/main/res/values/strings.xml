@@ -69,4 +69,9 @@
     <string name="title_activity_task_created">TaskCreatedActivity</string>
     <string name="sign_out">Sign out</string>
 
+    <string name="Send">Send</string>
+    <string name="Say_something">Say something...</string>
+    <string name="Accept_Offer">Accept Offer</string>
+    <string name="Decline_Offer">Decline Offer</string>
+
 </resources>
