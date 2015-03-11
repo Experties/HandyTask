@@ -65,4 +65,7 @@
         <item>WI</item>
         <item>WY</item>
     </string-array>
+
+    <string name="title_activity_task_created">TaskCreatedActivity</string>
+
 </resources>

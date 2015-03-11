@@ -22,6 +22,22 @@
         <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily"></item>
-        <item name="android:textColor">@android:color/holo_blue_light</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="secondary"></style>
+    <style name="secondary.button">
+        <item name="android:padding">15dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dialog"></style>
+    <style name="dialog.title">
+        <item name="android:gravity">left</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:textSize">50sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#29A5D8</item>
     </style>
 </resources>

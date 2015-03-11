@@ -1,5 +1,6 @@
 package experties.com.handytask.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
+import experties.com.handytask.activities.TaskCreatedActivity;
 
 /**
  * Created by hetashah on 3/7/15.
@@ -83,7 +85,7 @@ public class LoginFragment extends Fragment {
                     case R.id.btnLogin:
 
                         String phoneNumber = edTxtPhone.getText().toString();
-
+                        phoneNumber = new String(phoneNumber.replaceAll("(^[1?])|([^\\d.])", ""));
                         PhoneNumber phNumberProto = null;
                         long notFormatted = 0;
                         try {
@@ -93,7 +95,7 @@ public class LoginFragment extends Fragment {
                             System.err.println("NumberParseException was thrown: " + e.toString());
                         }
 
-                        boolean isValid = phoneUtil.isValidNumber(phNumberProto);
+                        boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
 
                         if (isValid) {
                             String username = String.valueOf(notFormatted);
@@ -101,7 +103,8 @@ public class LoginFragment extends Fragment {
                             ParseUser.logInInBackground(username, "password", new LogInCallback() {
                                 public void done(ParseUser user, ParseException e) {
                                     if (user != null) {
-                                        Toast.makeText(viewInstance.getContext(),"User is successfully login",Toast.LENGTH_SHORT).show();
+                                        Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
+                                        startActivity(taskActivity);
                                     } else {
                                         Toast.makeText(viewInstance.getContext(),"Needs to go to sign up screen, User not found.",Toast.LENGTH_SHORT).show();
                                     }
@@ -130,10 +133,9 @@ public class LoginFragment extends Fragment {
     }
 
     public String updateNationalNumber(String s){
-        AsYouTypeFormatter aytf = phoneUtil.getAsYouTypeFormatter("US");
         String fNationalNumber = null;
-
-        if(s.length() > 0){
+        if(s != null && s.length() > 0){
+            AsYouTypeFormatter aytf = phoneUtil.getAsYouTypeFormatter("US");
             String digitString = new String(s.replaceAll("(^[1?])|([^\\d.])", ""));
             if(digitString != null){
                 for(int i = 0; i < digitString.length(); i++){

@@ -1,6 +1,7 @@
 package experties.com.handytask.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.parse.ParseUser;
 
 import experties.com.handytask.R;
 import experties.com.handytask.fragments.LoginFragment;
@@ -33,32 +35,40 @@ public class LoginActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
+            Intent taskActivity = new Intent(LoginActivity.this, TaskCreatedActivity.class);
+            startActivity(taskActivity);
+        } else {
+            // show the signup or login screen
+            setContentView(R.layout.activity_login);
 
-        TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        phoneNumber = tMgr.getLine1Number();
-        try {
-            PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-            Phonenumber.PhoneNumber usPhoneNumber = phoneUtil.parse(phoneNumber, "US");
-            phoneNumber = phoneUtil.format(usPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
-        } catch (NumberParseException e) {}
+            TelephonyManager tMgr = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            phoneNumber = tMgr.getLine1Number();
+            try {
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                Phonenumber.PhoneNumber usPhoneNumber = phoneUtil.parse(phoneNumber, "US");
+                phoneNumber = phoneUtil.format(usPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+            } catch (NumberParseException e) {
+            }
 
-        Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrLogin);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mTitle = (TextView) toolbar.findViewById(R.id.login_toolbar_title);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrLogin);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            mTitle = (TextView) toolbar.findViewById(R.id.login_toolbar_title);
 
-        //toolbar.setLogo(R.drawable.ic_tweets);
-        mTitle.setTypeface(fontJamesFajardo);
-        mTitle.setText(getResources().getString(R.string.title));
+            //toolbar.setLogo(R.drawable.ic_tweets);
+            mTitle.setTypeface(fontJamesFajardo);
+            mTitle.setText(getResources().getString(R.string.title));
 
-        pager = (ViewPager) findViewById(R.id.vwPgrLogin);
-        pagerAdaptor = new LoginPagerAdaptor(getSupportFragmentManager());
-        pager.setAdapter(pagerAdaptor);
-        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.LoginTabs);
-        tabStrip.setViewPager(pager);
+            pager = (ViewPager) findViewById(R.id.vwPgrLogin);
+            pagerAdaptor = new LoginPagerAdaptor(getSupportFragmentManager());
+            pager.setAdapter(pagerAdaptor);
+            PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip) findViewById(R.id.LoginTabs);
+            tabStrip.setViewPager(pager);
+        }
     }
 
 

@@ -3,14 +3,17 @@ package experties.com.handytask.fragments;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -39,12 +42,17 @@ public class UploadImageFragment extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NORMAL, R.style.upload_cust_dialog);
+        setStyle(STYLE_NO_TITLE, R.style.upload_cust_dialog);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.upload_dialog, parent, false);
+
+        Typeface fontJamesFajardo = Typeface.createFromAsset(getActivity().getAssets(), "fonts/JamesFajardo.ttf");
+        TextView title = (TextView) v.findViewById(R.id.dialog_title);
+        title.setTypeface(fontJamesFajardo);
+
         btnCameraUpload = (Button) v.findViewById(R.id.btnCameraUpload);
         btnCameraUpload.setOnClickListener(new View.OnClickListener(){
 
@@ -87,7 +95,7 @@ public class UploadImageFragment extends DialogFragment {
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteArray = stream.toByteArray();
-            UploadDialogListener listener = (UploadDialogListener) getActivity();
+            UploadDialogListener listener = (UploadDialogListener) getTargetFragment();
             listener.onSelectImageDialog(byteArray);
         }
     }
