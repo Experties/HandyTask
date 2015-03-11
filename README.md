@@ -30,3 +30,10 @@ Optional stories:
  ![Seniors posting a task](elderly_senior_create_task.png)
  ![Volunteers finding a task](elderly_volunteer_find_task.png)
  ![Chat screen to accept help offer](elderly_chat.png)
+
+ Walkthrough of all user stories:
+
+ ![Task Show in both List View and Map View](HandyTask_ShowTasks_w6.gif)
+ 
+ Gif created with [LiceCap](http://www.cockos.com/licecap/). 
+
