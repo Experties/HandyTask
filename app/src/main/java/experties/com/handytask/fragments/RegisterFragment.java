@@ -33,6 +33,7 @@ import com.google.i18n.phonenumbers.Phonenumber;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import experties.com.handytask.R;
@@ -315,21 +316,71 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             } catch(Exception e) {}
 
             if(selectedImage != null) {
-                ParseFile profileImg = new ParseFile("profileImg.jpeg", selectedImage);
-                userData.put("ProfilePhoto",profileImg);
+                final ParseFile profileImg = new ParseFile("profileImg.jpeg", selectedImage);
+                profileImg.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            userData.put("ProfilePhoto",profileImg);
+                            saveUserOnServer();
+                        } else {
+                            scrVwSignUp.setVisibility(ScrollView.VISIBLE);
+                            pbSignUP.setVisibility(ProgressBar.GONE);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Sign up unsuccessful")
+                                    .setMessage("We are not able to complete your sign up. Do you want to try again?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            signUpUser();
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    }
+                });
+            } else {
+                saveUserOnServer();
             }
-            userData.signUpInBackground(new SignUpCallback() {
-                public void done(ParseException e) {
-                    if (e == null) {
-                        Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
-                        startActivity(taskActivity);
+        }
+    }
 
-                        scrVwSignUp.setVisibility(ScrollView.GONE);
-                        pbSignUP.setVisibility(ProgressBar.VISIBLE);
+    private void saveUserOnServer() {
+        userData.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e == null) {
+                    Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
+                    startActivity(taskActivity);
+
+                    scrVwSignUp.setVisibility(ScrollView.GONE);
+                    pbSignUP.setVisibility(ProgressBar.VISIBLE);
+                } else {
+                    scrVwSignUp.setVisibility(ScrollView.VISIBLE);
+                    pbSignUP.setVisibility(ProgressBar.GONE);
+
+                    if(e.getCode() == ParseException.USERNAME_TAKEN) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Sign up unsuccessful")
+                                .setMessage("Phone number is already taken.")
+                                .setCancelable(true)
+                                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
                     } else {
-                        scrVwSignUp.setVisibility(ScrollView.GONE);
-                        pbSignUP.setVisibility(ProgressBar.VISIBLE);
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setTitle("Sign up unsuccessful")
                                 .setMessage("We are not able to complete your sign up. Do you want to try again?")
@@ -350,7 +401,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                         dialog.show();
                     }
                 }
-            });
-        }
+            }
+        });
     }
 }
