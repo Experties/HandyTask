@@ -1,6 +1,8 @@
 package experties.com.handytask.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -43,10 +48,12 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
 
     private ParseUser userData;
     private PhoneNumberUtil phoneUtil;
+    private UploadImageFragment uploadDialog;
 
     private ImageView imgVwProfile;
-    UploadImageFragment uploadDialog;
     private Spinner sprState;
+    private ProgressBar pbSignUP;
+    private ScrollView scrVwSignUp;
 
     private EditText edVwPhoneNo;
     private EditText edTxtFirstName;
@@ -93,14 +100,27 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
         uploadDialog = new UploadImageFragment();
         userData = new ParseUser();
 
+        pbSignUP = (ProgressBar) v.findViewById(R.id.pbSignUP);
+        scrVwSignUp = (ScrollView) v.findViewById(R.id.scrVwSignUp);
         sprState = (Spinner) v.findViewById(R.id.sprState);
+        imgVwProfile = (ImageView) v.findViewById(R.id.imgVwProfile);
+        edTxtFirstName = (EditText)v.findViewById(R.id.edTxtFirstName);
+        edTxtLastName = (EditText)v.findViewById(R.id.edTxtLastName);
+        edTxtAddress1 = (EditText)v.findViewById(R.id.edTxtAddress1);
+        edTxtAddress2 = (EditText)v.findViewById(R.id.edTxtAddress2);
+        edTxtCity = (EditText)v.findViewById(R.id.edTxtCity);
+        edTxtZipCode = (EditText)v.findViewById(R.id.edTxtZipCode);
+        edVwPhoneNo = (EditText)v.findViewById(R.id.edVwPhoneNo);
+        cancelBtn = (Button)v.findViewById(R.id.cancelBtn);
+        signUpBtn = (Button)v.findViewById(R.id.signUpBtn);
+        uploadBtn = (Button) v.findViewById(R.id.uploadBtn);
+
         ArrayAdapter<CharSequence> stateAdapter = ArrayAdapter.createFromResource(
                 v.getContext(), R.array.state_arrays, R.layout.spinner_item);
         stateAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sprState.setAdapter(stateAdapter);
         //state.setSelection(spImageSizeAdapter.getPosition(settings.getImgSize()));
-        imgVwProfile = (ImageView) v.findViewById(R.id.imgVwProfile);
-        edTxtFirstName = (EditText)v.findViewById(R.id.edTxtFirstName);
+
         edTxtFirstName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -117,7 +137,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                 isMandatoryFilled = checkEntries();
             }
         });
-        edTxtLastName = (EditText)v.findViewById(R.id.edTxtLastName);
+
         edTxtLastName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,11 +154,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                 isMandatoryFilled = checkEntries();
             }
         });
-        edTxtAddress1 = (EditText)v.findViewById(R.id.edTxtAddress1);
-        edTxtAddress2 = (EditText)v.findViewById(R.id.edTxtAddress2);
-        edTxtCity = (EditText)v.findViewById(R.id.edTxtCity);
-        edTxtZipCode = (EditText)v.findViewById(R.id.edTxtZipCode);
-        edVwPhoneNo = (EditText)v.findViewById(R.id.edVwPhoneNo);
+
         if(phoneNumber != null) {
             edVwPhoneNo.setText(phoneNumber);
             edVwPhoneNo.setSelection(phoneNumber.length());
@@ -160,7 +176,6 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             }
         });
 
-        cancelBtn = (Button)v.findViewById(R.id.cancelBtn);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -175,44 +190,14 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                 Toast.makeText(v.getContext(),"Entries got cleared",Toast.LENGTH_LONG).show();
             }
         });
-        signUpBtn = (Button)v.findViewById(R.id.signUpBtn);
+
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isMandatoryFilled) {
-
-                    long phone = getPhoneNumber();
-                    userData = new ParseUser();
-                    userData.setUsername(String.valueOf(phone));
-                    userData.setPassword("password");
-
-// other fields can be set just like with ParseObject
-                    userData.put("Mobile", phone);
-                    userData.put("FirstName", edTxtFirstName.getText().toString());
-                    userData.put("LastName", edTxtLastName.getText().toString());
-                    String zipCode = edTxtZipCode.getText().toString();
-                    try {
-                        userData.put("ZipCode", Integer.parseInt(zipCode));
-                        userData.put("Address1", edTxtAddress1.getText().toString());
-                        userData.put("Address2", edTxtAddress2.getText().toString());
-                        userData.put("City", edTxtCity.getText().toString());
-                    } catch(Exception e) {}
-
-                    userData.signUpInBackground(new SignUpCallback() {
-                        public void done(ParseException e) {
-                            if (e == null) {
-                                Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
-                                startActivity(taskActivity);
-                            } else {
-                                Toast.makeText(getActivity(),"Something went wrong", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }
+                signUpUser();
             }
         });
 
-        uploadBtn = (Button) v.findViewById(R.id.uploadBtn);
         uploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -268,18 +253,20 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             System.err.println("NumberParseException was thrown: " + e.toString());
         }
 
-        boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
-        if(isValid) {
-            String firstName = edTxtFirstName.getText().toString();
-            if (firstName != null && !"".equals(firstName)) {
-                String lastName = edTxtLastName.getText().toString();
-                if (lastName != null && !"".equals(lastName)) {
-                    float alpha = 1.0f;
-                    AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
-                    alphaUp.setFillAfter(true);
-                    signUpBtn.startAnimation(alphaUp);
+        if(phNumberProto != null) {
+            boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
+            if (isValid) {
+                String firstName = edTxtFirstName.getText().toString();
+                if (firstName != null && !"".equals(firstName)) {
+                    String lastName = edTxtLastName.getText().toString();
+                    if (lastName != null && !"".equals(lastName)) {
+                        float alpha = 1.0f;
+                        AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
+                        alphaUp.setFillAfter(true);
+                        signUpBtn.startAnimation(alphaUp);
 
-                    return true;
+                        return true;
+                    }
                 }
             }
         }
@@ -304,5 +291,66 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
         }
 
         return notFormatted;
+    }
+
+    private void signUpUser() {
+        if(isMandatoryFilled) {
+            scrVwSignUp.setVisibility(ScrollView.GONE);
+            pbSignUP.setVisibility(ProgressBar.VISIBLE);
+            long phone = getPhoneNumber();
+            userData = new ParseUser();
+            userData.setUsername(String.valueOf(phone));
+            userData.setPassword("password");
+
+// other fields can be set just like with ParseObject
+            userData.put("Mobile", phone);
+            userData.put("FirstName", edTxtFirstName.getText().toString());
+            userData.put("LastName", edTxtLastName.getText().toString());
+            String zipCode = edTxtZipCode.getText().toString();
+            try {
+                userData.put("ZipCode", Integer.parseInt(zipCode));
+                userData.put("Address1", edTxtAddress1.getText().toString());
+                userData.put("Address2", edTxtAddress2.getText().toString());
+                userData.put("City", edTxtCity.getText().toString());
+            } catch(Exception e) {}
+
+            if(selectedImage != null) {
+                ParseFile profileImg = new ParseFile("profileImg.jpeg", selectedImage);
+                userData.put("ProfilePhoto",profileImg);
+            }
+            userData.signUpInBackground(new SignUpCallback() {
+                public void done(ParseException e) {
+                    if (e == null) {
+                        Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
+                        startActivity(taskActivity);
+
+                        scrVwSignUp.setVisibility(ScrollView.GONE);
+                        pbSignUP.setVisibility(ProgressBar.VISIBLE);
+                    } else {
+                        scrVwSignUp.setVisibility(ScrollView.GONE);
+                        pbSignUP.setVisibility(ProgressBar.VISIBLE);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle("Sign up unsuccessful")
+                                .setMessage("We are not able to complete your sign up. Do you want to try again?")
+                                .setCancelable(false)
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        signUpUser();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
+                }
+            });
+        }
     }
 }

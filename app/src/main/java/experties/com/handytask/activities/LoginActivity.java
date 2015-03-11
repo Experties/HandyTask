@@ -26,7 +26,7 @@ import experties.com.handytask.fragments.LoginFragment;
 import experties.com.handytask.fragments.RegisterFragment;
 
 
-public class LoginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity implements LoginFragment.TabSwitchInterface{
     private ViewPager pager;
     private LoginPagerAdaptor pagerAdaptor;
     private TextView mTitle;
@@ -86,6 +86,11 @@ public class LoginActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSwitchToSignUpTab() {
+        pager.setCurrentItem(1, true);
     }
 
     public class LoginPagerAdaptor extends FragmentPagerAdapter /*implements PagerSlidingTabStrip.IconTabProvider*/ {

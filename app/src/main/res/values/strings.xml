@@ -67,5 +67,6 @@
     </string-array>
 
     <string name="title_activity_task_created">TaskCreatedActivity</string>
+    <string name="sign_out">Sign out</string>
 
 </resources>

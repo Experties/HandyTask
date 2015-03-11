@@ -1,5 +1,7 @@
 package experties.com.handytask.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.i18n.phonenumbers.AsYouTypeFormatter;
@@ -23,6 +26,7 @@ import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
+import experties.com.handytask.activities.LoginActivity;
 import experties.com.handytask.activities.TaskCreatedActivity;
 
 /**
@@ -34,6 +38,12 @@ public class LoginFragment extends Fragment {
     private EditText edTxtPhone;
     private Button btnLogin;
     private PhoneNumberUtil phoneUtil;
+
+    private ProgressBar pbLogin;
+
+    public interface TabSwitchInterface {
+        void onSwitchToSignUpTab();
+    }
 
     public static LoginFragment newInstance(String phoneNumber){
         LoginFragment fragment = new LoginFragment();
@@ -48,6 +58,7 @@ public class LoginFragment extends Fragment {
         View v = inflater.inflate(R.layout.login_fragment, parent, false);
         final LoginFragment instance = this;
         phoneUtil = PhoneNumberUtil.getInstance();
+        pbLogin = (ProgressBar) v.findViewById(R.id.pbLogin);
         edTxtPhone = (EditText) v.findViewById(R.id.edTxtPhone);
         if(phoneNumber != null) {
             edTxtPhone.setText(phoneNumber);
@@ -98,24 +109,52 @@ public class LoginFragment extends Fragment {
                         boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
 
                         if (isValid) {
+                            pbLogin.setVisibility(ProgressBar.VISIBLE);
                             String username = String.valueOf(notFormatted);
                             final View viewInstance = v;
                             ParseUser.logInInBackground(username, "password", new LogInCallback() {
                                 public void done(ParseUser user, ParseException e) {
+                                    pbLogin.setVisibility(ProgressBar.GONE);
                                     if (user != null) {
                                         Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
                                         startActivity(taskActivity);
                                     } else {
-                                        Toast.makeText(viewInstance.getContext(),"Needs to go to sign up screen, User not found.",Toast.LENGTH_SHORT).show();
+                                        final TabSwitchInterface switchActivity = (TabSwitchInterface) getActivity();
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        builder.setTitle("Invalid Login")
+                                                .setMessage("We are not able to find you. Do you want to Sign up?")
+                                                .setCancelable(false)
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        switchActivity.onSwitchToSignUpTab();
+                                                    }
+                                                })
+                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
                                     }
                                 }
                             });
 
                         } else {
-                            Toast.makeText(
-                                    v.getContext(),"Phone number is not valid: " + phoneNumber,
-                                    Toast.LENGTH_SHORT).show();
-
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Invalid Login")
+                                    .setMessage("Phone Number is not valid. Please enter valid one.")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
                         }
 
                         break;
