@@ -33,3 +33,5 @@ Optional stories:
 # Week1 Progress:
 ### Hetang's Work
  ![Hetang's Work](HandyTaskLogin.gif)
+### Vince's Work
+ ![Vince's Work](HandyTask_MapTask.gif)
