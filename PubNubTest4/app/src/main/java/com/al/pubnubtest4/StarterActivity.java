@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 
 public class StarterActivity extends ActionBarActivity {
@@ -15,9 +16,13 @@ public class StarterActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter);
 
+
+    }
+
+    public void launchChat(View v) {
         Intent i = new Intent(StarterActivity.this, ChatActivity.class);
-        i.putExtra("thisUsername", "Alice");
-        i.putExtra("otherUsername", "Bob");
+        i.putExtra("thisUsername", "UserBob");
+        i.putExtra("otherUsername", "UserAlice");
         i.putExtra("otherUserPhoneNumber", "5126997597");
         i.putExtra("isSeller", true);
         startActivityForResult(i, CHAT_ACTIVITY_LAUNCH_ID);
