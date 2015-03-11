@@ -13,8 +13,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,10 +61,13 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
     private TextView tvRelativeTime;
     private TextView tvLocation;
     private TextView tvRelativeDistance;
+    private RelativeLayout rlBriefView;
 
     //Each fragment holds its own copy
     // [vince] TODO: need a better way for this
     ArrayList<TaskItem> taskItems;
+
+    TaskItem selectedTaskItem;
 
 
     public ShowOnMapFragment() {
@@ -81,6 +86,7 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
         tvLocation = (TextView) v.findViewById(R.id.tvLocation);
         tvRelativeDistance = (TextView) v.findViewById(R.id.tvRelativeDistance);
+        rlBriefView = (RelativeLayout) v.findViewById(R.id.taskItem);
         // [vince] TODO: Initialize Brief Item form to closest point on map. Or just make sure you initialize.
 
         mapView = (MapView) v.findViewById(R.id.map);
@@ -92,6 +98,8 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
                 loadMap(googleMap);
             }
         });
+
+        setupOnClickListener();
 
         return v;
     }
@@ -129,19 +137,38 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         int i;
         TaskItemsListListener listener = (TaskItemsListListener) getActivity();
         taskItems = listener.getList();
-        if (!taskItems.isEmpty())
-            for(i=0;i<taskItems.size();i++) {
+        if (!taskItems.isEmpty()) {
+            for (i = 0; i < taskItems.size(); i++) {
                 TaskItem taskItem = taskItems.get(i);
                 map.addMarker(new MarkerOptions().title(String.valueOf(i)).position(new LatLng(taskItem.getLatitude(), taskItem.getLongitude())));
             }
+            // Initialize brief view
+            selectedTaskItem = taskItems.get(0);
+            populateBriefPreview(selectedTaskItem);
+        }
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        TaskItem taskItem = taskItems.get(Integer.parseInt(marker.getTitle()));
-        populateBriefPreview(taskItem);
+        selectedTaskItem = taskItems.get(Integer.parseInt(marker.getTitle()));
+        populateBriefPreview(selectedTaskItem);
 
         return true;
+    }
+
+
+    public void setupOnClickListener() {
+        rlBriefView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDetailedView(selectedTaskItem);
+            }
+        });
+    }
+
+    public void showDetailedView(TaskItem taskItem) {
+        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(taskItem);
+        frag.show(getFragmentManager(), "Nothing");
     }
 
     @Override
