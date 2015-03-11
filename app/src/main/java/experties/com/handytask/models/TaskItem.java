@@ -26,6 +26,9 @@ public class TaskItem {
     // DateTime
     private Date date;
 
+    // Unique ID
+    private long id;
+
     // [vince] TODO: How to handle photos?
 
 

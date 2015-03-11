@@ -47,7 +47,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShowOnMapFragment extends Fragment {
+public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerClickListener{
 
     // Google Map/GPS related
     private MapView mapView;
@@ -59,6 +59,10 @@ public class ShowOnMapFragment extends Fragment {
     private TextView tvRelativeTime;
     private TextView tvLocation;
     private TextView tvRelativeDistance;
+
+    //Each fragment holds its own copy
+    // [vince] TODO: need a better way for this
+    ArrayList<TaskItem> taskItems;
 
 
     public ShowOnMapFragment() {
@@ -96,28 +100,48 @@ public class ShowOnMapFragment extends Fragment {
         map = googleMap;
         if (map != null) {
             // Map is ready
-            Toast.makeText(getActivity(), "Map Fragment was loaded properly!", Toast.LENGTH_SHORT).show();
             map.setMyLocationEnabled(true);
-            populateMapwithMarkers();
+
+            /* [vince] TODO: This is a little more complicated
+            Location location = map.getMyLocation();
+
+            if (location != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        new LatLng(location.getLatitude(), location.getLongitude()), 13));
+            }*/
+
+            populateMapWithMarkers();
+            map.setOnMarkerClickListener(this);
         } else {
             Toast.makeText(getActivity(), "Error - Map was null!!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void populateBriefPreview(TaskItem taskItem) {
-        // [vince] TODO: populate Brief Preview onStart + onClick
-
+        tvBriefDescription.setText(taskItem.getBriefDescription());
+        tvRelativeTime.setText(taskItem.getDate().toString()); // [vince] TODO: figure out where to get the relative time conversion
+        tvLocation.setText(taskItem.getCity() + "," + taskItem.getState());
+        tvRelativeDistance.setText("some miles"); // [vince] TODO: figure out how to calculate relative location
+        // [vince] TODO: load first image of task, if any
     }
 
-    private void populateMapwithMarkers() {
+    private void populateMapWithMarkers() {
         int i;
         TaskItemsListListener listener = (TaskItemsListListener) getActivity();
-        ArrayList<TaskItem> taskItems = listener.getList();
+        taskItems = listener.getList();
         if (!taskItems.isEmpty())
             for(i=0;i<taskItems.size();i++) {
                 TaskItem taskItem = taskItems.get(i);
-                map.addMarker(new MarkerOptions().position(new LatLng(taskItem.getLatitude(), taskItem.getLongitude())));
+                map.addMarker(new MarkerOptions().title(String.valueOf(i)).position(new LatLng(taskItem.getLatitude(), taskItem.getLongitude())));
             }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        TaskItem taskItem = taskItems.get(Integer.parseInt(marker.getTitle()));
+        populateBriefPreview(taskItem);
+
+        return true;
     }
 
     @Override
@@ -137,6 +161,5 @@ public class ShowOnMapFragment extends Fragment {
         mapView.onLowMemory();
         super.onLowMemory();
     }
-
 
 }
