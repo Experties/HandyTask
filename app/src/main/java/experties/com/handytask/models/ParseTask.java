@@ -73,13 +73,11 @@ public class ParseTask extends ParseObject {
         put("State", value);
     }
 
-    public String getZipCode() {
-        return getString("Zipcode");
+    public Number getZipCode() {
+        return getNumber("ZipCode");
     }
 
-    public void setZipCode(String value) {
-        put("Zipcode", value);
-    }
+    public void setZipCode(Number value) { put("ZipCode", value); }
 
     public Double getLatitude() {
         return getDouble("Latitude");
@@ -128,4 +126,21 @@ public class ParseTask extends ParseObject {
     public void setPhoto3(ParseFile value) {
         put("Photo3", value);
     }
+
+    public ParseUser getOwner() { return getParseUser("Owner"); }
+
+    public void setOwner(ParseUser value) { put("Owner", value); }
+
+    public ParseUser getResponder() { return getParseUser("Responder"); }
+
+    public void setResponder(ParseUser value) { put("Responder", value); }
+
+    public String getCurrentState() {
+        return getString("CurrentState");
+    }
+
+    public void setCurrentState(String value) {
+        put("CurrentState", value);
+    }
+
 }
