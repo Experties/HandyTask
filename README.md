@@ -9,9 +9,9 @@ Required stories:
  * [x] Experts and users can create profiles of their contact information.
  * [ ] User can posts its needs to the server.
  * [x] Experts will see the need and use a map interface to find tasks near them.
- * [ ] Experts and user can enter a chat with each other for exchanging questions, details and expert's portfolio.
+ * [x] Experts and user can enter a chat with each other for exchanging questions, details and expert's portfolio.
  * [ ] User receive a system notification when a experts respond to need.
- * [ ] Experts can upload a portfolio photos or use the phone's camera.
+ * [x] Experts can upload a portfolio photos or use the phone's camera.
  * [ ] GPS will locate the user as a starting point for searches/task posts.
  * [x] User can press a button in chat to have their phone call with experts.
 
@@ -35,3 +35,5 @@ Optional stories:
  ![Hetang's Work](HandyTaskLogin.gif)
 ### Vince's Work
  ![Vince's Work](HandyTask_MapTask.gif)
+### Al's Work
+ ![Al's Work](chat.gif)

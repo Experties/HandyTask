@@ -65,6 +65,14 @@ public class ParseTask extends ParseObject {
         put("City", value);
     }
 
+    public String getState() {
+        return getString("State");
+    }
+
+    public void setState(String value) {
+        put("State", value);
+    }
+
     public String getZipCode() {
         return getString("Zipcode");
     }
@@ -73,19 +81,19 @@ public class ParseTask extends ParseObject {
         put("Zipcode", value);
     }
 
-    public Long getLatitude() {
-        return getLong("Latitude");
+    public Double getLatitude() {
+        return getDouble("Latitude");
     }
 
-    public void setLatitude(Long value) {
+    public void setLatitude(Double value) {
         put("Latitude", value);
     }
 
-    public Long getLongitude() {
-        return getLong("Longitude");
+    public Double getLongitude() {
+        return getDouble("Longitude");
     }
 
-    public void setLongitude(Long value) {
+    public void setLongitude(Double value) {
         put("Longitude", value);
     }
 
