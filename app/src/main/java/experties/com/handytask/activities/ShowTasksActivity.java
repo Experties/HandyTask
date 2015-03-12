@@ -28,6 +28,7 @@ public class ShowTasksActivity extends ActionBarActivity implements TaskItemsLis
 
         // [vince] TODO: temporary solution
         populateDummyList();
+        populateTaskList();
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -76,6 +77,10 @@ public class ShowTasksActivity extends ActionBarActivity implements TaskItemsLis
             taskItem.setLatitude(37.734654 + i * 0.001756);
             taskItem.setLongitude(-122.425290 + i * 0.008787);
         }
+
+    }
+
+    public void populateTaskList() {
 
     }
 
