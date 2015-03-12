@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+    android:id="@+id/muUploadProfile" android:background="#F5F6F1" android:minWidth="300dp"
+    android:minHeight="200dp">
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload photo"
+        style="@style/dialog.title" />
+
+    <Button
+        android:id="@+id/btnCameraUpload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onSaveButtonClick"
+        android:text="Capture a photo"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/secondary_button_style"
+        style="@style/secondary.button"/>
+
+    <Button
+        android:id="@+id/btnGalleryUpload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onCancelButtonClick"
+        android:text="From photo gallery"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/secondary_button_style"
+        style="@style/secondary.button"/>
+
+</LinearLayout>

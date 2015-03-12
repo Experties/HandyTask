@@ -25,6 +25,22 @@ public class ParseTask extends ParseObject {
         put("Type", value);
     }
 
+    public String getTitle() {
+        return getString("Title");
+    }
+
+    public void setTitle(String value) {
+        put("Title", value);
+    }
+
+    public String getDescription() {
+        return getString("Description");
+    }
+
+    public void setDescription(String value) {
+        put("Description", value);
+    }
+
     public String getAddress1() {
         return getString("Address1");
     }

@@ -1,8 +1,43 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
+    <style name="spinner_style">
+        <item name="android:background">@drawable/gradient_spinner</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:popupBackground">#DFFFFFFF</item>
+    </style>
+    <style name="upload_cust_dialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowTitleStyle">@style/dialog_title_style</item>
+    </style>
 
+    <style name="dialog_title_style" parent="android:Widget.TextView">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">26sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily"></item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="secondary"></style>
+    <style name="secondary.button">
+        <item name="android:padding">15dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="dialog"></style>
+    <style name="dialog.title">
+        <item name="android:gravity">left</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:textSize">50sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#29A5D8</item>
+    </style>
 </resources>

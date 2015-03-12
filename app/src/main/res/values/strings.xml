@@ -4,7 +4,74 @@
     <string name="app_name">Handy Task</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title">Handy Task</string>
+    <string name="phone_text_hint">Enter your phone no...</string>
+    <string name="state_prompt">Choose your state</string>
+    <string name="upload_btn">Upload</string>
+    <string name="first_name">Enter your first name</string>
+    <string name="last_name">Enter your last name</string>
     <string name="title_activity_show_tasks">ShowTasksActivity</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="state_arrays">
+        <item>AL</item>
+        <item>AR</item>
+        <item>AZ</item>
+        <item>CA</item>
+        <item>CO</item>
+        <item>CT</item>
+        <item>DE</item>
+        <item>DC</item>
+        <item>FL</item>
+        <item>GA</item>
+        <item>HI</item>
+        <item>ID</item>
+        <item>IL</item>
+        <item>IN</item>
+        <item>IA</item>
+        <item>KS</item>
+        <item>KY</item>
+        <item>LA</item>
+        <item>ME</item>
+        <item>MD</item>
+        <item>MA</item>
+        <item>MI</item>
+        <item>MN</item>
+        <item>MS</item>
+        <item>MO</item>
+        <item>MT</item>
+        <item>NE</item>
+        <item>NV</item>
+        <item>NH</item>
+        <item>NJ</item>
+        <item>NM</item>
+        <item>NY</item>
+        <item>NC</item>
+        <item>ND</item>
+        <item>OH</item>
+        <item>OK</item>
+        <item>OR</item>
+        <item>PA</item>
+        <item>RI</item>
+        <item>SC</item>
+        <item>SD</item>
+        <item>TN</item>
+        <item>TX</item>
+        <item>UT</item>
+        <item>VT</item>
+        <item>VA</item>
+        <item>WA</item>
+        <item>WV</item>
+        <item>WI</item>
+        <item>WY</item>
+    </string-array>
+
+    <string name="title_activity_task_created">TaskCreatedActivity</string>
+    <string name="sign_out">Sign out</string>
+
+    <string name="Send">Send</string>
+    <string name="Say_something">Say something...</string>
+    <string name="Accept_Offer">Accept Offer</string>
+    <string name="Decline_Offer">Decline Offer</string>
 
 </resources>
