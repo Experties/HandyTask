@@ -13,7 +13,7 @@ Required stories:
  * [ ] User receive a system notification when a experts respond to need.
  * [ ] Experts can upload a portfolio photos or use the phone's camera.
  * [ ] GPS will locate the user as a starting point for searches/task posts.
- * [ ] User can press a button in chat to have their phone call with experts.
+ * [x] User can press a button in chat to have their phone call with experts.
 
 Optional stories:
 
@@ -29,7 +29,7 @@ Optional stories:
  ![Seniors posting a task](elderly_senior_create_task.png)
  ![Volunteers finding a task](elderly_volunteer_find_task.png)
  ![Chat screen to accept help offer](elderly_chat.png)
- 
+
 # Week1 Progress:
 ### Hetang's Work
  ![Hetang's Work](HandyTaskLogin.gif)
