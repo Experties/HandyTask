@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
@@ -22,6 +23,7 @@ public class TaskCreatedActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
+            this.finish();
             Intent taskActivity = new Intent(TaskCreatedActivity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
@@ -31,11 +33,20 @@ public class TaskCreatedActivity extends ActionBarActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+            toolbar.setNavigationIcon(R.drawable.ic_back_white);
             mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title);
 
             //toolbar.setLogo(R.drawable.ic_tweets);
             mTitle.setTypeface(fontJamesFajardo);
             mTitle.setText(getResources().getString(R.string.title));
+            final TaskCreatedActivity context = this;
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.finish();
+                }
+            });
         }
     }
 

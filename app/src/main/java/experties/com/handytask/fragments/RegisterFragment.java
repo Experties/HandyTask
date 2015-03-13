@@ -37,6 +37,7 @@ import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 
 import experties.com.handytask.R;
+import experties.com.handytask.activities.ShowTasksActivity;
 import experties.com.handytask.activities.TaskCreatedActivity;
 import experties.com.handytask.helpers.FragmentHelpers;
 
@@ -367,7 +368,8 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
         userData.signUpInBackground(new SignUpCallback() {
             public void done(ParseException e) {
                 if (e == null) {
-                    Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
+                    getActivity().finish();
+                    Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
                     startActivity(taskActivity);
 
                     scrVwSignUp.setVisibility(ScrollView.GONE);

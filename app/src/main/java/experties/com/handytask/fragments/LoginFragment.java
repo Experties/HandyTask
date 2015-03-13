@@ -27,6 +27,7 @@ import com.parse.ParseUser;
 
 import experties.com.handytask.R;
 import experties.com.handytask.activities.LoginActivity;
+import experties.com.handytask.activities.ShowTasksActivity;
 import experties.com.handytask.activities.TaskCreatedActivity;
 import experties.com.handytask.helpers.FragmentHelpers;
 
@@ -115,7 +116,8 @@ public class LoginFragment extends Fragment {
                                 public void done(ParseUser user, ParseException e) {
                                     pbLogin.setVisibility(ProgressBar.GONE);
                                     if (user != null) {
-                                        Intent taskActivity = new Intent(getActivity(), TaskCreatedActivity.class);
+                                        getActivity().finish();
+                                        Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
                                         startActivity(taskActivity);
                                     } else {
                                         final TabSwitchInterface switchActivity = (TabSwitchInterface) getActivity();

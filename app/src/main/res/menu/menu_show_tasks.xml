@@ -2,6 +2,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="experties.com.handytask.activities.ShowTasksActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:orderInCategory="1"
+        android:id="@+id/muAddTask"
+        android:icon="@drawable/ic_add_task1"
+        app:showAsAction="ifRoom"
+        android:title="@string/add_task" />
+    <item
+        android:orderInCategory="2"
+        android:id="@+id/muSignOut"
+        android:icon="@drawable/ic_logout"
+        app:showAsAction="ifRoom"
+        android:title="@string/sign_out" />
 </menu>

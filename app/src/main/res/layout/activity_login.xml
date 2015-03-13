@@ -7,19 +7,10 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tolBrLogin"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#29A5D8">
+        style="@style/toolbar">
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:text="@string/app_name"
-            android:gravity="center_vertical"
-            android:textColor="#E6E6E8"
-            android:textSize="46sp"
-            android:textStyle="bold"
-            android:layout_gravity="left"
+            style="@style/toolbar.title"
             android:id="@+id/login_toolbar_title" />
     </android.support.v7.widget.Toolbar>
     <com.astuetz.PagerSlidingTabStrip

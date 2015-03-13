@@ -40,4 +40,45 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:background">#29A5D8</item>
     </style>
+
+    <style name="toolbar.title">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">#E6E6E8</item>
+        <item name="android:textSize">46sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_gravity">left</item>
+    </style>
+
+    <style name="toolbar">
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">#29A5D8</item>
+    </style>
+
+    <style name="linearLayout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">#00F5F6F1</item>
+    </style>
+
+    <style name="linearLayout.secondary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/secondary_button_style</item>
+        <item name="android:layout_marginRight">20dp</item>
+    </style>
+
+    <style name="linearLayout.primary">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/primary_button_style</item>
+    </style>
 </resources>

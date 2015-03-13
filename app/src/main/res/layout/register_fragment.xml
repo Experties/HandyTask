@@ -218,28 +218,17 @@
     </ScrollView>
     <LinearLayout
         android:id="@+id/btnContainer"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
-        android:background="#00F5F6F1">
+        style="@style/linearLayout"
+        android:layout_marginTop="10dp">
 
         <Button
             android:id="@+id/cancelBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Clear Entries"
-            android:background="@drawable/secondary_button_style"
-            android:layout_marginRight="20dp"/>
+            style="@style/linearLayout.secondary"
+            android:text="Clear Entries"/>
 
         <Button
             android:id="@+id/signUpBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Sign Up"
-            android:textColor="#ffffff"
-            android:background="@drawable/primary_button_style"/>
+            style="@style/linearLayout.primary"
+            android:text="Sign Up"/>
     </LinearLayout>
 </RelativeLayout>

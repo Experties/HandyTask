@@ -73,5 +73,6 @@
     <string name="Say_something">Say something...</string>
     <string name="Accept_Offer">Accept Offer</string>
     <string name="Decline_Offer">Decline Offer</string>
+    <string name="add_task">Create Task</string>
 
 </resources>

@@ -6,7 +6,7 @@
     <item
         android:orderInCategory="1"
         android:id="@+id/muSignOut"
-        android:icon="@drawable/ic_settings2"
+        android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom"
-        android:title="@string/action_settings" />
+        android:title="@string/sign_out" />
 </menu>

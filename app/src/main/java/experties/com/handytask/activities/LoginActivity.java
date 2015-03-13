@@ -37,7 +37,8 @@ public class LoginActivity extends ActionBarActivity implements LoginFragment.Ta
         super.onCreate(savedInstanceState);
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
-            Intent taskActivity = new Intent(LoginActivity.this, TaskCreatedActivity.class);
+            this.finish();
+            Intent taskActivity = new Intent(LoginActivity.this, ShowTasksActivity.class);
             startActivity(taskActivity);
         } else {
             // show the signup or login screen
