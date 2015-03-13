@@ -73,13 +73,11 @@ public class ParseTask extends ParseObject {
         put("State", value);
     }
 
-    public String getZipCode() {
-        return getString("Zipcode");
+    public Number getZipCode() {
+        return getNumber("ZipCode");
     }
 
-    public void setZipCode(String value) {
-        put("Zipcode", value);
-    }
+    public void setZipCode(Number value) { put("ZipCode", value); }
 
     public Double getLatitude() {
         return getDouble("Latitude");

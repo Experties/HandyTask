@@ -14,7 +14,12 @@ package experties.com.handytask.activities;
         import android.widget.ImageView;
         import android.widget.ListView;
         import android.widget.TextView;
+        import android.widget.Toast;
 
+        import com.parse.GetCallback;
+        import com.parse.ParseException;
+        import com.parse.ParseQuery;
+        import com.parse.ParseUser;
         import com.pubnub.api.*;
         import org.json.*;
 
@@ -23,6 +28,7 @@ package experties.com.handytask.activities;
         import experties.com.handytask.R;
         import experties.com.handytask.adapters.ChatListAdapter;
         import experties.com.handytask.models.ChatMessage;
+        import experties.com.handytask.models.ParseTask;
 
 
 public class ChatActivity extends ActionBarActivity {
@@ -36,6 +42,8 @@ public class ChatActivity extends ActionBarActivity {
     private String chatChannel; // name of the chat channel, made from the two usernames.
     private byte[] thisUserPhoto;
     private byte[] otherUserPhoto;
+    private String taskId;
+    private ParseTask task;
 
     private ListView lvChat;
     private ArrayList<ChatMessage> mMessages;
@@ -53,14 +61,39 @@ public class ChatActivity extends ActionBarActivity {
         setContentView(R.layout.activity_chat);
 
         pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+            // if the user is not logged in, start the Login Activity with the "next" extra set.
+            Intent i = new Intent(ChatActivity.this, LoginActivity.class);
+            i.putExtra("next", "chat");
+            startActivity(i);
+            return;
+        }
 
         // get extra data from intent
-        thisUsername =  getIntent().getStringExtra("thisUsername");
+        //taskId = getIntent().getStringExtra("taskId"); // TEMP - For testing, we'll just hardcode this for now.
+        taskId = "08a54aQJ30"; // TEMP for testing
+        thisUsername =  currentUser.getUsername();
+
+        ParseQuery<ParseTask> taskQuery = ParseQuery.getQuery(ParseTask.class);
+        taskQuery.getInBackground(taskId, new GetCallback<ParseTask>() {
+            @Override
+            public void done(ParseTask parseTask, ParseException e) {
+                // Got the task object information. Now we need to get the task owner information.
+                if (e == null) {
+                    ChatActivity.this.task = parseTask; // store the task
+                    ParseQuery<ParseUser> ownerQuery = ParseQuery.getQuery(ParseUser.class);
+                    //ownerQuery.getInBackground() // LEFT OFF
+                } else {
+                    Toast.makeText(ChatActivity.this, getResources().getString(R.string.Unable_to_get_data_from_the_database_), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         otherUsername =  getIntent().getStringExtra("otherUsername");
         otherUserPhoneNumber = getIntent().getStringExtra("otherUserPhoneNumber");
         thisUserPhoto = getIntent().getByteArrayExtra("thisUserPhoto");
         otherUserPhoto = getIntent().getByteArrayExtra("otherUserPhoto");
-        thisUserIsSeller = getIntent().getBooleanExtra("isSeller", false);
 
         if (thisUsername.compareTo(otherUsername) <= 0) { // chatChannel is derived from alphabetical order of the two usernames
             chatChannel = thisUsername + CHAT_DIV + otherUsername;
@@ -74,10 +107,6 @@ public class ChatActivity extends ActionBarActivity {
         ivOtherUserPhoto = (ImageView) findViewById(R.id.ivOtherUserPhoto);
         btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
         btnDeclineOffer = (Button) findViewById(R.id.btnDeclineOffer);
-
-        if (!thisUserIsSeller) {
-            btnAcceptOffer.setVisibility(View.INVISIBLE); // hide accept button from the buyer
-        }
 
         tvOtherUserUsername.setText(otherUsername);
         //ivTODO.setImageBitmap(BitmapFactory.decodeByteArray(thisUserPhoto, 0, thisUserPhoto.length));
