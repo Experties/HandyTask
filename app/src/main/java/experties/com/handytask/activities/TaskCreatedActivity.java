@@ -2,13 +2,18 @@ package experties.com.handytask.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,26 +23,16 @@ import android.widget.TextView;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
+import experties.com.handytask.fragments.RegisterFragment;
+import experties.com.handytask.fragments.TaskCreationFragment;
+import experties.com.handytask.fragments.TaskCreationLocationFragment;
+import experties.com.handytask.fragments.UploadImageFragment;
 import experties.com.handytask.models.TaskItem;
 
-public class TaskCreatedActivity extends ActionBarActivity {
+public class TaskCreatedActivity extends ActionBarActivity implements TaskCreationFragment.TaskCreationNextStep{
+    private boolean isMandatoryFilled;
+
     private TextView mTitle;
-
-    private EditText edTxtTitle;
-    private EditText edTxtComment;
-
-    private Button taskUploadBtn1;
-    private Button taskUploadBtn2;
-    private Button taskUploadBtn3;
-    private Button cancelTaskBtn;
-    private Button nextTaskBtn;
-
-    private ImageView imgVwTask1;
-    private ImageView imgVwTask2;
-    private ImageView imgVwTask3;
-
-    private Spinner sprTaskType;
-
     private TaskItem item;
 
     @Override
@@ -50,58 +45,34 @@ public class TaskCreatedActivity extends ActionBarActivity {
             startActivity(taskActivity);
         } else {
             setContentView(R.layout.activity_task_created);
-            setupView();
+            final TaskCreatedActivity context = this;
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
+            setSupportActionBar(toolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+            toolbar.setNavigationIcon(R.drawable.ic_back_white);
+            mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title);
+
+            //toolbar.setLogo(R.drawable.ic_tweets);
+            mTitle.setTypeface(fontJamesFajardo);
+            mTitle.setText(getResources().getString(R.string.title));
+            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    context.finish();
+                }
+            });
+            item = new TaskItem();
+
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.creation_fragment, TaskCreationFragment.newInstance(item));
+            ft.commit();
         }
     }
 
-    private void setupView() {
-        final TaskCreatedActivity context = this;
-        sprTaskType = (Spinner) findViewById(R.id.sprTaskType);
 
-        edTxtTitle = (EditText) findViewById(R.id.edTxtTitle);
-        edTxtComment = (EditText) findViewById(R.id.edTxtComment);
-
-        taskUploadBtn1 = (Button) findViewById(R.id.taskUploadBtn1);
-        taskUploadBtn2 = (Button) findViewById(R.id.taskUploadBtn2);
-        taskUploadBtn3 = (Button) findViewById(R.id.taskUploadBtn3);
-        cancelTaskBtn = (Button) findViewById(R.id.cancelTaskBtn);
-        cancelTaskBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.finish();
-            }
-        });
-        nextTaskBtn = (Button) findViewById(R.id.nextTaskBtn);
-        nextTaskBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        imgVwTask1 = (ImageView) findViewById(R.id.imgVwTask1);
-        imgVwTask2 = (ImageView) findViewById(R.id.imgVwTask2);
-        imgVwTask3 = (ImageView) findViewById(R.id.imgVwTask3);
-
-        Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        toolbar.setNavigationIcon(R.drawable.ic_back_white);
-        mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title);
-
-        //toolbar.setLogo(R.drawable.ic_tweets);
-        mTitle.setTypeface(fontJamesFajardo);
-        mTitle.setText(getResources().getString(R.string.title));
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                context.finish();
-            }
-        });
-    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -125,5 +96,21 @@ public class TaskCreatedActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onNextStep(int stepId, TaskItem item) {
+        switch (stepId) {
+            case 1:
+                break;
+            case 2:
+                this.item = item;
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.creation_fragment, TaskCreationLocationFragment.newInstance(item));
+                ft.commit();
+                break;
+            case 3:
+                break;
+        }
     }
 }

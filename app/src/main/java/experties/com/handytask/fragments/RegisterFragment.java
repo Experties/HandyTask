@@ -228,27 +228,13 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
     }
 
     @Override
-    public void onSelectImageDialog(byte[] byteArray) {
+    public void onSelectImageDialog(byte[] byteArray, int btnId) {
         if(byteArray != null) {
             selectedImage = byteArray;
             uploadDialog.dismiss();
             Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-            imgVwProfile.setImageBitmap(getResizedBitmap(bmp, 300, 300));
+            imgVwProfile.setImageBitmap(FragmentHelpers.getResizedBitmap(bmp, 300, 300));
         }
-    }
-
-    public Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        // CREATE A MATRIX FOR THE MANIPULATION
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-
-        // "RECREATE" THE NEW BITMAP
-        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
     }
 
     private boolean checkEntries() {

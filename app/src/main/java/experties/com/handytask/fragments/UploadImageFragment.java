@@ -1,11 +1,13 @@
 package experties.com.handytask.fragments;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.Gravity;
@@ -31,8 +33,18 @@ public class UploadImageFragment extends DialogFragment {
     private Button btnCameraUpload;
     private Button btnGalleryUpload;
 
+    private int btnId;
+
+    public static UploadImageFragment newInstance(int btnId) {
+        UploadImageFragment frag = new UploadImageFragment();
+        Bundle args = new Bundle();
+        args.putInt("btnId", btnId);
+        frag.setArguments(args);
+        return frag;
+    }
+
     public interface UploadDialogListener {
-        void onSelectImageDialog(byte[] byteArray);
+        void onSelectImageDialog(byte[] byteArray, int btnId);
     }
 
     public UploadImageFragment() {
@@ -48,6 +60,9 @@ public class UploadImageFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.upload_dialog, parent, false);
+        if(getArguments() != null) {
+            btnId = getArguments().getInt("btnId");
+        }
 
         Typeface fontJamesFajardo = Typeface.createFromAsset(getActivity().getAssets(), "fonts/JamesFajardo.ttf");
         TextView title = (TextView) v.findViewById(R.id.dialog_title);
@@ -96,7 +111,7 @@ public class UploadImageFragment extends DialogFragment {
             photo.compress(Bitmap.CompressFormat.JPEG, 100, stream);
             byte[] byteArray = stream.toByteArray();
             UploadDialogListener listener = (UploadDialogListener) getTargetFragment();
-            listener.onSelectImageDialog(byteArray);
+            listener.onSelectImageDialog(byteArray, btnId);
         }
     }
 

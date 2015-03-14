@@ -1,11 +1,14 @@
 package experties.com.handytask.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
 /**
  * Created by vincetulit on 3/8/15.
  */
-public class TaskItem {
+public class TaskItem implements Parcelable {
 
     // Job Related
     private String type;
@@ -29,7 +32,9 @@ public class TaskItem {
     // Unique ID
     private long id;
 
-    // [vince] TODO: How to handle photos?
+    private byte[] selectedImage1;
+    private byte[] selectedImage2;
+    private byte[] selectedImage3;
 
 
     public String getType() {
@@ -118,5 +123,39 @@ public class TaskItem {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public byte[] getSelectedImage1() {
+        return selectedImage1;
+    }
+
+    public void setSelectedImage1(byte[] selectedImage1) {
+        this.selectedImage1 = selectedImage1;
+    }
+
+    public byte[] getSelectedImage2() {
+        return selectedImage2;
+    }
+
+    public void setSelectedImage2(byte[] selectedImage2) {
+        this.selectedImage2 = selectedImage2;
+    }
+
+    public byte[] getSelectedImage3() {
+        return selectedImage3;
+    }
+
+    public void setSelectedImage3(byte[] selectedImage3) {
+        this.selectedImage3 = selectedImage3;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }
