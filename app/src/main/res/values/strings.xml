@@ -78,4 +78,13 @@
     <string name="add_task">Create Task</string>
     <string name="title_activity_chat">ChatActivity</string>
 
+    <string-array name="task_type_arrays">
+        <item>House work</item>
+        <item>Furniture fixing</item>
+        <item>Outdoor / Gardening</item>
+        <item>Plumbing</item>
+        <item>Other</item>
+    </string-array>
+
+    <string name="task_type_hint">Select task type</string>
 </resources>

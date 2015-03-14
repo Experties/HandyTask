@@ -49,13 +49,10 @@
                 android:background="#ffffff"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="For privacy, you name will appear to other as: John S."
                 android:id="@+id/txtVwFullName"
                 android:layout_below="@+id/edVwPhoneNo"
-                android:textSize="14sp"
-                android:layout_marginBottom="20dp"/>
+                style="@style/textViewStyle" />
 
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
@@ -103,33 +100,20 @@
             </RelativeLayout>
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:ems="10"
                 android:id="@+id/edTxtFirstName"
                 android:layout_toRightOf="@+id/layoutImg"
                 android:layout_below="@+id/txtVwFullName"
                 android:hint="@string/first_name"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:padding="10dp"
-                android:layout_marginBottom="20dp"/>
+                style="@style/editTextStyle"/>
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:ems="10"
                 android:id="@+id/edTxtLastName"
                 android:layout_toRightOf="@+id/layoutImg"
                 android:layout_below="@+id/edTxtFirstName"
                 android:hint="@string/last_name"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:padding="10dp"/>
+                style="@style/editTextStyle"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -142,46 +126,26 @@
                 android:layout_marginBottom="20dp"/>
 
             <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:ems="10"
                 android:id="@+id/edTxtAddress1"
                 android:layout_below="@+id/txtVwAddress"
                 android:hint="Enter street address"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="20dp"
-                android:padding="10dp"/>
+                style="@style/editTextStyle" />
             <EditText
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:inputType="textPersonName"
-                android:ems="10"
                 android:id="@+id/edTxtAddress2"
                 android:layout_below="@+id/edTxtAddress1"
                 android:hint="Enter Apt #"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:padding="10dp"/>
+                style="@style/editTextStyle"/>
 
             <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/edTxtCity"
-                android:layout_alignBottom="@+id/edTxtAddress2"
                 android:layout_toRightOf="@+id/edTxtAddress2"
-                android:layout_alignRight="@+id/edTxtAddress1"
-                android:layout_alignEnd="@+id/edTxtAddress1"
                 android:layout_below="@+id/edTxtAddress1"
                 android:hint="City"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
                 android:layout_marginLeft="20dp"
-                android:padding="10dp"/>
+                style="@style/editTextStyle.right" />
 
             <Spinner
                 android:layout_width="wrap_content"
@@ -194,26 +158,18 @@
                 android:layout_alignEnd="@+id/edTxtAddress2"
                 android:entries="@array/state_arrays"
                 android:prompt="@string/state_prompt"
-                android:layout_marginTop="20dp"
                 style="@style/spinner_style"/>
 
             <EditText
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:inputType="textPostalAddress"
                 android:id="@+id/edTxtZipCode"
                 android:hint="Zip Code"
+                android:layout_marginBottom="0dp"
                 android:layout_alignBottom="@+id/sprState"
                 android:layout_below="@+id/edTxtCity"
-                android:minHeight="50dp"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:layout_marginTop="20dp"
-                android:padding="10dp"
+                style="@style/editTextStyle.right"
                 android:layout_alignLeft="@+id/edTxtCity"
-                android:layout_alignStart="@+id/edTxtCity"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true" />
+                android:layout_alignStart="@+id/edTxtCity" />
         </RelativeLayout>
     </ScrollView>
     <LinearLayout
