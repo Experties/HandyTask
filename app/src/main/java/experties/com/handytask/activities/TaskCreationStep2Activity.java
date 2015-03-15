@@ -10,11 +10,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
@@ -22,14 +24,10 @@ import experties.com.handytask.fragments.TaskCreationFragment;
 import experties.com.handytask.fragments.TaskCreationLocationFragment;
 import experties.com.handytask.models.TaskItem;
 
-public class TaskCreationStep2Activity extends ActionBarActivity implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class TaskCreationStep2Activity extends ActionBarActivity  {
     private TaskItem item;
     private TextView mTitle;
-    private GoogleApiClient client;
 
-    private double lat;
-    private double lng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,34 +80,13 @@ public class TaskCreationStep2Activity extends ActionBarActivity implements
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    protected synchronized void buildGoogleApiClient() {
-        client = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(client);
-        if (mLastLocation != null) {
-            lat = mLastLocation.getLatitude();
-            lng = mLastLocation.getLongitude();
+        if (id == R.id.muSignOut) {
+            ParseUser.logOut();
+            this.finish();
+            Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
+            startActivity(taskActivity);
+            return true;
         }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        return super.onOptionsItemSelected(item);
     }
 }

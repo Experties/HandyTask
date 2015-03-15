@@ -80,6 +80,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
         //noinspection SimplifiableIfStatement
         if (id == R.id.muSignOut) {
             ParseUser.logOut();
+            this.finish();
             Intent taskActivity = new Intent(TaskCreationStep1Activity.this, LoginActivity.class);
             startActivity(taskActivity);
             return true;

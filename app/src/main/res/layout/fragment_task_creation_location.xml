@@ -3,17 +3,13 @@
     android:layout_height="match_parent"
     tools:context="experties.com.handytask.fragments.TaskCreationLocationFragment"
     android:orientation="vertical">
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/addressMap"
-        android:id="@+id/lvAddress"
-        android:layout_weight="0.06" />
-    <com.google.android.gms.maps.MapView
-        android:id="@+id/addressMap"
-        android:layout_below="@+id/lvAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_above="@+id/addressMap"
+            android:id="@+id/lvAddress"/>
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/addressMap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 </LinearLayout>
