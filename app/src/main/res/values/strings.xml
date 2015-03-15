@@ -68,9 +68,7 @@
 
     <string name="title_activity_task_created">TaskCreatedActivity</string>
     <string name="sign_out">Sign out</string>
-
     <string name="Unable_to_get_data_from_the_database.">Unable to get data from the database.</string>
-
     <string name="Send">Send</string>
     <string name="Say_something">Say something...</string>
     <string name="Accept_Offer">Accept Offer</string>
@@ -87,4 +85,6 @@
     </string-array>
 
     <string name="task_type_hint">Select task type</string>
+    <string name="title_activity_task_creation_step2">TaskCreationStep2Activity</string>
+
 </resources>

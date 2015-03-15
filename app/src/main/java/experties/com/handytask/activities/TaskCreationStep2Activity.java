@@ -2,58 +2,54 @@ package experties.com.handytask.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentManager;
+import android.location.Location;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
-import experties.com.handytask.fragments.RegisterFragment;
 import experties.com.handytask.fragments.TaskCreationFragment;
 import experties.com.handytask.fragments.TaskCreationLocationFragment;
-import experties.com.handytask.fragments.UploadImageFragment;
 import experties.com.handytask.models.TaskItem;
 
-public class TaskCreatedActivity extends ActionBarActivity implements TaskCreationFragment.TaskCreationNextStep{
-    private boolean isMandatoryFilled;
-
-    private TextView mTitle;
+public class TaskCreationStep2Activity extends ActionBarActivity implements
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private TaskItem item;
+    private TextView mTitle;
+    private GoogleApiClient client;
 
+    private double lat;
+    private double lng;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             this.finish();
-            Intent taskActivity = new Intent(TaskCreatedActivity.this, LoginActivity.class);
+            Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
-            setContentView(R.layout.activity_task_created);
-            final TaskCreatedActivity context = this;
+            setContentView(R.layout.activity_task_creation_step2);
+            item = (TaskItem) getIntent().getExtras().getParcelable("item");
+            final TaskCreationStep2Activity context = this;
             Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation2);
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
 
             toolbar.setNavigationIcon(R.drawable.ic_back_white);
-            mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title);
+            mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title2);
 
             //toolbar.setLogo(R.drawable.ic_tweets);
             mTitle.setTypeface(fontJamesFajardo);
@@ -67,7 +63,7 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
             item = new TaskItem();
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.creation_fragment, TaskCreationFragment.newInstance(item));
+            ft.replace(R.id.creation_fragment_step2, TaskCreationLocationFragment.newInstance(item));
             ft.commit();
         }
     }
@@ -75,8 +71,8 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_task_created, menu);
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_task_creation_step2, menu);
         return true;
     }
 
@@ -87,30 +83,33 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.muSignOut) {
-            ParseUser.logOut();
-            Intent taskActivity = new Intent(TaskCreatedActivity.this, LoginActivity.class);
-            startActivity(taskActivity);
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
+    protected synchronized void buildGoogleApiClient() {
+        client = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
     @Override
-    public void onNextStep(int stepId, TaskItem item) {
-        switch (stepId) {
-            case 1:
-                break;
-            case 2:
-                this.item = item;
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.creation_fragment, TaskCreationLocationFragment.newInstance(item));
-                ft.commit();
-                break;
-            case 3:
-                break;
+    public void onConnected(Bundle bundle) {
+        Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(client);
+        if (mLastLocation != null) {
+            lat = mLastLocation.getLatitude();
+            lng = mLastLocation.getLongitude();
         }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 }

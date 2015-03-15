@@ -15,7 +15,6 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
 
     <application
@@ -29,6 +28,7 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,7 +36,6 @@
             android:name=".activities.ShowTasksActivity"
             android:label="@string/title_activity_show_tasks" >
         </activity>
-
         <activity
             android:name=".activities.ChatActivity"
             android:label="@string/title_activity_chat" >
@@ -57,8 +56,12 @@
             android:value="AIzaSyBFgfG5NRhQj_nC0aFRi7PAyruYG3lbJdg" />
 
         <activity
-            android:name=".activities.TaskCreatedActivity"
+            android:name=".activities.TaskCreationStep1Activity"
             android:label="@string/title_activity_task_created" >
+        </activity>
+        <activity
+            android:name=".activities.TaskCreationStep2Activity"
+            android:label="@string/title_activity_task_creation_step2" >
         </activity>
     </application>
 

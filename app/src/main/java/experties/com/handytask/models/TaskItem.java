@@ -156,6 +156,81 @@ public class TaskItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeStringArray(new String[] {
+                String.valueOf(this.id),
+                this.type,
+                this.briefDescription,
+                this.detailedDescription,
+                this.address1,
+                this.address2,
+                this.city,
+                this.zipCode,
+                this.state,
+                String.valueOf(this.longitude),
+                String.valueOf(this.latitude)
+        });
+        if(selectedImage1 != null) {
+            dest.writeInt(selectedImage1.length);
+            dest.writeByteArray(selectedImage1);
+        } else {
+            dest.writeInt(0);
+        }
 
+        if(selectedImage2 != null) {
+            dest.writeInt(selectedImage2.length);
+            dest.writeByteArray(selectedImage2);
+        } else {
+            dest.writeInt(0);
+        }
+
+        if(selectedImage3 != null) {
+            dest.writeInt(selectedImage3.length);
+            dest.writeByteArray(selectedImage3);
+        } else {
+            dest.writeInt(0);
+        }
     }
+    public TaskItem() {}
+    // Parcelling part
+    public TaskItem(Parcel in){
+        String[] data = new String[11];
+
+        in.readStringArray(data);
+        this.id = Long.parseLong(data[0]);
+        this.type = data[1];
+        this.briefDescription = data[2];
+        this.detailedDescription = data[3];
+        this.address1 = data[4];
+        this.address2 = data[5];
+        this.city = data[6];
+        this.zipCode = data[7];
+        this.state = data[8];
+        this.longitude = Double.parseDouble(data[9]);
+        this.latitude = Double.parseDouble(data[10]);
+        int length = in.readInt();
+        if(length > 0) {
+            this.selectedImage1 = new byte[length];
+            in.readByteArray(this.selectedImage1);
+        }
+        length = in.readInt();
+        if(length > 0) {
+            this.selectedImage2 = new byte[length];
+            in.readByteArray(this.selectedImage2);
+        }
+        length = in.readInt();
+        if(length > 0) {
+            this.selectedImage3 = new byte[length];
+            in.readByteArray(this.selectedImage3);
+        }
+    }
+
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        public TaskItem createFromParcel(Parcel in) {
+            return new TaskItem(in);
+        }
+
+        public TaskItem[] newArray(int size) {
+            return new TaskItem[size];
+        }
+    };
 }

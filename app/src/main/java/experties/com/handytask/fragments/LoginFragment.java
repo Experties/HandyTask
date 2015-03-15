@@ -14,21 +14,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
-import experties.com.handytask.activities.LoginActivity;
 import experties.com.handytask.activities.ShowTasksActivity;
-import experties.com.handytask.activities.TaskCreatedActivity;
 import experties.com.handytask.helpers.FragmentHelpers;
 
 /**
