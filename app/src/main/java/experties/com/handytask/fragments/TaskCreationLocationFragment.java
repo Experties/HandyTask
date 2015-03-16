@@ -217,7 +217,9 @@ public class TaskCreationLocationFragment extends Fragment implements
                 @Override
                 public void done(ParseException e) {
                     if(e == null) {
-
+                        pbSaveTask.setVisibility(View.GONE);
+                        saveTaskStep2.setVisibility(View.VISIBLE);
+                        getActivity().finish();
                     }
                 }
             });
