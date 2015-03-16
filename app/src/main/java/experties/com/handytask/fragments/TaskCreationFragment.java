@@ -190,10 +190,10 @@ public class TaskCreationFragment extends Fragment implements UploadImageFragmen
                         item.setSelectedImage1(selectedImage1);
                     }
                     if(selectedImage2 != null) {
-                        item.setSelectedImage1(selectedImage2);
+                        item.setSelectedImage2(selectedImage2);
                     }
                     if(selectedImage3 != null) {
-                        item.setSelectedImage1(selectedImage3);
+                        item.setSelectedImage3(selectedImage3);
                     }
 
                     TaskCreationNextStep listner = (TaskCreationNextStep)getActivity();

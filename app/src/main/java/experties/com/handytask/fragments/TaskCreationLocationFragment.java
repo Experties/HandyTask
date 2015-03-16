@@ -204,23 +204,25 @@ public class TaskCreationLocationFragment extends Fragment implements
 
                     @Override
                     public void done(ParseException e) {
-                        saveCount[0]++;
-                        task.setPhoto1(selectedImg1);
-                        if(finalCountImgUpload == saveCount[0]++) {
-                            task.saveInBackground(new SaveCallback() {
-                                @Override
-                                public void done(ParseException e) {
-                                    if(e == null) {
-                                        pbSaveTask.setVisibility(View.GONE);
-                                        saveTaskStep2.setVisibility(View.VISIBLE);
-                                        getActivity().finish();
-                                        Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        intent.putExtra("EXIT", true);
-                                        startActivity(intent);
+                        if(e == null) {
+                            saveCount[0]++;
+                            task.setPhoto1(selectedImg1);
+                            if (finalCountImgUpload == saveCount[0]) {
+                                task.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if (e == null) {
+                                            pbSaveTask.setVisibility(View.GONE);
+                                            saveTaskStep2.setVisibility(View.VISIBLE);
+                                            getActivity().finish();
+                                            Intent intent = new Intent(getActivity(), TaskCreationStep1Activity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            intent.putExtra("EXIT", true);
+                                            startActivity(intent);
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });
@@ -235,7 +237,7 @@ public class TaskCreationLocationFragment extends Fragment implements
                         if(e == null) {
                             saveCount[0]++;
                             task.setPhoto2(selectedImg2);
-                            if (finalCountImgUpload == saveCount[0]++) {
+                            if (finalCountImgUpload == saveCount[0]) {
                                 task.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
@@ -265,7 +267,7 @@ public class TaskCreationLocationFragment extends Fragment implements
                         if(e == null) {
                             saveCount[0]++;
                             task.setPhoto3(selectedImg3);
-                            if (finalCountImgUpload == saveCount[0]++) {
+                            if (finalCountImgUpload == saveCount[0]) {
                                 task.saveInBackground(new SaveCallback() {
                                     @Override
                                     public void done(ParseException e) {
