@@ -9,13 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import bolts.Task;
 import experties.com.handytask.R;
-import experties.com.handytask.activities.TaskItemsListListener;
-import experties.com.handytask.adapters.TaskItemsAdapter;
+import experties.com.handytask.activities.ParseTaskListListener;
+import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.adapters.ParseTasksAdapter;
+import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
 /**
@@ -23,9 +26,10 @@ import experties.com.handytask.models.TaskItem;
  */
 public class ShowOnListFragment extends Fragment {
 
-    ArrayList<TaskItem> taskItems;
-    private TaskItemsAdapter aTaskItems;
-    private ListView lvTaskItems;
+    ArrayList<ParseTask> parseTasks;
+    private ParseTasksAdapter aParseTasks;
+    private ListView lvParseTasks;
+
 
     public ShowOnListFragment() {
         // Required empty public constructor
@@ -38,17 +42,17 @@ public class ShowOnListFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_show_on_list, container, false);
 
-        lvTaskItems = (ListView) v.findViewById(R.id.lvTaskItems);
+        lvParseTasks = (ListView) v.findViewById(R.id.lvParseTasks);
 
         // Get the list from the parent activity
-        TaskItemsListListener listener = (TaskItemsListListener) getActivity();
-        taskItems = listener.getList();
+        ParseTaskListListener listener = (ParseTaskListListener) getActivity();
+        parseTasks = listener.getParseTaskList();
 
         // Attach list to the adapter
-        aTaskItems = new TaskItemsAdapter(getActivity(), taskItems);
+        aParseTasks = new ParseTasksAdapter(getActivity(), parseTasks);
 
         // Link adapter to the listview
-        lvTaskItems.setAdapter(aTaskItems);
+        lvParseTasks.setAdapter(aParseTasks);
 
         setupOnClickListener();
 
@@ -56,17 +60,27 @@ public class ShowOnListFragment extends Fragment {
     }
 
     public void setupOnClickListener() {
-        lvTaskItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvParseTasks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetailedView(taskItems.get(position));
+                showDetailedView(parseTasks.get(position));
             }
         });
     }
 
-    public void showDetailedView(TaskItem taskItem) {
-        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(taskItem);
+    public void showDetailedView(ParseTask parseTask) {
+        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
         frag.show(getFragmentManager(), "fragment_reply_dialog");
+    }
+
+    public void updateTasksList() {
+        ParseTaskListListener listener = (ParseTaskListListener) getActivity();
+        parseTasks = listener.getParseTaskList();
+        // [vince] TODO: Ugly solution. Because I completely overwrite parseTask instead remove/add
+        // I need to do the adapter setup and attach again.
+        aParseTasks = new ParseTasksAdapter(getActivity(), parseTasks);
+        lvParseTasks.setAdapter(aParseTasks);
+        aParseTasks.notifyDataSetChanged();
     }
 
 

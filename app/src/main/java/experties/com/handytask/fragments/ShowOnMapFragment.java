@@ -22,7 +22,10 @@ import android.widget.Toast;
 
 import bolts.Task;
 import experties.com.handytask.R;
-import experties.com.handytask.activities.TaskItemsListListener;
+import experties.com.handytask.activities.ParseTaskListListener;
+import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.helpers.FragmentHelpers;
+import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -36,6 +39,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -43,20 +47,23 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
 
 import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerClickListener{
+public class ShowOnMapFragment extends Fragment
+        implements GoogleMap.OnMarkerClickListener {
 
     // Google Map/GPS related
     private MapView mapView;
     private GoogleMap map;
 
     // To populate the Brief Item at the bottom of the fragment
-    private ImageView ivMainTaskPhoto;
+    private ParseImageView ivMainTaskPhoto;
     private TextView tvBriefDescription;
     private TextView tvRelativeTime;
     private TextView tvLocation;
@@ -65,10 +72,11 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
 
     //Each fragment holds its own copy
     // [vince] TODO: need a better way for this
-    ArrayList<TaskItem> taskItems;
+    ArrayList<ParseTask> parseTasks;
 
-    TaskItem selectedTaskItem;
+    ParseTask selectedParseTask;
 
+    ParseTaskListListener listener;
 
     public ShowOnMapFragment() {
         // Required empty public constructor
@@ -81,17 +89,15 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_show_on_map, container, false);
 
-        ivMainTaskPhoto = (ImageView) v.findViewById(R.id.ivMainTaskPhoto);
+        ivMainTaskPhoto = (ParseImageView) v.findViewById(R.id.ivMainTaskPhoto);
         tvBriefDescription = (TextView) v.findViewById(R.id.tvBriefDescription);
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
         tvLocation = (TextView) v.findViewById(R.id.tvLocation);
         tvRelativeDistance = (TextView) v.findViewById(R.id.tvRelativeDistance);
         rlBriefView = (RelativeLayout) v.findViewById(R.id.taskItem);
-        // [vince] TODO: Initialize Brief Item form to closest point on map. Or just make sure you initialize.
 
         mapView = (MapView) v.findViewById(R.id.map);
         mapView.onCreate(savedInstanceState);
-
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
@@ -100,6 +106,8 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         });
 
         setupOnClickListener();
+
+        listener = (ParseTaskListListener) getActivity();
 
         return v;
     }
@@ -110,13 +118,7 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
             // Map is ready
             map.setMyLocationEnabled(true);
 
-            /* [vince] TODO: This is a little more complicated
-            Location location = map.getMyLocation();
-
-            if (location != null) {
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        new LatLng(location.getLatitude(), location.getLongitude()), 13));
-            }*/
+            MapsInitializer.initialize(getActivity());
 
             populateMapWithMarkers();
             map.setOnMarkerClickListener(this);
@@ -125,33 +127,57 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         }
     }
 
-    private void populateBriefPreview(TaskItem taskItem) {
-        tvBriefDescription.setText(taskItem.getBriefDescription());
-        tvRelativeTime.setText(taskItem.getDate().toString()); // [vince] TODO: figure out where to get the relative time conversion
-        tvLocation.setText(taskItem.getCity() + "," + taskItem.getState());
-        tvRelativeDistance.setText("some miles"); // [vince] TODO: figure out how to calculate relative location
-        // [vince] TODO: load first image of task, if any
+    private void populateBriefPreview(ParseTask parseTask) {
+        tvBriefDescription.setText(parseTask.getTitle());
+        tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getCreatedAt()));
+        tvLocation.setText(parseTask.getCity() + "," + parseTask.getState());
+
+        LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
+        String relativeDistance =
+                String.format("%.1f", parseTask.getRelativeDistance());
+        tvRelativeDistance.setText(relativeDistance + " miles");
+
+        ParseFile file = parseTask.getPhoto1();
+        if (file!=null) {
+            ivMainTaskPhoto.setParseFile(file);
+            ivMainTaskPhoto.loadInBackground();
+        } else {
+            ivMainTaskPhoto.setImageResource(R.drawable.no_image_avail);
+        }
     }
 
     private void populateMapWithMarkers() {
         int i;
-        TaskItemsListListener listener = (TaskItemsListListener) getActivity();
-        taskItems = listener.getList();
-        if (!taskItems.isEmpty()) {
-            for (i = 0; i < taskItems.size(); i++) {
-                TaskItem taskItem = taskItems.get(i);
-                map.addMarker(new MarkerOptions().title(String.valueOf(i)).position(new LatLng(taskItem.getLatitude(), taskItem.getLongitude())));
+        parseTasks = listener.getParseTaskList();
+
+        if (map!=null) {
+            map.clear();
+            if (!parseTasks.isEmpty()) {
+                for (i = 0; i < parseTasks.size(); i++) {
+                    ParseTask parseTask = parseTasks.get(i);
+                    map.addMarker(new MarkerOptions().title(String.valueOf(i)).
+                            position(new LatLng(parseTask.getLatitude(), parseTask.getLongitude())).
+                            icon(BitmapDescriptorFactory.fromResource(R.drawable.blu_square)));
+                }
+                selectedParseTask = parseTasks.get(0);
+                if (listener.getCurrentPosition()!=null) {
+                    map.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(listener.getCurrentPosition(), 11));
+                }
+
+                populateBriefPreview(selectedParseTask);
             }
-            // Initialize brief view
-            selectedTaskItem = taskItems.get(0);
-            populateBriefPreview(selectedTaskItem);
         }
+    }
+
+    public void updateTasksList() {
+        populateMapWithMarkers();
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        selectedTaskItem = taskItems.get(Integer.parseInt(marker.getTitle()));
-        populateBriefPreview(selectedTaskItem);
+        selectedParseTask = parseTasks.get(Integer.parseInt(marker.getTitle()));
+        populateBriefPreview(selectedParseTask);
 
         return true;
     }
@@ -161,20 +187,32 @@ public class ShowOnMapFragment extends Fragment implements GoogleMap.OnMarkerCli
         rlBriefView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDetailedView(selectedTaskItem);
+                showDetailedView(selectedParseTask);
             }
         });
     }
 
-    public void showDetailedView(TaskItem taskItem) {
-        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(taskItem);
+    public void showDetailedView(ParseTask parseTask) {
+        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
         frag.show(getFragmentManager(), "Nothing");
+    }
+
+    public void focusMapOn(LatLng pos) {
+        if (pos!=null) {
+            map.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(pos, 11));
+        }
     }
 
     @Override
     public void onResume() {
         mapView.onResume();
         super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override

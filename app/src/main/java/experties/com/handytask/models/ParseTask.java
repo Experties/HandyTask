@@ -5,6 +5,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Date;
  */
 @ParseClassName("Task")
 public class ParseTask extends ParseObject {
+
+    private double relativeDistance;
 
     public ParseTask() {
         super();
@@ -150,4 +153,15 @@ public class ParseTask extends ParseObject {
     public void setCurrentState(String value) {
         put("CurrentState", value);
     }
+
+    public double getRelativeDistance() { return relativeDistance; }
+
+    public void setRelativeDistance(double relativeDistance) { this.relativeDistance = relativeDistance; }
+
+    public static Comparator<ParseTask> relDistComparator = new Comparator<ParseTask>() {
+        @Override
+        public int compare(ParseTask lhs, ParseTask rhs) {
+            return (int)(lhs.getRelativeDistance()*10 - rhs.getRelativeDistance()*10);
+        }
+    };
 }

@@ -9,29 +9,37 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.parse.ParseFile;
+import com.parse.ParseImageView;
+
 import experties.com.handytask.R;
+import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.helpers.FragmentHelpers;
+import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
 
 public class DetailedTaskViewFragment extends DialogFragment {
-
-    TaskItem taskItem;
+    ParseTask parseTask;
 
     TextView tvTitle;
     TextView tvDescription;
     TextView tvLocation;
     TextView tvRelativeTime;
-    ImageView ivPhoto;
+    ParseImageView ivPhoto1;
+    ParseImageView ivPhoto2;
+    ParseImageView ivPhoto3;
 
-    public static DetailedTaskViewFragment newInstance(TaskItem taskItem) {
+    public static DetailedTaskViewFragment newInstance(ParseTask parseTask) {
         DetailedTaskViewFragment frag = new DetailedTaskViewFragment();
-        frag.setTaskItem(taskItem);
+        frag.setTaskItem(parseTask);
 
         return frag;
     }
 
-    public void setTaskItem(TaskItem taskItem) {
-        this.taskItem = taskItem;
+    public void setTaskItem(ParseTask parseTask) {
+        this.parseTask = parseTask;
     }
 
     public DetailedTaskViewFragment() {
@@ -49,16 +57,39 @@ public class DetailedTaskViewFragment extends DialogFragment {
         tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvLocation = (TextView) v.findViewById(R.id.tvLocation);
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
-        ivPhoto = (ImageView) v.findViewById(R.id.ivPhoto);
+        ivPhoto1 = (ParseImageView) v.findViewById(R.id.ivPhoto1);
+        ivPhoto2 = (ParseImageView) v.findViewById(R.id.ivPhoto2);
+        ivPhoto3 = (ParseImageView) v.findViewById(R.id.ivPhoto3);
 
-        tvTitle.setText(taskItem.getBriefDescription());
-        tvDescription.setText(taskItem.getDetailedDescription());
-        tvLocation.setText("x mi from your current location in " +
-                    taskItem.getCity() + "," + taskItem.getState());
-        tvRelativeTime.setText(taskItem.getDate().toString());
+        tvTitle.setText(parseTask.getTitle());
+        tvDescription.setText(parseTask.getDescription());
+        LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
+        String relativeDistance =
+                String.format("%.1f", parseTask.getRelativeDistance());
+        tvLocation.setText(relativeDistance + " mi from your current location in " +
+                    parseTask.getCity() + "," + parseTask.getState());
+        tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getCreatedAt()));
 
-        // [vince] TODO: relative time
-        // [vince] TODO: relative distance
+        ParseFile file = parseTask.getPhoto1();
+        if (file!=null) {
+            ivPhoto1.setVisibility(View.VISIBLE);
+            ivPhoto1.setParseFile(file);
+            ivPhoto1.loadInBackground();
+        }
+
+        file = parseTask.getPhoto2();
+        if (file!=null) {
+            ivPhoto2.setVisibility(View.VISIBLE);
+            ivPhoto2.setParseFile(file);
+            ivPhoto2.loadInBackground();
+        }
+
+        file = parseTask.getPhoto3();
+        if (file!=null) {
+            ivPhoto3.setVisibility(View.VISIBLE);
+            ivPhoto3.setParseFile(file);
+            ivPhoto3.loadInBackground();
+        }
         // [vince] TODO: figure out how to load images from parse
         // [vince] TODO: load all images, figure out a way how to display them
 

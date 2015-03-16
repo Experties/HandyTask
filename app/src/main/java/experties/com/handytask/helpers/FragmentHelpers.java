@@ -4,13 +4,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
+import android.text.format.DateUtils;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
+import experties.com.handytask.R;
 
 /**
  * Created by hetashah on 3/11/15.
@@ -77,5 +85,43 @@ public class FragmentHelpers {
         Bitmap rotatedBitmap = Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
         // Return result
         return rotatedBitmap;
+    }
+
+    private static Double EARTH_RADIUS = 6371.00; // Radius in Kilometers default
+    private static Double KM_TO_MI = 0.621371192;
+
+    public static Double getDistance(LatLng p1, LatLng p2){
+        Double Radius = EARTH_RADIUS; //6371.00;
+        Double dLat = toRadians(p1.latitude-p2.latitude);
+        Double dLon = toRadians(p1.longitude-p2.longitude);
+        Double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(toRadians(p1.latitude)) *   Math.cos(toRadians(p2.latitude)) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+        Double c = 2 * Math.asin(Math.sqrt(a));
+        return Radius * c * KM_TO_MI;
+    }
+
+    public static Double toRadians(Double degree){
+        // Value degree * Pi/180
+        Double res = degree * 3.1415926 / 180;
+        return res;
+    }
+
+    // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
+    public static String getRelativeTime(Date date) {
+        String dateFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sf = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+        sf.setLenient(true);
+
+        String relativeDate = "";
+        try {
+            long dateMillis = sf.parse(date.toString()).getTime();
+            relativeDate = DateUtils.getRelativeTimeSpanString(dateMillis,
+                    System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS).toString();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return relativeDate;
     }
 }

@@ -27,7 +27,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvRelativeTime"
-        android:lines="5"
+        android:maxLines="5"
         android:linksClickable="true"
         android:text="Description"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -52,17 +52,42 @@
         android:text="Created RelativeTime ago"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageView
-        android:id="@+id/ivPhoto"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
+    <HorizontalScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/hsvPhotos"
         android:layout_alignParentEnd="false"
         android:layout_alignParentLeft="false"
         android:layout_alignParentRight="false"
         android:layout_alignParentStart="false"
         android:layout_below="@+id/tvDescription"
-        android:layout_centerInParent="true"
-        android:src="@android:drawable/ic_delete" />
+        android:layout_centerInParent="true">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal">
+    <com.parse.ParseImageView
+        android:id="@+id/ivPhoto1"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:padding="5dp"
+        android:visibility="invisible" />
+
+        <com.parse.ParseImageView
+            android:id="@+id/ivPhoto2"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:padding="5dp"
+            android:visibility="invisible" />
+
+        <com.parse.ParseImageView
+            android:id="@+id/ivPhoto3"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:padding="5dp"
+            android:visibility="invisible"/>
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
