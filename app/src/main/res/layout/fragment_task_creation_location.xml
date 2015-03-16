@@ -1,10 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="experties.com.handytask.fragments.TaskCreationLocationFragment">
+    <ProgressBar
+        android:id="@+id/pbSaveTask"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/saveTaskStep2">
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/btnContainerStep2"
+            android:id="@+id/lvAddress"
+            android:layout_alignParentTop="true" />
+        <LinearLayout
+            android:id="@+id/btnContainerStep2"
+            style="@style/linearLayout"
+            android:paddingTop="0dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+            <Button
+                android:id="@+id/backBtn"
+                style="@style/linearLayout.secondary"
+                android:text="Back"/>
 
-</FrameLayout>
+            <Button
+                android:id="@+id/postBtn"
+                style="@style/linearLayout.primary"
+                android:text="Post"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

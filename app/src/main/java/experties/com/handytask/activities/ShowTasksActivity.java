@@ -161,7 +161,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
                 startActivity(taskActivity);
                 return true;
             case R.id.muAddTask:
-                Intent addTaskActivity = new Intent(ShowTasksActivity.this, TaskCreatedActivity.class);
+                Intent addTaskActivity = new Intent(ShowTasksActivity.this, TaskCreationStep1Activity.class);
                 startActivity(addTaskActivity);
                 return true;
             case R.id.muSearchMap:

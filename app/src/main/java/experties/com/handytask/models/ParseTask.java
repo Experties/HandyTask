@@ -80,7 +80,7 @@ public class ParseTask extends ParseObject {
         return getNumber("ZipCode");
     }
 
-    public void setZipCode(Number value) { put("ZipCode", value); }
+    public void setZipCode(int value) { put("ZipCode", value); }
 
     public Double getLatitude() {
         return getDouble("Latitude");

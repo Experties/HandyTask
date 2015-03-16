@@ -2,34 +2,24 @@ package experties.com.handytask.activities;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.parse.ParseUser;
 
 import experties.com.handytask.R;
-import experties.com.handytask.fragments.RegisterFragment;
 import experties.com.handytask.fragments.TaskCreationFragment;
 import experties.com.handytask.fragments.TaskCreationLocationFragment;
-import experties.com.handytask.fragments.UploadImageFragment;
 import experties.com.handytask.models.TaskItem;
 
-public class TaskCreatedActivity extends ActionBarActivity implements TaskCreationFragment.TaskCreationNextStep{
+public class TaskCreationStep1Activity extends ActionBarActivity implements TaskCreationFragment.TaskCreationNextStep{
     private boolean isMandatoryFilled;
 
     private TextView mTitle;
@@ -41,11 +31,11 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             this.finish();
-            Intent taskActivity = new Intent(TaskCreatedActivity.this, LoginActivity.class);
+            Intent taskActivity = new Intent(TaskCreationStep1Activity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
             setContentView(R.layout.activity_task_created);
-            final TaskCreatedActivity context = this;
+            final TaskCreationStep1Activity context = this;
             Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
@@ -90,7 +80,8 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
         //noinspection SimplifiableIfStatement
         if (id == R.id.muSignOut) {
             ParseUser.logOut();
-            Intent taskActivity = new Intent(TaskCreatedActivity.this, LoginActivity.class);
+            this.finish();
+            Intent taskActivity = new Intent(TaskCreationStep1Activity.this, LoginActivity.class);
             startActivity(taskActivity);
             return true;
         }
@@ -105,9 +96,9 @@ public class TaskCreatedActivity extends ActionBarActivity implements TaskCreati
                 break;
             case 2:
                 this.item = item;
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.creation_fragment, TaskCreationLocationFragment.newInstance(item));
-                ft.commit();
+                Intent step2 = new Intent(TaskCreationStep1Activity.this, TaskCreationStep2Activity.class);
+                step2.putExtra("item", this.item);
+                startActivity(step2);
                 break;
             case 3:
                 break;
