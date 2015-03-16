@@ -11,7 +11,7 @@
         android:layout_weight="1"/>
 
     <include android:id="@+id/taskItem"
-        layout="@layout/item_task"
+        layout="@layout/parse_task"
         android:layout_width="match_parent"
         android:layout_height="100dp"/>
 

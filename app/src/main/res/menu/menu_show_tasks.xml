@@ -4,15 +4,24 @@
     tools:context="experties.com.handytask.activities.ShowTasksActivity">
 
     <item
+        android:id="@+id/muSearchMap"
+        android:title="Search"
+        android:icon="@android:drawable/ic_menu_search"
         android:orderInCategory="1"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"/>
+
+    <item
+        android:orderInCategory="2"
         android:id="@+id/muAddTask"
         android:icon="@drawable/ic_add_task1"
         app:showAsAction="ifRoom"
         android:title="@string/add_task" />
     <item
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:id="@+id/muSignOut"
         android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom"
         android:title="@string/sign_out" />
+
 </menu>
