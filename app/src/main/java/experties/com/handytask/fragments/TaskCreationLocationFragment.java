@@ -354,12 +354,20 @@ public class TaskCreationLocationFragment extends Fragment implements
     }
 
     public void populateLocation(String currentQuery) {
+        List<AddressData> copyAddress = new ArrayList<AddressData>();
         if(items.size() > 1) {
             selectedIndex = 0;
-            AddressData addr = items.get(0);
-            addr.setSelected(true);
+            for(int i=0, count = helper.getCurrentIndex();i<count;i++) {
+                AddressData addr = items.get(i);
+                copyAddress.add(addr);
+                if(selectedIndex == i) {
+                    addr.setSelected(true);
+                } else {
+                    addr.setSelected(false);
+                }
+            }
             items.clear();
-            items.add(0, addr);
+            items.addAll(copyAddress);
             adapter.notifyDataSetChanged();
         }
         helper.getQueryLocation(currentQuery);

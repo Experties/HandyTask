@@ -24,10 +24,6 @@ public class AddressFinderHelper {
 
     private AsyncHttpClient client;
 
-    public AddressData getSelectedAddress() {
-        return selectedAddress;
-    }
-
     private List<AddressData> items;
     private AddressArrayAdapter adapter;
     private int myLocationIndex = -1;
@@ -45,6 +41,14 @@ public class AddressFinderHelper {
 
     private String getApiUrl(String relativeUrl) {
         return API_BASE_URL + relativeUrl;
+    }
+
+    public AddressData getSelectedAddress() {
+        return selectedAddress;
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
     }
 
     public void getHomeAddress(String address) {
@@ -102,9 +106,11 @@ public class AddressFinderHelper {
         client.get(url.toString(), new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                if(response != null) {
+                JSONArray results = response.optJSONArray("results");
+                if(results != null && results.length() > 0) {
+                    JSONObject result = results.optJSONObject(0);
                     AddressData addr = new AddressData();
-                    String address = response.optString("formatted_address");
+                    String address = result.optString("formatted_address");
                     addr.setAddress(address);
                     addr.setAddressName("My location");
                     addr.setLatitude(lat);
@@ -113,7 +119,11 @@ public class AddressFinderHelper {
                         myLocationIndex = currentIndex;
                         currentIndex++;
                     }
-                    items.add(myLocationIndex,addr);
+                    if(myLocationIndex == 0) {
+                        addr.setSelected(true);
+                        selectedAddress = addr;
+                    }
+                    items.add(myLocationIndex, addr);
                     adapter.notifyDataSetChanged();
                 }
             }
