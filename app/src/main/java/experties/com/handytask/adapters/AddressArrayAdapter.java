@@ -44,8 +44,28 @@ public class AddressArrayAdapter extends ArrayAdapter<AddressData> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.txtAddress.setText(Html.fromHtml(item.getAddress()));
-        viewHolder.txtAddressName.setText(Html.fromHtml(item.getAddressName()));
+        if(item.isSelected()) {
+            convertView.setBackgroundResource(R.drawable.list_item_selected_state);
+            viewHolder.txtAddress.setTextColor(context.getResources().getColor(android.R.color.white));
+            viewHolder.txtAddressName.setTextColor(context.getResources().getColor(android.R.color.white));
+        } else {
+            convertView.setBackgroundResource(R.drawable.list_item_state);
+            viewHolder.txtAddress.setTextColor(context.getResources().getColor(android.R.color.black));
+            viewHolder.txtAddressName.setTextColor(context.getResources().getColor(android.R.color.black));
+        }
+        String address = item.getAddress();
+        if(address != null && !"".equals(address)) {
+            viewHolder.txtAddress.setText(address);
+        } else {
+            viewHolder.txtAddress.setText("");
+        }
+
+        String addressName = item.getAddressName();
+        if(addressName != null && !"".equals(addressName)) {
+            viewHolder.txtAddressName.setText(addressName);
+        } else {
+            viewHolder.txtAddressName.setText("");
+        }
         return convertView;
     }
 

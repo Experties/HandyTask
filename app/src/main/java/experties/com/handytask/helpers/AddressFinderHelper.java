@@ -13,12 +13,15 @@ import java.util.List;
 
 import experties.com.handytask.adapters.AddressArrayAdapter;
 import experties.com.handytask.models.AddressData;
+import experties.com.handytask.models.TaskItem;
 
 /**
  * Created by hetashah on 3/14/15.
  */
 public class AddressFinderHelper {
     private static final String API_BASE_URL = "https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyCeKd_4y7Odo1lEZvZRmQkLMYjkAnD_MY8";
+    private static final String API_PLACE_AUTO_COMPLETE_BASE_URL = "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=AIzaSyCeKd_4y7Odo1lEZvZRmQkLMYjkAnD_MY8&types=geocode";
+    private static final String API_PLACE_DETAILS_BASE_URL = "https://maps.googleapis.com/maps/api/place/details/json?key=AIzaSyCeKd_4y7Odo1lEZvZRmQkLMYjkAnD_MY8";
     private StringBuilder url;
 
     private AsyncHttpClient client;
@@ -29,9 +32,12 @@ public class AddressFinderHelper {
     private int homeIndex = -1;
     private int currentIndex = 0;
 
-    public AddressFinderHelper(List<AddressData> items, AddressArrayAdapter adapter) {
+    private AddressData selectedAddress;
+
+    public AddressFinderHelper(List<AddressData> items, AddressArrayAdapter adapter, AddressData item) {
         this.items = items;
         this.adapter = adapter;
+        this.selectedAddress = item;
         this.client = new AsyncHttpClient();
     }
 
@@ -53,9 +59,27 @@ public class AddressFinderHelper {
                         String address = result.optString("formatted_address");
                         addr.setAddress(address);
                         addr.setAddressName("Home");
+                        JSONObject geometry = result.optJSONObject("geometry");
+                        if(geometry != null) {
+                            JSONObject location = geometry.optJSONObject("location");
+                            if(location != null) {
+                                String lat = location.optString("lat");
+                                if(lat != null) {
+                                    String lng = location.optString("lng");
+                                    if(lng != null) {
+                                        addr.setLatitude(Double.parseDouble(lat));
+                                        addr.setLongitude(Double.parseDouble(lng));
+                                    }
+                                }
+                            }
+                        }
                         if (homeIndex == -1) {
                             homeIndex = currentIndex;
                             currentIndex++;
+                        }
+                        if(homeIndex == 0) {
+                            addr.setSelected(true);
+                            selectedAddress = addr;
                         }
                         items.add(homeIndex, addr);
                         adapter.notifyDataSetChanged();
@@ -70,7 +94,7 @@ public class AddressFinderHelper {
         });
     }
 
-    public void getCurrentLocationAddress(double lat, double lng) {
+    public void getCurrentLocationAddress(final double lat, final double lng) {
         url = new StringBuilder(API_BASE_URL);
         url.append("&latlng=").append(lat).append(",").append(lng);
         client.get(url.toString(), new JsonHttpResponseHandler() {
@@ -81,6 +105,8 @@ public class AddressFinderHelper {
                     String address = response.optString("formatted_address");
                     addr.setAddress(address);
                     addr.setAddressName("My location");
+                    addr.setLatitude(lat);
+                    addr.setLongitude(lng);
                     if(myLocationIndex == -1) {
                         myLocationIndex = currentIndex;
                         currentIndex++;
@@ -124,5 +150,74 @@ public class AddressFinderHelper {
         }
 
         return null;
+    }
+
+    public void getQueryLocation(String query){
+        url = new StringBuilder(API_PLACE_AUTO_COMPLETE_BASE_URL);
+        url.append("&input=").append(query);
+        client.get(url.toString(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if(response != null) {
+                    JSONArray results = response.optJSONArray("predictions");
+                    if(results != null) {
+                        for (int i = 0, length = results.length(); i < length; i++) {
+                            JSONObject result = results.optJSONObject(i);
+                            AddressData addr = new AddressData();
+                            String address = result.optString("description");
+                            addr.setAddressName(address);
+                            String placeId = result.optString("place_id");
+                            addr.setPlaceId(placeId);
+                            items.add(addr);
+                            getPlaceDetails(placeId, items.size() - 1);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
+    public void getPlaceDetails(String placeId, final int index) {
+        url = new StringBuilder(API_PLACE_DETAILS_BASE_URL);
+        url.append("&placeid=").append(placeId);
+        client.get(url.toString(), new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if(response != null) {
+                    JSONObject result = response.optJSONObject("result");
+                    if(result != null) {
+                        String address = result.optString("formatted_address");
+                        AddressData addr = adapter.getItem(index);
+                        addr.setAddress(address);
+                        JSONObject geometry = result.optJSONObject("geometry");
+                        if(geometry != null) {
+                            JSONObject location = geometry.optJSONObject("location");
+                            if(location != null) {
+                                String lat = location.optString("lat");
+                                if(lat != null) {
+                                    String lng = location.optString("lng");
+                                    if(lng != null) {
+                                        addr.setLatitude(Double.parseDouble(lat));
+                                        addr.setLongitude(Double.parseDouble(lng));
+                                    }
+                                }
+                            }
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 }

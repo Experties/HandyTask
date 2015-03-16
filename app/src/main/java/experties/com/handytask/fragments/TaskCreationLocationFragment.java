@@ -7,15 +7,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +29,7 @@ import experties.com.handytask.R;
 import experties.com.handytask.adapters.AddressArrayAdapter;
 import experties.com.handytask.helpers.AddressFinderHelper;
 import experties.com.handytask.models.AddressData;
+import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
 /**
@@ -33,7 +39,10 @@ public class TaskCreationLocationFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener{
 
     private ListView lvAddress;
-    private MapView mapView;
+    private ProgressBar pbSaveTask;
+    private RelativeLayout saveTaskStep2;
+    private Button postBtn;
+    private Button backBtn;
 
     private GoogleApiClient client;
     private AddressFinderHelper helper;
@@ -44,6 +53,10 @@ public class TaskCreationLocationFragment extends Fragment implements
 
     private List<AddressData> items;
     private TaskItem item;
+
+    private AddressData selectedAddress;
+
+    private int selectedIndex = 0;
 
     public TaskCreationLocationFragment() {
         // Required empty public constructor
@@ -80,14 +93,134 @@ public class TaskCreationLocationFragment extends Fragment implements
     }
 
     private void setupView(View v) {
+        pbSaveTask = (ProgressBar) v.findViewById(R.id.pbSaveTask);
+        saveTaskStep2 = (RelativeLayout) v.findViewById(R.id.saveTaskStep2);
         lvAddress = (ListView) v.findViewById(R.id.lvAddress);
         lvAddress.setAdapter(adapter);
-        mapView = (MapView) v.findViewById(R.id.addressMap);
-        helper = new AddressFinderHelper(items, adapter);
+        helper = new AddressFinderHelper(items, adapter, selectedAddress);
         ParseUser currentUser = ParseUser.getCurrentUser();
         String fullHomeAddress = AddressFinderHelper.getFullAddress(currentUser);
         if(fullHomeAddress != null) {
             helper.getHomeAddress(fullHomeAddress);
+        }
+
+        lvAddress.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AddressData prevSelected = items.get(selectedIndex);
+                prevSelected.setSelected(false);
+                AddressData currentSelected = items.get(position);
+                currentSelected.setSelected(true);
+                selectedIndex = position;
+                selectedAddress = currentSelected;
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        postBtn = (Button) v.findViewById(R.id.postBtn);
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTaskStep2.setVisibility(View.GONE);
+                pbSaveTask.setVisibility(View.VISIBLE);
+                if(selectedAddress != null) {
+                    item.setAddress(selectedAddress.getAddress());
+                }
+                saveTask(item);
+            }
+        });
+        backBtn = (Button) v.findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finish();
+            }
+        });
+    }
+
+    private void saveTask(TaskItem item) {
+        int countImgUpload = 0;
+        final ParseTask task = new ParseTask();
+        task.setType(item.getType());
+        task.setTitle(item.getBriefDescription());
+        task.setDescription(item.getDetailedDescription());
+        task.setAddress1(item.getAddress1());
+        task.setAddress2(item.getAddress2());
+        task.setCity(item.getCity());
+        task.setState(item.getState());
+        task.setZipCode(Integer.parseInt(item.getZipCode()));
+        byte[] selectedImage1 = item.getSelectedImage1();
+        byte[] selectedImage2 = item.getSelectedImage2();
+        byte[] selectedImage3 = item.getSelectedImage3();
+        if(selectedImage1 != null || selectedImage2 != null || selectedImage3 != null) {
+            if(selectedImage1 != null && selectedImage2 != null && selectedImage3 != null ) {
+                countImgUpload = 3;
+            } else if((selectedImage1 != null && selectedImage2 != null) ||
+                    (selectedImage1 != null && selectedImage3 != null) ||
+                    (selectedImage2 != null && selectedImage3 != null)) {
+                countImgUpload = 2;
+            } else {
+                countImgUpload = 1;
+            }
+            final int[] saveCount = {0};
+            final int finalCountImgUpload = countImgUpload;
+            if(selectedImage1 != null) {
+                final ParseFile selectedImg1 = new ParseFile("profileImg.jpeg", selectedImage1);
+                selectedImg1.saveInBackground(new SaveCallback() {
+
+                    @Override
+                    public void done(ParseException e) {
+                        saveCount[0]++;
+                        task.setPhoto1(selectedImg1);
+                        if(finalCountImgUpload == saveCount[0]++) {
+
+                        }
+                    }
+                });
+            }
+
+            if(selectedImage2 != null) {
+                final ParseFile selectedImg2 = new ParseFile("profileImg.jpeg", selectedImage2);
+                selectedImg2.saveInBackground(new SaveCallback() {
+
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null) {
+                            saveCount[0]++;
+                            task.setPhoto2(selectedImg2);
+                            if (finalCountImgUpload == saveCount[0]++) {
+
+                            }
+                        }
+                    }
+                });
+            }
+
+            if(selectedImage3 != null) {
+                final ParseFile selectedImg3 = new ParseFile("profileImg.jpeg", selectedImage3);
+                selectedImg3.saveInBackground(new SaveCallback() {
+
+                    @Override
+                    public void done(ParseException e) {
+                        if(e == null) {
+                            saveCount[0]++;
+                            task.setPhoto3(selectedImg3);
+                            if (finalCountImgUpload == saveCount[0]++) {
+
+                            }
+                        }
+                    }
+                });
+            }
+        } else {
+            task.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if(e == null) {
+
+                    }
+                }
+            });
         }
     }
 
@@ -139,5 +272,22 @@ public class TaskCreationLocationFragment extends Fragment implements
             GooglePlayServicesUtil.getErrorDialog(status, getActivity(), 0).show();
             return false;
         }
+    }
+
+    public void populateLocation(String currentQuery) {
+        if(items.size() > 1) {
+            selectedIndex = 0;
+            AddressData addr = items.get(0);
+            addr.setSelected(true);
+            items.clear();
+            items.add(0, addr);
+            adapter.notifyDataSetChanged();
+        }
+        helper.getQueryLocation(currentQuery);
+    }
+
+    public void showPreview() {
+        DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(item);
+        frag.show(getFragmentManager(), "fragment_preview_dialog");
     }
 }

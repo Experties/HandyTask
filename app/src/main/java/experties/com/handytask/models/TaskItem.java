@@ -27,7 +27,7 @@ public class TaskItem implements Parcelable {
     private double latitude;
 
     // DateTime
-    private Date date;
+    private Date date = new Date();
 
     // Unique ID
     private long id;
@@ -233,4 +233,21 @@ public class TaskItem implements Parcelable {
             return new TaskItem[size];
         }
     };
+
+    public void setAddress(String address) {
+        if(address != null && !"".equals(address)) {
+            String[] adresses = address.split(",");
+            if(adresses != null && adresses.length > 0) {
+                if(adresses.length == 4) {
+                    this.address1 = adresses[0];
+                    this.city = adresses[1];
+                    String[] state = adresses[2].split(" ");
+                    if(state != null && state.length > 1) {
+                        this.state = state[0];
+                        this.zipCode = state[1];
+                    }
+                }
+            }
+        }
+    }
 }
