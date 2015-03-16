@@ -261,17 +261,18 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
     @Override
     public void onConnected(Bundle bundle) {
         Location mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        currentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
+        if(mCurrentLocation != null) {
+            currentLatLng = new LatLng(mCurrentLocation.getLatitude(), mCurrentLocation.getLongitude());
 
-        // If Relative Distances were updated successfully update Fragments
-        if (calculateRelativeDistance()) {
-            // sort by relativeDistance
-            Collections.sort(parseTasks, ParseTask.relDistComparator);
-            // update Fragments
-            showOnListFragment.updateTasksList();
-            showOnMapFragment.updateTasksList();
+            // If Relative Distances were updated successfully update Fragments
+            if (calculateRelativeDistance()) {
+                // sort by relativeDistance
+                Collections.sort(parseTasks, ParseTask.relDistComparator);
+                // update Fragments
+                showOnListFragment.updateTasksList();
+                showOnMapFragment.updateTasksList();
+            }
         }
-
         // [vince] TODO: continuous update of location -> startLocationUpdates();
     }
 

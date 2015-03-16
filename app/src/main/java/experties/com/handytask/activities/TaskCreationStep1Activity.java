@@ -28,6 +28,9 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            this.finish();
+        }
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             this.finish();

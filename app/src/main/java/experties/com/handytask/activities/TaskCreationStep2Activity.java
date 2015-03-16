@@ -65,7 +65,9 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
                     context.finish();
                 }
             });
-            item = new TaskItem();
+            if(item == null) {
+                item = new TaskItem();
+            }
 
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.creation_fragment_step2, TaskCreationLocationFragment.newInstance(item));

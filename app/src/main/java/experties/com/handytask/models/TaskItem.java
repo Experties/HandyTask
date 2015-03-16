@@ -243,9 +243,27 @@ public class TaskItem implements Parcelable {
                     this.city = adresses[1];
                     String[] state = adresses[2].split(" ");
                     if(state != null && state.length > 1) {
+                        if(!"".equals(state[0])) {
+                            this.state = state[0];
+                            this.zipCode = state[1];
+                        } else {
+                            this.state = state[1];
+                            this.zipCode = state[2];
+                        }
+                    }
+                } else if(adresses.length == 3) {
+                    this.address1 = adresses[0];
+                    this.city = adresses[1];
+                    String[] state = adresses[2].split(" ");
+                    if(state != null && state.length > 1) {
                         this.state = state[0];
                         this.zipCode = state[1];
                     }
+                } else if(adresses.length == 2) {
+                    this.address1 = adresses[0];
+                    this.city = adresses[1];
+                } else {
+                    this.address1 = adresses[0];
                 }
             }
         }

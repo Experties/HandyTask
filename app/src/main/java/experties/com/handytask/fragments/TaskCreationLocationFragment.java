@@ -1,6 +1,7 @@
 package experties.com.handytask.fragments;
 
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,9 +24,12 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import experties.com.handytask.R;
+import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.activities.TaskCreationStep1Activity;
 import experties.com.handytask.adapters.AddressArrayAdapter;
 import experties.com.handytask.helpers.AddressFinderHelper;
 import experties.com.handytask.models.AddressData;
@@ -123,8 +127,13 @@ public class TaskCreationLocationFragment extends Fragment implements
             public void onClick(View v) {
                 saveTaskStep2.setVisibility(View.GONE);
                 pbSaveTask.setVisibility(View.VISIBLE);
+                if(selectedAddress == null) {
+                    selectedAddress = helper.getSelectedAddress();
+                }
                 if(selectedAddress != null) {
                     item.setAddress(selectedAddress.getAddress());
+                    item.setLongitude(selectedAddress.getLongitude());
+                    item.setLatitude(selectedAddress.getLatitude());
                 }
                 saveTask(item);
             }
@@ -144,11 +153,36 @@ public class TaskCreationLocationFragment extends Fragment implements
         task.setType(item.getType());
         task.setTitle(item.getBriefDescription());
         task.setDescription(item.getDetailedDescription());
-        task.setAddress1(item.getAddress1());
-        task.setAddress2(item.getAddress2());
-        task.setCity(item.getCity());
-        task.setState(item.getState());
-        task.setZipCode(Integer.parseInt(item.getZipCode()));
+        task.setLatitude(item.getLatitude());
+        task.setLongitude(item.getLongitude());
+        task.setOwner(ParseUser.getCurrentUser());
+        task.setCurrentState("open");
+        task.setPostedDate(new Date());
+        String address1 = item.getAddress1();
+        if(address1 != null) {
+            task.setAddress1(item.getAddress1());
+        }
+        String address2 = item.getAddress2();
+        if(address2 != null) {
+            task.setAddress2(address2);
+        }
+        String city = item.getCity();
+        if(city != null) {
+            task.setCity(city);
+        }
+
+        String state = item.getState();
+        if(state != null) {
+            task.setState(state);
+        }
+
+        try {
+            String zipCode = item.getZipCode();
+            if (zipCode != null && !"".equals(zipCode)) {
+                task.setZipCode(Integer.parseInt(item.getZipCode()));
+            }
+        } catch(Exception e) {}
+
         byte[] selectedImage1 = item.getSelectedImage1();
         byte[] selectedImage2 = item.getSelectedImage2();
         byte[] selectedImage3 = item.getSelectedImage3();
@@ -173,7 +207,20 @@ public class TaskCreationLocationFragment extends Fragment implements
                         saveCount[0]++;
                         task.setPhoto1(selectedImg1);
                         if(finalCountImgUpload == saveCount[0]++) {
-
+                            task.saveInBackground(new SaveCallback() {
+                                @Override
+                                public void done(ParseException e) {
+                                    if(e == null) {
+                                        pbSaveTask.setVisibility(View.GONE);
+                                        saveTaskStep2.setVisibility(View.VISIBLE);
+                                        getActivity().finish();
+                                        Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.putExtra("EXIT", true);
+                                        startActivity(intent);
+                                    }
+                                }
+                            });
                         }
                     }
                 });
@@ -189,7 +236,20 @@ public class TaskCreationLocationFragment extends Fragment implements
                             saveCount[0]++;
                             task.setPhoto2(selectedImg2);
                             if (finalCountImgUpload == saveCount[0]++) {
-
+                                task.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e == null) {
+                                            pbSaveTask.setVisibility(View.GONE);
+                                            saveTaskStep2.setVisibility(View.VISIBLE);
+                                            getActivity().finish();
+                                            Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            intent.putExtra("EXIT", true);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
                             }
                         }
                     }
@@ -206,7 +266,20 @@ public class TaskCreationLocationFragment extends Fragment implements
                             saveCount[0]++;
                             task.setPhoto3(selectedImg3);
                             if (finalCountImgUpload == saveCount[0]++) {
-
+                                task.saveInBackground(new SaveCallback() {
+                                    @Override
+                                    public void done(ParseException e) {
+                                        if(e == null) {
+                                            pbSaveTask.setVisibility(View.GONE);
+                                            saveTaskStep2.setVisibility(View.VISIBLE);
+                                            getActivity().finish();
+                                            Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                            intent.putExtra("EXIT", true);
+                                            startActivity(intent);
+                                        }
+                                    }
+                                });
                             }
                         }
                     }
@@ -220,6 +293,10 @@ public class TaskCreationLocationFragment extends Fragment implements
                         pbSaveTask.setVisibility(View.GONE);
                         saveTaskStep2.setVisibility(View.VISIBLE);
                         getActivity().finish();
+                        Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("EXIT", true);
+                        startActivity(intent);
                     }
                 }
             });
@@ -289,7 +366,7 @@ public class TaskCreationLocationFragment extends Fragment implements
     }
 
     public void showPreview() {
-        DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(item);
-        frag.show(getFragmentManager(), "fragment_preview_dialog");
+        /*DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(item);
+        frag.show(getFragmentManager(), "fragment_preview_dialog");*/
     }
 }

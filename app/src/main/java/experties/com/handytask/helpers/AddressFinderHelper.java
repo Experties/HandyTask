@@ -1,7 +1,6 @@
 package experties.com.handytask.helpers;
 
 import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.parse.ParseUser;
 
@@ -13,7 +12,6 @@ import java.util.List;
 
 import experties.com.handytask.adapters.AddressArrayAdapter;
 import experties.com.handytask.models.AddressData;
-import experties.com.handytask.models.TaskItem;
 
 /**
  * Created by hetashah on 3/14/15.
@@ -25,6 +23,10 @@ public class AddressFinderHelper {
     private StringBuilder url;
 
     private AsyncHttpClient client;
+
+    public AddressData getSelectedAddress() {
+        return selectedAddress;
+    }
 
     private List<AddressData> items;
     private AddressArrayAdapter adapter;
