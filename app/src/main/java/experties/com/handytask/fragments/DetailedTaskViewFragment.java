@@ -68,7 +68,7 @@ public class DetailedTaskViewFragment extends DialogFragment {
                 String.format("%.1f", parseTask.getRelativeDistance());
         tvLocation.setText(relativeDistance + " mi from your current location in " +
                     parseTask.getCity() + "," + parseTask.getState());
-        tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getCreatedAt()));
+        tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getPostedDate()));
 
         ParseFile file = parseTask.getPhoto1();
         if (file!=null) {

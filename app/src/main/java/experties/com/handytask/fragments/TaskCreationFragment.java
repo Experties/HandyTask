@@ -1,5 +1,6 @@
 package experties.com.handytask.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -240,17 +241,15 @@ public class TaskCreationFragment extends Fragment implements UploadImageFragmen
         if(title != null && !"".equals(title)) {
             String comment = edTxtComment.getText().toString();
             if(comment != null && !"".equals(comment)) {
-                float alpha = 1.0f;
-                AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
-                alphaUp.setFillAfter(true);
-                nextTaskBtn.startAnimation(alphaUp);
+                ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(nextTaskBtn, "alpha", 1.0f);
+                fadeAnim.setDuration(500);
+                fadeAnim.start();
                 return true;
             }
         }
-        float alpha = 0.5f;
-        AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
-        alphaUp.setFillAfter(true);
-        nextTaskBtn.startAnimation(alphaUp);
+
+        ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(nextTaskBtn, "alpha", 0.5f);
+        fadeAnim.start();
         return false;
     }
 }

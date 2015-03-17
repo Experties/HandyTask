@@ -63,6 +63,7 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
                 @Override
                 public void onClick(View view) {
                     context.finish();
+                    overridePendingTransition(R.anim.left_in, R.anim.right_out);
                 }
             });
             if(item == null) {
@@ -75,13 +76,13 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_task_creation_step2, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint("You can search places here....");
         /*TextView textView = (TextView) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         textView.setTextColor(Color.WHITE);*/
 
@@ -132,9 +133,6 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
             Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
             startActivity(taskActivity);
             return true;
-        } else if(id == R.id.muPreview) {
-            TaskCreationLocationFragment fm = (TaskCreationLocationFragment) getSupportFragmentManager().findFragmentById(R.id.creation_fragment_step2);
-            fm.showPreview();
         }
 
         return super.onOptionsItemSelected(item);

@@ -10,12 +10,6 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
     <item
         android:orderInCategory="2"
-        android:id="@+id/muPreview"
-        android:icon="@drawable/ic_task_review"
-        app:showAsAction="ifRoom"
-        android:title="Preview task"></item>
-    <item
-        android:orderInCategory="3"
         android:id="@+id/muSignOut"
         android:icon="@drawable/ic_logout"
         app:showAsAction="ifRoom"

@@ -102,6 +102,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
                 Intent step2 = new Intent(TaskCreationStep1Activity.this, TaskCreationStep2Activity.class);
                 step2.putExtra("item", this.item);
                 startActivity(step2);
+                overridePendingTransition(R.anim.right_in, R.anim.left_out);
                 break;
             case 3:
                 break;

@@ -20,6 +20,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseInstallation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
@@ -46,7 +47,7 @@ public class TaskCreationLocationFragment extends Fragment implements
     private ProgressBar pbSaveTask;
     private RelativeLayout saveTaskStep2;
     private Button postBtn;
-    private Button backBtn;
+    private Button previewBtn;
 
     private GoogleApiClient client;
     private AddressFinderHelper helper;
@@ -57,7 +58,7 @@ public class TaskCreationLocationFragment extends Fragment implements
 
     private List<AddressData> items;
     private TaskItem item;
-
+    private ParseTask parseTask;
     private AddressData selectedAddress;
 
     private int selectedIndex = 0;
@@ -135,19 +136,20 @@ public class TaskCreationLocationFragment extends Fragment implements
                     item.setLongitude(selectedAddress.getLongitude());
                     item.setLatitude(selectedAddress.getLatitude());
                 }
-                saveTask(item);
+                saveTask(item, false);
             }
         });
-        backBtn = (Button) v.findViewById(R.id.backBtn);
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        previewBtn = (Button) v.findViewById(R.id.previewBtn);
+        previewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().finish();
+                DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(saveTask(item,true));
+                frag.show(getFragmentManager(), "fragment_preview_dialog");
             }
         });
     }
 
-    private void saveTask(TaskItem item) {
+    private ParseTask saveTask(TaskItem item, final boolean isConverting) {
         int countImgUpload = 0;
         final ParseTask task = new ParseTask();
         task.setType(item.getType());
@@ -204,7 +206,7 @@ public class TaskCreationLocationFragment extends Fragment implements
 
                     @Override
                     public void done(ParseException e) {
-                        if(e == null) {
+                        if(e == null && !isConverting) {
                             saveCount[0]++;
                             task.setPhoto1(selectedImg1);
                             if (finalCountImgUpload == saveCount[0]) {
@@ -212,13 +214,7 @@ public class TaskCreationLocationFragment extends Fragment implements
                                     @Override
                                     public void done(ParseException e) {
                                         if (e == null) {
-                                            pbSaveTask.setVisibility(View.GONE);
-                                            saveTaskStep2.setVisibility(View.VISIBLE);
-                                            getActivity().finish();
-                                            Intent intent = new Intent(getActivity(), TaskCreationStep1Activity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            intent.putExtra("EXIT", true);
-                                            startActivity(intent);
+                                            saveTaskCallBack(task);
                                         }
                                     }
                                 });
@@ -234,7 +230,7 @@ public class TaskCreationLocationFragment extends Fragment implements
 
                     @Override
                     public void done(ParseException e) {
-                        if(e == null) {
+                        if(e == null && !isConverting) {
                             saveCount[0]++;
                             task.setPhoto2(selectedImg2);
                             if (finalCountImgUpload == saveCount[0]) {
@@ -242,13 +238,7 @@ public class TaskCreationLocationFragment extends Fragment implements
                                     @Override
                                     public void done(ParseException e) {
                                         if(e == null) {
-                                            pbSaveTask.setVisibility(View.GONE);
-                                            saveTaskStep2.setVisibility(View.VISIBLE);
-                                            getActivity().finish();
-                                            Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            intent.putExtra("EXIT", true);
-                                            startActivity(intent);
+                                            saveTaskCallBack(task);
                                         }
                                     }
                                 });
@@ -264,7 +254,7 @@ public class TaskCreationLocationFragment extends Fragment implements
 
                     @Override
                     public void done(ParseException e) {
-                        if(e == null) {
+                        if(e == null && !isConverting) {
                             saveCount[0]++;
                             task.setPhoto3(selectedImg3);
                             if (finalCountImgUpload == saveCount[0]) {
@@ -272,13 +262,7 @@ public class TaskCreationLocationFragment extends Fragment implements
                                     @Override
                                     public void done(ParseException e) {
                                         if(e == null) {
-                                            pbSaveTask.setVisibility(View.GONE);
-                                            saveTaskStep2.setVisibility(View.VISIBLE);
-                                            getActivity().finish();
-                                            Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                            intent.putExtra("EXIT", true);
-                                            startActivity(intent);
+                                            saveTaskCallBack(task);
                                         }
                                     }
                                 });
@@ -288,21 +272,19 @@ public class TaskCreationLocationFragment extends Fragment implements
                 });
             }
         } else {
-            task.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if(e == null) {
-                        pbSaveTask.setVisibility(View.GONE);
-                        saveTaskStep2.setVisibility(View.VISIBLE);
-                        getActivity().finish();
-                        Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra("EXIT", true);
-                        startActivity(intent);
+            if(!isConverting) {
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            saveTaskCallBack(task);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
+
+        return task;
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -375,8 +357,23 @@ public class TaskCreationLocationFragment extends Fragment implements
         helper.getQueryLocation(currentQuery);
     }
 
-    public void showPreview() {
-        /*DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(item);
-        frag.show(getFragmentManager(), "fragment_preview_dialog");*/
+    private void saveTaskCallBack(ParseTask task) {
+        ParseInstallation installation = ParseInstallation.getCurrentInstallation();
+        installation.put("taskId",task.getObjectId());
+        installation.put("username",ParseUser.getCurrentUser().getUsername());
+        installation.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if(e == null) {
+                    pbSaveTask.setVisibility(View.GONE);
+                    saveTaskStep2.setVisibility(View.VISIBLE);
+                    getActivity().finish();
+                    Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("EXIT", true);
+                    startActivity(intent);
+                }
+            }
+        });
     }
 }

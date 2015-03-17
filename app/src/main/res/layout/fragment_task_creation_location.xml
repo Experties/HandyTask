@@ -13,14 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/saveTaskStep2">
+        <TextView
+            android:text="Please select location for your task ..."
+            android:id="@+id/txtVwLocationTaskLabel"
+            style="@style/textViewStyle"
+            android:padding="10dp"
+            android:layout_marginBottom="0dp"
+            android:textSize="16sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/btnContainerStep2"
             android:id="@+id/lvAddress"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"/>
+            android:layout_below="@+id/txtVwLocationTaskLabel" />
         <LinearLayout
             android:id="@+id/btnContainerStep2"
             style="@style/linearLayout"
@@ -30,9 +38,9 @@
             android:paddingRight="20dp">
 
             <Button
-                android:id="@+id/backBtn"
+                android:id="@+id/previewBtn"
                 style="@style/linearLayout.secondary"
-                android:text="Back"/>
+                android:text="Preview Task"/>
 
             <Button
                 android:id="@+id/postBtn"

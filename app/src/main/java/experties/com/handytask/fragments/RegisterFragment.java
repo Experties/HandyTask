@@ -1,5 +1,8 @@
 package experties.com.handytask.fragments;
 
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -255,10 +258,8 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                 if (firstName != null && !"".equals(firstName)) {
                     String lastName = edTxtLastName.getText().toString();
                     if (lastName != null && !"".equals(lastName)) {
-                        float alpha = 1.0f;
-                        AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
-                        alphaUp.setFillAfter(true);
-                        signUpBtn.startAnimation(alphaUp);
+                        ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(signUpBtn, "alpha", 1.0f);
+                        fadeAnim.start();
 
                         return true;
                     }
@@ -266,10 +267,8 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
             }
         }
 
-        float alpha = 0.5f;
-        AlphaAnimation alphaUp = new AlphaAnimation(alpha, alpha);
-        alphaUp.setFillAfter(true);
-        signUpBtn.startAnimation(alphaUp);
+        ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(signUpBtn, "alpha", 0.5f);
+        fadeAnim.start();
 
         return false;
     }

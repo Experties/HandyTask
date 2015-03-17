@@ -82,7 +82,4 @@ public class ShowOnListFragment extends Fragment {
         lvParseTasks.setAdapter(aParseTasks);
         aParseTasks.notifyDataSetChanged();
     }
-
-
-
 }

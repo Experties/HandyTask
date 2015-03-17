@@ -248,7 +248,9 @@ public class TaskItem implements Parcelable {
                             this.zipCode = state[1];
                         } else {
                             this.state = state[1];
-                            this.zipCode = state[2];
+                            if(state.length > 2) {
+                                this.zipCode = state[2];
+                            }
                         }
                     }
                 } else if(adresses.length == 3) {

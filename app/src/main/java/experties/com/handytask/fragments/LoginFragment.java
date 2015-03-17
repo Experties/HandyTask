@@ -1,5 +1,6 @@
 package experties.com.handytask.fragments;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -60,7 +61,7 @@ public class LoginFragment extends Fragment {
             edTxtPhone.setText(phoneNumber);
             edTxtPhone.setSelection(phoneNumber.length());
         }
-
+        btnLogin = (Button) v.findViewById(R.id.btnLogin);
         edTxtPhone.addTextChangedListener(new TextWatcher() {
             boolean isInAfterTextChanged = false;
             @Override
@@ -80,11 +81,18 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-
+                String text = edTxtPhone.getText().toString();
+                if(text == null || "".equals(text)) {
+                    ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(btnLogin, "alpha", 0.5f);
+                    fadeAnim.start();
+                } else {
+                    ObjectAnimator fadeAnim = ObjectAnimator.ofFloat(btnLogin, "alpha", 1.0f);
+                    fadeAnim.start();
+                }
             }
         });
 
-        btnLogin = (Button) v.findViewById(R.id.btnLogin);
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -92,67 +100,68 @@ public class LoginFragment extends Fragment {
                     case R.id.btnLogin:
 
                         String phoneNumber = edTxtPhone.getText().toString();
-                        phoneNumber = new String(phoneNumber.replaceAll("(^[1?])|([^\\d.])", ""));
-                        PhoneNumber phNumberProto = null;
-                        long notFormatted = 0;
-                        try {
-                            phNumberProto = phoneUtil.parse(phoneNumber, "US");
-                            notFormatted = phNumberProto.getNationalNumber();
-                        } catch (NumberParseException e) {
-                            System.err.println("NumberParseException was thrown: " + e.toString());
-                        }
+                        if(!"".equals(phoneNumber)) {
+                            phoneNumber = new String(phoneNumber.replaceAll("(^[1?])|([^\\d.])", ""));
+                            PhoneNumber phNumberProto = null;
+                            long notFormatted = 0;
+                            try {
+                                phNumberProto = phoneUtil.parse(phoneNumber, "US");
+                                notFormatted = phNumberProto.getNationalNumber();
+                            } catch (NumberParseException e) {
+                                System.err.println("NumberParseException was thrown: " + e.toString());
+                            }
 
-                        boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
+                            boolean isValid = phoneUtil.isPossibleNumber(phNumberProto);
 
-                        if (isValid) {
-                            pbLogin.setVisibility(ProgressBar.VISIBLE);
-                            String username = String.valueOf(notFormatted);
-                            ParseUser.logInInBackground(username, "password", new LogInCallback() {
-                                public void done(ParseUser user, ParseException e) {
-                                    pbLogin.setVisibility(ProgressBar.GONE);
-                                    if (user != null) {
-                                        getActivity().finish();
-                                        Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
-                                        startActivity(taskActivity);
-                                    } else {
-                                        final TabSwitchInterface switchActivity = (TabSwitchInterface) getActivity();
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Invalid Login")
-                                                .setMessage("We are not able to find you. Do you want to Sign up?")
-                                                .setCancelable(false)
-                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        switchActivity.onSwitchToSignUpTab();
-                                                    }
-                                                })
-                                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                        dialog.dismiss();
-                                                    }
-                                                });
-                                        AlertDialog dialog = builder.create();
-                                        dialog.show();
-                                    }
-                                }
-                            });
-
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                            builder.setTitle("Invalid Login")
-                                    .setMessage("Phone Number is not valid. Please enter valid one.")
-                                    .setCancelable(false)
-                                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
+                            if (isValid) {
+                                pbLogin.setVisibility(ProgressBar.VISIBLE);
+                                String username = String.valueOf(notFormatted);
+                                ParseUser.logInInBackground(username, "password", new LogInCallback() {
+                                    public void done(ParseUser user, ParseException e) {
+                                        pbLogin.setVisibility(ProgressBar.GONE);
+                                        if (user != null) {
+                                            getActivity().finish();
+                                            Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
+                                            startActivity(taskActivity);
+                                        } else {
+                                            final TabSwitchInterface switchActivity = (TabSwitchInterface) getActivity();
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            builder.setTitle("Invalid Login")
+                                                    .setMessage("We are not able to find you. Do you want to Sign up?")
+                                                    .setCancelable(false)
+                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            switchActivity.onSwitchToSignUpTab();
+                                                        }
+                                                    })
+                                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    });
+                                            AlertDialog dialog = builder.create();
+                                            dialog.show();
                                         }
-                                    });
-                            AlertDialog dialog = builder.create();
-                            dialog.show();
-                        }
+                                    }
+                                });
 
+                            } else {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                builder.setTitle("Invalid Login")
+                                        .setMessage("Phone Number is not valid. Please enter valid one.")
+                                        .setCancelable(false)
+                                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+                            }
+                        }
                         break;
 
                 }

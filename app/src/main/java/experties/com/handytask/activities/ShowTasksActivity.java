@@ -163,6 +163,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
             case R.id.muAddTask:
                 Intent addTaskActivity = new Intent(ShowTasksActivity.this, TaskCreationStep1Activity.class);
                 startActivity(addTaskActivity);
+                //overridePendingTransition(R.anim.slide_down, R.id.none);
                 return true;
             case R.id.muSearchMap:
                 return true;
