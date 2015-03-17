@@ -86,5 +86,5 @@
 
     <string name="task_type_hint">Select task type</string>
     <string name="title_activity_task_creation_step2">TaskCreationStep2Activity</string>
-
+    <string name="push_message">%1$s wants to chat with. Lets reply about %2$s</string>
 </resources>

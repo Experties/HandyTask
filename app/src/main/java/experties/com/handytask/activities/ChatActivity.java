@@ -13,11 +13,15 @@ package experties.com.handytask.activities;
         import android.widget.EditText;
         import android.widget.ImageView;
         import android.widget.ListView;
+        import android.widget.ProgressBar;
+        import android.widget.RelativeLayout;
         import android.widget.TextView;
         import android.widget.Toast;
 
         import com.parse.GetCallback;
         import com.parse.ParseException;
+        import com.parse.ParseFile;
+        import com.parse.ParseImageView;
         import com.parse.ParseQuery;
         import com.parse.ParseUser;
         import com.pubnub.api.*;
@@ -35,90 +39,119 @@ public class ChatActivity extends ActionBarActivity {
     public static final String CHAT_DIV = "|||";
 
     private Pubnub pubnub;
+
     private String otherUserPhoneNumber;
     private String thisUsername; // local user's username
     private String otherUsername; // username of the person you are chatting with
-    private boolean thisUserIsSeller;
     private String chatChannel; // name of the chat channel, made from the two usernames.
-    private byte[] thisUserPhoto;
-    private byte[] otherUserPhoto;
     private String taskId;
+
+    private boolean thisUserIsSeller;
+
     private ParseTask task;
 
-    private ListView lvChat;
     private ArrayList<ChatMessage> mMessages;
+
+    private ListView lvChat;
     private ChatListAdapter mAdapter;
+
+    private TextView tvOtherUserUsername;
     private EditText etMessageToSend;
+
     private Button btnSend;
     private Button btnAcceptOffer;
     private Button btnDeclineOffer;
-    private TextView tvOtherUserUsername;
-    private ImageView ivOtherUserPhoto;
+
+    private ProgressBar pbChat;
+
+    private RelativeLayout layoutChat;
+
+    private ParseImageView ivOtherUserPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        taskId = getIntent().getStringExtra("taskId");
         pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             // if the user is not logged in, start the Login Activity with the "next" extra set.
             Intent i = new Intent(ChatActivity.this, LoginActivity.class);
             i.putExtra("next", "chat");
+            i.putExtra("taskId", taskId);
             startActivity(i);
             return;
         }
 
-        // get extra data from intent
-        //taskId = getIntent().getStringExtra("taskId"); // TEMP - For testing, we'll just hardcode this for now.
-        taskId = "08a54aQJ30"; // TEMP for testing
         thisUsername =  currentUser.getUsername();
 
-        ParseQuery<ParseTask> taskQuery = ParseQuery.getQuery(ParseTask.class);
-        taskQuery.getInBackground(taskId, new GetCallback<ParseTask>() {
-            @Override
-            public void done(ParseTask parseTask, ParseException e) {
-                // Got the task object information. Now we need to get the task owner information.
-                if (e == null) {
-                    ChatActivity.this.task = parseTask; // store the task
-                    ParseQuery<ParseUser> ownerQuery = ParseQuery.getQuery(ParseUser.class);
-                    //ownerQuery.getInBackground() // LEFT OFF
-                } else {
-                    Toast.makeText(ChatActivity.this, getResources().getString(R.string.Unable_to_get_data_from_the_database_), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        otherUsername =  getIntent().getStringExtra("otherUsername");
-        otherUserPhoneNumber = getIntent().getStringExtra("otherUserPhoneNumber");
-        thisUserPhoto = getIntent().getByteArrayExtra("thisUserPhoto");
-        otherUserPhoto = getIntent().getByteArrayExtra("otherUserPhoto");
-
-        if (thisUsername.compareTo(otherUsername) <= 0) { // chatChannel is derived from alphabetical order of the two usernames
-            chatChannel = thisUsername + CHAT_DIV + otherUsername;
-        } else {
-            chatChannel = otherUsername + CHAT_DIV + thisUsername;
-        }
-
-        etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
-        btnSend = (Button) findViewById(R.id.btnSend);
         tvOtherUserUsername = (TextView) findViewById(R.id.tvOtherUserUsername);
-        ivOtherUserPhoto = (ImageView) findViewById(R.id.ivOtherUserPhoto);
+        etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
+
+        btnSend = (Button) findViewById(R.id.btnSend);
         btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
         btnDeclineOffer = (Button) findViewById(R.id.btnDeclineOffer);
 
-        tvOtherUserUsername.setText(otherUsername);
-        //ivTODO.setImageBitmap(BitmapFactory.decodeByteArray(thisUserPhoto, 0, thisUserPhoto.length));
-        //ivOtherUserPhoto.setImageBitmap(BitmapFactory.decodeByteArray(otherUserPhoto, 0, otherUserPhoto.length));
+        pbChat = (ProgressBar) findViewById(R.id.pbChat);
+
+        layoutChat = (RelativeLayout) findViewById(R.id.layoutChat);
+
+        ivOtherUserPhoto = (ParseImageView) findViewById(R.id.ivOtherUserPhoto);
 
         lvChat = (ListView) findViewById(R.id.lvChat);
         mMessages = new ArrayList<ChatMessage>();
         mAdapter = new ChatListAdapter(ChatActivity.this, thisUsername, mMessages);
         lvChat.setAdapter(mAdapter);
 
-        subscribeToChannel();
-        refreshAndPopulateFromHistory();
+        layoutChat.setVisibility(View.GONE);
+        pbChat.setVisibility(View.VISIBLE);
+
+        ParseQuery<ParseTask> taskQuery = ParseQuery.getQuery(ParseTask.class);
+        taskQuery.whereEqualTo("objectId", taskId);
+        taskQuery.getInBackground(taskId, new GetCallback<ParseTask>() {
+            @Override
+            public void done(ParseTask parseTask, ParseException e) {
+                // Got the task object information. Now we need to get the task owner information.
+                pbChat.setVisibility(View.GONE);
+                layoutChat.setVisibility(View.VISIBLE);
+                if (e == null) {
+                    task = parseTask; // store the task
+                    ParseUser owner = parseTask.getOwner();
+                    ParseUser responder = parseTask.getResponder();
+                    ParseFile profileImg = null;
+                    if(thisUsername.equalsIgnoreCase(owner.getUsername())) {
+                        otherUsername = responder.getUsername();
+                        otherUserPhoneNumber = responder.getString("Mobile");
+                        profileImg = responder.getParseFile("ProfilePhoto");
+
+                    } else {
+                        otherUsername = owner.getUsername();
+                        otherUserPhoneNumber = owner.getString("Mobile");
+                        profileImg = owner.getParseFile("ProfilePhoto");
+                    }
+
+                    if(profileImg != null) {
+                        ivOtherUserPhoto.setParseFile(profileImg);
+                        ivOtherUserPhoto.loadInBackground();
+                    } else {
+                        ivOtherUserPhoto.setImageResource(R.drawable.ic_profilee);
+                    }
+                    if (thisUsername.compareTo(otherUsername) <= 0) { // chatChannel is derived from alphabetical order of the two usernames
+                        chatChannel = thisUsername + CHAT_DIV + otherUsername;
+                    } else {
+                        chatChannel = otherUsername + CHAT_DIV + thisUsername;
+                    }
+
+                    tvOtherUserUsername.setText(otherUsername);
+
+                    subscribeToChannel();
+                    refreshAndPopulateFromHistory();
+                } else {
+                    Toast.makeText(ChatActivity.this, getResources().getString(R.string.Unable_to_get_data_from_the_database_), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void subscribeToChannel() {

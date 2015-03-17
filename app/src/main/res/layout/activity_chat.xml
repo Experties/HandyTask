@@ -4,89 +4,99 @@
     tools:context=".MainActivity"
     android:padding="0dp"
     android:longClickable="true">
-
-    <ListView
+    <ProgressBar
+        android:id="@+id/pbChat"
+        android:visibility="invisible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/lvChat"
-        android:layout_below="@+id/ibCallOtherUser"
-        android:layout_alignLeft="@+id/ivOtherUserPhoto"
-        android:layout_alignStart="@+id/ivOtherUserPhoto"
-        android:layout_above="@+id/btnSend" />
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layoutChat">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lvChat"
+            android:layout_below="@+id/ibCallOtherUser"
+            android:layout_alignLeft="@+id/ivOtherUserPhoto"
+            android:layout_alignStart="@+id/ivOtherUserPhoto"
+            android:layout_above="@+id/btnSend" />
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/ivOtherUserPhoto"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:src="@drawable/ic_launcher" />
+        <com.parse.ParseImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ivOtherUserPhoto"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_launcher" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Other person&apos;s name"
-        android:id="@+id/tvOtherUserUsername"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/ivOtherUserPhoto"
-        android:layout_toEndOf="@+id/ivOtherUserPhoto" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other person&apos;s name"
+            android:id="@+id/tvOtherUserUsername"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/ivOtherUserPhoto"
+            android:layout_toEndOf="@+id/ivOtherUserPhoto" />
 
-    <ImageButton
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/ibCallOtherUser"
-        android:layout_below="@+id/tvOtherUserUsername"
-        android:layout_toRightOf="@+id/ivOtherUserPhoto"
-        android:layout_toEndOf="@+id/ivOtherUserPhoto"
-        android:src="@mipmap/ic_phone"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentLeft="false"
-        android:scaleType="fitCenter"
-        android:onClick="onCallOtherUserClick" />
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:id="@+id/ibCallOtherUser"
+            android:layout_below="@+id/tvOtherUserUsername"
+            android:layout_toRightOf="@+id/ivOtherUserPhoto"
+            android:layout_toEndOf="@+id/ivOtherUserPhoto"
+            android:src="@mipmap/ic_phone"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:scaleType="fitCenter"
+            android:onClick="onCallOtherUserClick" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Send"
-        android:id="@+id/btnSend"
-        android:onClick="onSendClick"
-        android:layout_above="@+id/btnAcceptOffer"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Send"
+            android:id="@+id/btnSend"
+            android:onClick="onSendClick"
+            android:layout_above="@+id/btnAcceptOffer"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/etMessageToSend"
-        android:hint="@string/Say_something"
-        android:layout_above="@+id/btnAcceptOffer"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/btnSend"
-        android:layout_toLeftOf="@+id/btnSend"
-        android:layout_toStartOf="@+id/btnSend" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/etMessageToSend"
+            android:hint="@string/Say_something"
+            android:layout_above="@+id/btnAcceptOffer"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/btnSend"
+            android:layout_toLeftOf="@+id/btnSend"
+            android:layout_toStartOf="@+id/btnSend" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Accept_Offer"
-        android:id="@+id/btnAcceptOffer"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:onClick="onAcceptOfferClick"
-        android:width="150dp" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Accept_Offer"
+            android:id="@+id/btnAcceptOffer"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:onClick="onAcceptOfferClick"
+            android:width="150dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/Decline_Offer"
-        android:id="@+id/btnDeclineOffer"
-        android:onClick="onDeclineOfferClick"
-        android:width="150dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/btnSend"
-        android:layout_alignEnd="@+id/btnSend" />
-
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Decline_Offer"
+            android:id="@+id/btnDeclineOffer"
+            android:onClick="onDeclineOfferClick"
+            android:width="150dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/btnSend"
+            android:layout_alignEnd="@+id/btnSend" />
+    </RelativeLayout>
 </RelativeLayout>
