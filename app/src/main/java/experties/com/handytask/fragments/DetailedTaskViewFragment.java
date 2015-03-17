@@ -80,6 +80,11 @@ public class DetailedTaskViewFragment extends DialogFragment {
         btnChat = (Button) v.findViewById(R.id.btnChat);
         btnBack = (Button) v.findViewById(R.id.btnBack);
 
+        try {
+            parseTask.getOwner().fetchIfNeeded();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         tvTitle.setText(parseTask.getTitle());
         tvDescription.setText(parseTask.getDescription());
         LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());

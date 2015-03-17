@@ -119,6 +119,12 @@ public class ChatActivity extends ActionBarActivity {
                     task = parseTask; // store the task
                     ParseUser owner = parseTask.getOwner();
                     ParseUser responder = parseTask.getResponder();
+                    try {
+                        owner.fetchIfNeeded();
+                        responder.fetchIfNeeded();
+                    } catch (ParseException e1) {
+                        e1.printStackTrace();
+                    }
                     ParseFile profileImg = null;
                     if(thisUsername.equalsIgnoreCase(owner.getUsername())) {
                         otherUsername = responder.getUsername();
