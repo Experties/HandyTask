@@ -3,7 +3,8 @@
     android:padding="10dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F6F1">
+    android:background="#F5F6F1"
+    android:layout_alignParentTop="true">
     <ProgressBar
         android:id="@+id/pbSignUP"
         android:visibility="invisible"
@@ -15,7 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/scrVwSignUp"
-        android:layout_above="@+id/btnContainer">
+        android:layout_above="@+id/btnContainer"
+        android:layout_alignParentTop="true">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

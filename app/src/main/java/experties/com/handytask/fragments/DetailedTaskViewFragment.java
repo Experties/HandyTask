@@ -4,6 +4,7 @@ package experties.com.handytask.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.parse.ParsePush;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
+import com.parse.SendCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,7 +140,12 @@ public class DetailedTaskViewFragment extends DialogFragment {
                 push.setQuery(pushQuery); // Set our Installation query
                 push.setMessage(message);
                 push.setData(object);
-                push.sendInBackground();
+                push.sendInBackground(new SendCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        Log.i("ParseReceiver", "Sending message:");
+                    }
+                });
 
                 parseTask.setResponder(ParseUser.getCurrentUser());
                 parseTask.setCurrentState("pending");
