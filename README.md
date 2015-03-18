@@ -39,4 +39,4 @@ Optional stories:
  ![Al's Work](chat.gif)
  
 #Week2 Progress:
-(HandyTaskSprint2.gif)
+ ![Team's Work](HandyTaskSprint2.gif)
