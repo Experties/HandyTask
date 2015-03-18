@@ -153,6 +153,7 @@ public class ShowOnMapFragment extends Fragment
         if (map!=null) {
             map.clear();
             if (!parseTasks.isEmpty()) {
+                map.clear();
                 for (i = 0; i < parseTasks.size(); i++) {
                     ParseTask parseTask = parseTasks.get(i);
                     map.addMarker(new MarkerOptions().title(String.valueOf(i)).

@@ -175,12 +175,14 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
 
     public void populateTaskList() {
         ParseQuery query = ParseQuery.getQuery(ParseTask.class);
+        query.whereEqualTo("CurrentState","open");
+        query.whereNotEqualTo("Owner", ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<ParseTask>() {
             @Override
             public void done(List<ParseTask> parseTasksAll, com.parse.ParseException e) {
                 parseTasks = (ArrayList) parseTasksAll;
                 // calculate relativeDistance for All
-                if (currentLatLng!=null) {
+                if (currentLatLng!=null && parseTasks != null && parseTasks.size() > 0) {
                     calculateRelativeDistance();
                     // sort by relativeDistance
                     Collections.sort(parseTasks, ParseTask.relDistComparator);
@@ -197,17 +199,20 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
     public void populateListTaskList() {
         parseTasks.clear();
         ParseQuery query = ParseQuery.getQuery(ParseTask.class);
+        query.whereEqualTo("CurrentState","open");
+        query.whereNotEqualTo("Owner", ParseUser.getCurrentUser());
         query.findInBackground(new FindCallback<ParseTask>() {
             @Override
             public void done(List<ParseTask> parseTasksAll, com.parse.ParseException e) {
                 parseTasks = (ArrayList) parseTasksAll;
                 // calculate relativeDistance for All
-                if (currentLatLng!=null) {
+                if (currentLatLng!=null && parseTasks != null && parseTasks.size() > 0) {
                     calculateRelativeDistance();
                     // sort by relativeDistance
                     Collections.sort(parseTasks, ParseTask.relDistComparator);
                     // update Fragments
                     showOnListFragment.updateTasksList();
+                    showOnMapFragment.updateTasksList();
                 }
 
             }
