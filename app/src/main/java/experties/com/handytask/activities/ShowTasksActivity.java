@@ -194,6 +194,27 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
         });
     }
 
+    public void populateListTaskList() {
+        parseTasks.clear();
+        ParseQuery query = ParseQuery.getQuery(ParseTask.class);
+        query.findInBackground(new FindCallback<ParseTask>() {
+            @Override
+            public void done(List<ParseTask> parseTasksAll, com.parse.ParseException e) {
+                parseTasks = (ArrayList) parseTasksAll;
+                // calculate relativeDistance for All
+                if (currentLatLng!=null) {
+                    calculateRelativeDistance();
+                    // sort by relativeDistance
+                    Collections.sort(parseTasks, ParseTask.relDistComparator);
+                    // update Fragments
+                    showOnListFragment.updateTasksList();
+                }
+
+            }
+
+        });
+    }
+
     // Calculate Relative Distance for each ParseTask in the ArrayList
     private boolean calculateRelativeDistance() {
         if ((parseTasks!=null) && (currentLatLng!=null)) {

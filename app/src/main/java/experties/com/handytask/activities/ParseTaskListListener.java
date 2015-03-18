@@ -12,6 +12,7 @@ import experties.com.handytask.models.TaskItem;
  */
 public interface ParseTaskListListener {
     public ArrayList<ParseTask> getParseTaskList();
+    public void populateListTaskList();
     public LatLng getCurrentPosition();
 }
 

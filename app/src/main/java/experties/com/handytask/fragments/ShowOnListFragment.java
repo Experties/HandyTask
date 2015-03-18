@@ -4,6 +4,7 @@ package experties.com.handytask.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class ShowOnListFragment extends Fragment {
     ArrayList<ParseTask> parseTasks;
     private ParseTasksAdapter aParseTasks;
     private ListView lvParseTasks;
-
+    private SwipeRefreshLayout swipeContainer;
 
     public ShowOnListFragment() {
         // Required empty public constructor
@@ -43,11 +44,13 @@ public class ShowOnListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_show_on_list, container, false);
 
         lvParseTasks = (ListView) v.findViewById(R.id.lvParseTasks);
-
+        swipeContainer = (SwipeRefreshLayout) v.findViewById(R.id.swipeContainer);
+        parseTasks = new ArrayList<ParseTask>();
         // Get the list from the parent activity
-        ParseTaskListListener listener = (ParseTaskListListener) getActivity();
-        parseTasks = listener.getParseTaskList();
-
+        final ParseTaskListListener listener = (ParseTaskListListener) getActivity();
+        parseTasks.addAll(listener.getParseTaskList());
+        aParseTasks = new ParseTasksAdapter(getActivity(), parseTasks);
+        lvParseTasks.setAdapter(aParseTasks);
         // Attach list to the adapter
         aParseTasks = new ParseTasksAdapter(getActivity(), parseTasks);
 
@@ -56,6 +59,18 @@ public class ShowOnListFragment extends Fragment {
 
         setupOnClickListener();
 
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                listener.populateListTaskList();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         return v;
     }
 
@@ -74,12 +89,14 @@ public class ShowOnListFragment extends Fragment {
     }
 
     public void updateTasksList() {
+        parseTasks.clear();
         ParseTaskListListener listener = (ParseTaskListListener) getActivity();
-        parseTasks = listener.getParseTaskList();
+        parseTasks.addAll(listener.getParseTaskList());
         // [vince] TODO: Ugly solution. Because I completely overwrite parseTask instead remove/add
         // I need to do the adapter setup and attach again.
-        aParseTasks = new ParseTasksAdapter(getActivity(), parseTasks);
-        lvParseTasks.setAdapter(aParseTasks);
         aParseTasks.notifyDataSetChanged();
+        if(swipeContainer != null) {
+            swipeContainer.setRefreshing(false);
+        }
     }
 }

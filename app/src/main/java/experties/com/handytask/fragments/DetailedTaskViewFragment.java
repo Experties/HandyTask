@@ -114,7 +114,7 @@ public class DetailedTaskViewFragment extends DialogFragment {
             ivPhoto3.setParseFile(file);
             ivPhoto3.loadInBackground();
         }
-
+        final DetailedTaskViewFragment context = this;
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -150,6 +150,7 @@ public class DetailedTaskViewFragment extends DialogFragment {
                             i.putExtra("taskId", taskId);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             getActivity().startActivity(i);
+                            context.dismiss();
                         }
                     }
                 });

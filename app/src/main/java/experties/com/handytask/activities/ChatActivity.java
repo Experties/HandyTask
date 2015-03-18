@@ -1,5 +1,6 @@
 package experties.com.handytask.activities;
 
+        import android.content.Context;
         import android.content.Intent;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
@@ -24,6 +25,7 @@ package experties.com.handytask.activities;
         import com.parse.ParseImageView;
         import com.parse.ParseQuery;
         import com.parse.ParseUser;
+        import com.parse.SaveCallback;
         import com.pubnub.api.*;
         import org.json.*;
 
@@ -90,8 +92,33 @@ public class ChatActivity extends ActionBarActivity {
         etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
 
         btnSend = (Button) findViewById(R.id.btnSend);
+        final ChatActivity context = this;
         btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
+        btnAcceptOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.setCurrentState("closed");
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        context.finish();
+                    }
+                });
+            }
+        });
         btnDeclineOffer = (Button) findViewById(R.id.btnDeclineOffer);
+        btnDeclineOffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.setCurrentState("open");
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        context.finish();
+                    }
+                });
+            }
+        });
 
         pbChat = (ProgressBar) findViewById(R.id.pbChat);
 
@@ -112,6 +139,7 @@ public class ChatActivity extends ActionBarActivity {
         taskQuery.getInBackground(taskId, new GetCallback<ParseTask>() {
             @Override
             public void done(ParseTask parseTask, ParseException e) {
+                String name = null;
                 // Got the task object information. Now we need to get the task owner information.
                 pbChat.setVisibility(View.GONE);
                 layoutChat.setVisibility(View.VISIBLE);
@@ -129,11 +157,13 @@ public class ChatActivity extends ActionBarActivity {
                     if(thisUsername.equalsIgnoreCase(owner.getUsername())) {
                         otherUsername = responder.getUsername();
                         otherUserPhoneNumber = responder.getString("Mobile");
+                        name = getUserName(responder);
                         profileImg = responder.getParseFile("ProfilePhoto");
 
                     } else {
                         otherUsername = owner.getUsername();
                         otherUserPhoneNumber = owner.getString("Mobile");
+                        name = getUserName(owner);
                         profileImg = owner.getParseFile("ProfilePhoto");
                     }
 
@@ -149,7 +179,11 @@ public class ChatActivity extends ActionBarActivity {
                         chatChannel = otherUsername + CHAT_DIV + thisUsername;
                     }
 
-                    tvOtherUserUsername.setText(otherUsername);
+                    if(name != null) {
+                        tvOtherUserUsername.setText(name);
+                    } else {
+                        tvOtherUserUsername.setText(otherUsername);
+                    }
 
                     subscribeToChannel();
                     refreshAndPopulateFromHistory();
@@ -158,6 +192,15 @@ public class ChatActivity extends ActionBarActivity {
                 }
             }
         });
+    }
+
+    private String getUserName(ParseUser responder) {
+        if(responder != null) {
+            StringBuilder name = new StringBuilder(responder.getString("FirstName"));
+            name.append(" ").append(responder.getString("LastName").substring(0,1).toUpperCase()).append(".");
+            return name.toString();
+        }
+        return null;
     }
 
     public void subscribeToChannel() {
