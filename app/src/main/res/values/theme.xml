@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="LOGIN" parent="android:Theme.Holo.Light">
+        <item name="pageBackground">@style/page_background</item>
+    </style>
+</resources>

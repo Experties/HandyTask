@@ -83,6 +83,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.register_fragment, parent, false);
+        getActivity().setTheme(R.style.AppTheme);
         setupView(v);
         isMandatoryFilled = checkEntries();
         return v;

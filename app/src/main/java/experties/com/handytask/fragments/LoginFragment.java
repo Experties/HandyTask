@@ -54,6 +54,7 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup parent, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.login_fragment, parent, false);
+        getActivity().setTheme(R.style.LOGIN);
         phoneUtil = PhoneNumberUtil.getInstance();
         pbLogin = (ProgressBar) v.findViewById(R.id.pbLogin);
         edTxtPhone = (EditText) v.findViewById(R.id.edTxtPhone);
