@@ -174,9 +174,9 @@ public class ChatActivity extends ActionBarActivity {
                         ivOtherUserPhoto.setImageResource(R.drawable.ic_profilee);
                     }
                     if (thisUsername.compareTo(otherUsername) <= 0) { // chatChannel is derived from alphabetical order of the two usernames
-                        chatChannel = thisUsername + CHAT_DIV + otherUsername;
+                        chatChannel = thisUsername + "-" + task.getObjectId() + CHAT_DIV + otherUsername + "-" + task.getObjectId();
                     } else {
-                        chatChannel = otherUsername + CHAT_DIV + thisUsername;
+                        chatChannel = otherUsername + "-" + task.getObjectId() + CHAT_DIV + thisUsername + "-" + task.getObjectId();
                     }
 
                     if(name != null) {
