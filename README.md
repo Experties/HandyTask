@@ -37,3 +37,6 @@ Optional stories:
  ![Vince's Work](HandyTask_MapTask.gif)
 ### Al's Work
  ![Al's Work](chat.gif)
+ 
+#Week2 Progress:
+ ![Team's Work](HandyTaskSprint2.gif)
