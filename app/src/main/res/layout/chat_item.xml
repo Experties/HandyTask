@@ -15,7 +15,6 @@
         android:id="@+id/tvChatText"
         android:padding="20dp"
         android:lines="3"
-        android:background="@drawable/left_chat"
         android:layout_marginRight="64dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

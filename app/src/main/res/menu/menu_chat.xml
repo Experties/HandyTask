@@ -4,6 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ChatActivity">
     <item
+        android:orderInCategory="1"
+        android:id="@+id/muAcceptTask"
+        app:showAsAction="never"
+        android:title="@string/Accept_Offer" />
+    <item
+        android:orderInCategory="2"
+        android:id="@+id/muDeclineTask"
+        app:showAsAction="never"
+        android:title="@string/Decline_Offer" />
+    <item
         android:orderInCategory="3"
         android:id="@+id/muSignOut"
         android:icon="@drawable/ic_logout"

@@ -1,46 +1,50 @@
 package experties.com.handytask.activities;
 
-        import android.content.Context;
-        import android.content.Intent;
-        import android.graphics.Bitmap;
-        import android.graphics.BitmapFactory;
-        import android.graphics.Typeface;
-        import android.support.v7.app.ActionBarActivity;
-        import android.os.Bundle;
-        import android.support.v7.widget.Toolbar;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.EditText;
-        import android.widget.ImageView;
-        import android.widget.ListView;
-        import android.widget.ProgressBar;
-        import android.widget.RelativeLayout;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-        import com.parse.GetCallback;
-        import com.parse.ParseException;
-        import com.parse.ParseFile;
-        import com.parse.ParseImageView;
-        import com.parse.ParseQuery;
-        import com.parse.ParseUser;
-        import com.parse.SaveCallback;
-        import com.pubnub.api.*;
-        import org.json.*;
+import com.makeramen.roundedimageview.RoundedImageView;
+import com.parse.GetCallback;
+import com.parse.ParseException;
+import com.parse.ParseFile;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+import com.pubnub.api.Callback;
+import com.pubnub.api.Pubnub;
+import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
+import com.squareup.picasso.Picasso;
 
-        import java.util.ArrayList;
+import org.json.JSONArray;
+import org.json.JSONException;
 
-        import experties.com.handytask.R;
-        import experties.com.handytask.adapters.ChatListAdapter;
-        import experties.com.handytask.models.ChatMessage;
-        import experties.com.handytask.models.ParseTask;
+import java.util.ArrayList;
+
+import experties.com.handytask.R;
+import experties.com.handytask.adapters.ChatListAdapter;
+import experties.com.handytask.models.ChatMessage;
+import experties.com.handytask.models.ParseTask;
 
 
 public class ChatActivity extends ActionBarActivity {
     public static final String CHAT_DIV = "|||";
+    private final ChatActivity context = this;
 
     private Pubnub pubnub;
 
@@ -60,28 +64,20 @@ public class ChatActivity extends ActionBarActivity {
     private ListView lvChat;
     private ChatListAdapter mAdapter;
 
-    private TextView tvOtherUserUsername;
     private EditText etMessageToSend;
     private TextView mTitle;
 
     private ImageView btnSend;
 
-    private Button btnAcceptOffer;
-    private Button btnDeclineOffer;
-
     private ProgressBar pbChat;
 
     private RelativeLayout layoutChat;
 
-    private ParseImageView ivOtherUserPhoto;
+    private RoundedImageView ivOtherUserPhoto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-
-        taskId = getIntent().getStringExtra("taskId");
-        pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
 
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
@@ -93,57 +89,41 @@ public class ChatActivity extends ActionBarActivity {
             return;
         }
 
-        Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+        setContentView(R.layout.activity_chat);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrLogin);
+        taskId = getIntent().getStringExtra("taskId");
+        pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
+
+        Typeface fontAngel = Typeface.createFromAsset(this.getAssets(), "fonts/RINGM.ttf");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrChat);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        mTitle = (TextView) toolbar.findViewById(R.id.login_toolbar_title);
+        toolbar.setNavigationIcon(R.drawable.ic_back_white);
+        mTitle = (TextView) toolbar.findViewById(R.id.chat_toolbar_title);
 
         //toolbar.setLogo(R.drawable.ic_tweets);
-        mTitle.setTypeface(fontJamesFajardo);
-        mTitle.setText(getResources().getString(R.string.title));
+        mTitle.setTypeface(fontAngel);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.finish();
+            }
+        });
 
         thisUsername =  currentUser.getUsername();
 
-        tvOtherUserUsername = (TextView) findViewById(R.id.tvOtherUserUsername);
         etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
 
         btnSend = (ImageView) findViewById(R.id.btnSend);
-        final ChatActivity context = this;
-        btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
-        btnAcceptOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                task.setCurrentState("closed");
-                task.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        context.finish();
-                    }
-                });
-            }
-        });
-        btnDeclineOffer = (Button) findViewById(R.id.btnDeclineOffer);
-        btnDeclineOffer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                task.setCurrentState("open");
-                task.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        context.finish();
-                    }
-                });
-            }
-        });
 
         pbChat = (ProgressBar) findViewById(R.id.pbChat);
 
         layoutChat = (RelativeLayout) findViewById(R.id.layoutChat);
 
-        ivOtherUserPhoto = (ParseImageView) findViewById(R.id.ivOtherUserPhoto);
+        ivOtherUserPhoto = (RoundedImageView) findViewById(R.id.ivOtherUserPhoto);
 
+        ivOtherUserPhoto.setVisibility(View.GONE);
         layoutChat.setVisibility(View.GONE);
         pbChat.setVisibility(View.VISIBLE);
 
@@ -184,9 +164,14 @@ public class ChatActivity extends ActionBarActivity {
                         profileImg = owner.getParseFile("ProfilePhoto");
                     }
 
+                    ivOtherUserPhoto.setVisibility(View.VISIBLE);
                     if(profileImg != null) {
-                        ivOtherUserPhoto.setParseFile(profileImg);
-                        ivOtherUserPhoto.loadInBackground();
+                        Picasso.with(context)
+                                .load(profileImg.getUrl())
+                                .fit().centerCrop()
+                                .into(ivOtherUserPhoto);
+                        //ivOtherUserPhoto.setParseFile(profileImg);
+                        //ivOtherUserPhoto.loadInBackground();
                     } else {
                         ivOtherUserPhoto.setImageResource(R.drawable.ic_profilee);
                     }
@@ -197,9 +182,9 @@ public class ChatActivity extends ActionBarActivity {
                     }
 
                     if(name != null) {
-                        tvOtherUserUsername.setText(name);
+                        mTitle.setText(name);
                     } else {
-                        tvOtherUserUsername.setText(otherUsername);
+                        mTitle.setText(otherUsername);
                     }
 
                     lvChat = (ListView) findViewById(R.id.lvChat);
@@ -337,8 +322,34 @@ public class ChatActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.muAddTask:
+                task.setCurrentState("closed");
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        context.finish();
+                    }
+                });
+                break;
+            case R.id.muDeclineTask:
+                task.setCurrentState("open");
+                task.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        context.finish();
+                    }
+                });
+                break;
+            case R.id.muSignOut:
+                ParseUser.logOut();
+                this.finish();
+                Intent loginActivity = new Intent(ChatActivity.this, LoginActivity.class);
+                startActivity(loginActivity);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 
