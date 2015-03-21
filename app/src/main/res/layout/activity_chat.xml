@@ -54,7 +54,7 @@
     <FrameLayout
         xmlns:fab="http://schemas.android.com/apk/res-auto"
         android:layout_below="@+id/tolBrChat"
-        android:id="@+id/layout_decline"
+        android:id="@+id/layout_call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -82,38 +82,48 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/lvChat"
-            android:layout_above="@+id/btnSend"
+            android:layout_above="@+id/layoutBtnSend"
             android:layout_alignParentTop="true"
-            android:layout_margin="15dp"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Send"
-            android:id="@+id/btnSend"
-            android:onClick="onSendClick"
-            android:src="@drawable/ic_send_btn"
-            android:minWidth="80dp"
-            android:minHeight="60dp"
+            android:id="@+id/layoutBtnSend"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="20dp"/>
+            android:weightSum="1"
+            android:paddingTop="20dp"
+            android:paddingLeft="20dp"
+            android:background="#CCCCCC">
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/etMessageToSend"
-            android:hint="@string/Say_something"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/btnSend"
-            android:layout_toLeftOf="@+id/btnSend"
-            android:layout_toStartOf="@+id/btnSend"
-            style="@style/editTextStyle"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="25dp"/>
+            <EditText
+                android:imeOptions="actionSend"
+                android:inputType="text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/etMessageToSend"
+                android:hint="@string/Say_something"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/btnSend"
+                android:layout_toLeftOf="@+id/btnSend"
+                android:layout_toStartOf="@+id/btnSend"
+                style="@style/editTextStyle"
+                android:layout_weight="0.8" />
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Send"
+                android:id="@+id/btnSend"
+                android:onClick="onSendClick"
+                android:src="@drawable/ic_send_btn"
+                android:minWidth="60dp"
+                android:minHeight="60dp"
+                android:layout_weight="0.2"
+                android:paddingBottom="10dp"/>
+        </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

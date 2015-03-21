@@ -1,16 +1,27 @@
 package experties.com.handytask.activities;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -34,7 +45,9 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 import experties.com.handytask.R;
 import experties.com.handytask.adapters.ChatListAdapter;
@@ -75,6 +88,7 @@ public class ChatActivity extends ActionBarActivity {
 
     private RoundedImageView ivOtherUserPhoto;
 
+    private FrameLayout layout_call;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,12 +128,23 @@ public class ChatActivity extends ActionBarActivity {
         thisUsername =  currentUser.getUsername();
 
         etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
+        etMessageToSend.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEND) {
+                    onSendClick(null);
+                    return true;
+                }
+                return false;
+            }
+        });
 
         btnSend = (ImageView) findViewById(R.id.btnSend);
 
         pbChat = (ProgressBar) findViewById(R.id.pbChat);
 
         layoutChat = (RelativeLayout) findViewById(R.id.layoutChat);
+        layout_call = (FrameLayout) findViewById(R.id.layout_call);
 
         ivOtherUserPhoto = (RoundedImageView) findViewById(R.id.ivOtherUserPhoto);
 
@@ -151,7 +176,7 @@ public class ChatActivity extends ActionBarActivity {
                         requestor = owner;
                         responder = resp;
                         otherUsername = resp.getUsername();
-                        otherUserPhoneNumber = resp.getString("Mobile");
+                        otherUserPhoneNumber = String.valueOf(resp.getLong("Mobile"));
                         name = getUserName(resp);
                         profileImg = resp.getParseFile("ProfilePhoto");
 
@@ -159,7 +184,7 @@ public class ChatActivity extends ActionBarActivity {
                         requestor = resp;
                         responder = owner;
                         otherUsername = owner.getUsername();
-                        otherUserPhoneNumber = owner.getString("Mobile");
+                        otherUserPhoneNumber = String.valueOf(owner.getLong("Mobile"));
                         name = getUserName(owner);
                         profileImg = owner.getParseFile("ProfilePhoto");
                     }
@@ -189,9 +214,8 @@ public class ChatActivity extends ActionBarActivity {
 
                     lvChat = (ListView) findViewById(R.id.lvChat);
                     mMessages = new ArrayList<ChatMessage>();
-                    mAdapter = new ChatListAdapter(ChatActivity.this, thisUsername, mMessages, requestor, responder);
+                    mAdapter = new ChatListAdapter(ChatActivity.this, thisUsername, mMessages, requestor, responder, lvChat);
                     lvChat.setAdapter(mAdapter);
-
                     subscribeToChannel();
                     refreshAndPopulateFromHistory();
                 } else {
@@ -304,6 +328,13 @@ public class ChatActivity extends ActionBarActivity {
                 mMessages.add(new ChatMessage(username, text));
                 mAdapter.notifyDataSetChanged();
                 lvChat.invalidate(); // redraw listview
+                lvChat.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Select the last row so it will scroll into view...
+                        lvChat.setSelection(mAdapter.getCount() - 1);
+                    }
+                });
             }
         });
     }
@@ -366,5 +397,79 @@ public class ChatActivity extends ActionBarActivity {
         i.putExtra("offerResponse", "accept");
         setResult(RESULT_OK, i);
         finish();
+    }
+
+    public void onCallOtherUserClick(View v) {
+        if(isCallingSupported(this)) {
+            if (otherUserPhoneNumber != null) {
+                String uri = "tel:" + otherUserPhoneNumber;
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(uri));
+                startActivity(intent);
+            }
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Call Error")
+                    .setMessage("Looks like this device does not support calling feature....")
+                    .setCancelable(true)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(DialogInterface dialogInterface) {
+                    // Set the text color on the dialog title and separator
+                    setTextColor(dialogInterface, 0xFFE5492A);
+                }
+            });
+            dialog.show();
+        }
+    }
+
+    private static boolean isCallingSupported(Context context) {
+        boolean result = true;
+        PackageManager manager = context.getPackageManager();
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        List<ResolveInfo> infos = manager.queryIntentActivities(intent, 0);
+        if (infos.size() <= 0) {
+            result = false;
+        }
+        return result;
+    }
+
+    public void setTextColor(DialogInterface alert, int color) {
+        try {
+            Class c = alert.getClass();
+            Field mAlert = c.getDeclaredField("mAlert");
+            mAlert.setAccessible(true);
+            Object alertController = mAlert.get(alert);
+            c = alertController.getClass();
+            Field mTitleView = c.getDeclaredField("mTitleView");
+            mTitleView.setAccessible(true);
+            Object dialogTitle = mTitleView.get(alertController);
+            TextView dialogTitleView = (TextView)dialogTitle;
+            // Set text color on the title
+            dialogTitleView.setTextColor(color);
+            // To find the horizontal divider, first
+            //  get container around the Title
+            ViewGroup parent = (ViewGroup)dialogTitleView.getParent();
+            // Then get the container around that container
+            parent = (ViewGroup)parent.getParent();
+            for (int i = 0; i < parent.getChildCount(); i++) {
+                View v = parent.getChildAt(i);
+                if (v instanceof ImageView) {
+                    // We got an ImageView, that should be the separator
+                    ImageView im = (ImageView)v;
+                    // Set a color filter on the image
+                    im.setColorFilter(color);
+                }
+            }
+        } catch (Exception e) {
+            // Ignore any exceptions, either it works or it doesn't
+        }
     }
 }
