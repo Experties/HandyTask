@@ -44,6 +44,7 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
             Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
+            setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_task_creation_step2);
             item = (TaskItem) getIntent().getExtras().getParcelable("item");
             final TaskCreationStep2Activity context = this;

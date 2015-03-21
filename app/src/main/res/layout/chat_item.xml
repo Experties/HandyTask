@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
+    <com.parse.ParseImageView
         android:id="@+id/ivOtherUserChatPhoto"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -15,9 +15,10 @@
         android:id="@+id/tvChatText"
         android:padding="20dp"
         android:lines="3"
+        android:background="@drawable/left_chat"
         android:layout_marginRight="64dp"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="match_parent"
         android:text="DUMMY: Chat text goes here.">
     </TextView>
     <ImageView
@@ -25,7 +26,7 @@
         android:src="@drawable/ic_launcher"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-    <ImageView
+    <com.parse.ParseImageView
         android:id="@+id/ivThisUserChatPhoto"
         android:layout_marginLeft="-64dp"
         android:layout_width="64dp"

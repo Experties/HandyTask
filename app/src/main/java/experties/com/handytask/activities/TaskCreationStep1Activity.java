@@ -37,6 +37,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
             Intent taskActivity = new Intent(TaskCreationStep1Activity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
+            setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_task_created);
             final TaskCreationStep1Activity context = this;
             Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");

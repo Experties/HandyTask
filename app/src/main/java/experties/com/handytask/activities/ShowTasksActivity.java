@@ -70,6 +70,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
             Intent taskActivity = new Intent(ShowTasksActivity.this, LoginActivity.class);
             startActivity(taskActivity);
         } else {
+            setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_show_tasks);
             Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
 

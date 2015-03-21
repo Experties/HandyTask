@@ -12,6 +12,6 @@
         android:orderInCategory="2"
         android:id="@+id/muSignOut"
         android:icon="@drawable/ic_logout"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/sign_out"></item>
 </menu>

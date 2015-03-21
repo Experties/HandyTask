@@ -4,8 +4,10 @@ package experties.com.handytask.activities;
         import android.content.Intent;
         import android.graphics.Bitmap;
         import android.graphics.BitmapFactory;
+        import android.graphics.Typeface;
         import android.support.v7.app.ActionBarActivity;
         import android.os.Bundle;
+        import android.support.v7.widget.Toolbar;
         import android.util.Log;
         import android.view.Menu;
         import android.view.MenuItem;
@@ -51,7 +53,8 @@ public class ChatActivity extends ActionBarActivity {
     private boolean thisUserIsSeller;
 
     private ParseTask task;
-
+    private ParseUser requestor;
+    private ParseUser responder;
     private ArrayList<ChatMessage> mMessages;
 
     private ListView lvChat;
@@ -59,8 +62,10 @@ public class ChatActivity extends ActionBarActivity {
 
     private TextView tvOtherUserUsername;
     private EditText etMessageToSend;
+    private TextView mTitle;
 
-    private Button btnSend;
+    private ImageView btnSend;
+
     private Button btnAcceptOffer;
     private Button btnDeclineOffer;
 
@@ -74,8 +79,10 @@ public class ChatActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
         taskId = getIntent().getStringExtra("taskId");
         pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
+
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             // if the user is not logged in, start the Login Activity with the "next" extra set.
@@ -86,12 +93,23 @@ public class ChatActivity extends ActionBarActivity {
             return;
         }
 
+        Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrLogin);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        mTitle = (TextView) toolbar.findViewById(R.id.login_toolbar_title);
+
+        //toolbar.setLogo(R.drawable.ic_tweets);
+        mTitle.setTypeface(fontJamesFajardo);
+        mTitle.setText(getResources().getString(R.string.title));
+
         thisUsername =  currentUser.getUsername();
 
         tvOtherUserUsername = (TextView) findViewById(R.id.tvOtherUserUsername);
         etMessageToSend = (EditText) findViewById(R.id.etMessageToSend);
 
-        btnSend = (Button) findViewById(R.id.btnSend);
+        btnSend = (ImageView) findViewById(R.id.btnSend);
         final ChatActivity context = this;
         btnAcceptOffer = (Button) findViewById(R.id.btnAcceptOffer);
         btnAcceptOffer.setOnClickListener(new View.OnClickListener() {
@@ -126,11 +144,6 @@ public class ChatActivity extends ActionBarActivity {
 
         ivOtherUserPhoto = (ParseImageView) findViewById(R.id.ivOtherUserPhoto);
 
-        lvChat = (ListView) findViewById(R.id.lvChat);
-        mMessages = new ArrayList<ChatMessage>();
-        mAdapter = new ChatListAdapter(ChatActivity.this, thisUsername, mMessages);
-        lvChat.setAdapter(mAdapter);
-
         layoutChat.setVisibility(View.GONE);
         pbChat.setVisibility(View.VISIBLE);
 
@@ -146,21 +159,25 @@ public class ChatActivity extends ActionBarActivity {
                 if (e == null) {
                     task = parseTask; // store the task
                     ParseUser owner = parseTask.getOwner();
-                    ParseUser responder = parseTask.getResponder();
+                    ParseUser resp = parseTask.getResponder();
                     try {
                         owner.fetchIfNeeded();
-                        responder.fetchIfNeeded();
+                        resp.fetchIfNeeded();
                     } catch (ParseException e1) {
                         e1.printStackTrace();
                     }
                     ParseFile profileImg = null;
                     if(thisUsername.equalsIgnoreCase(owner.getUsername())) {
-                        otherUsername = responder.getUsername();
-                        otherUserPhoneNumber = responder.getString("Mobile");
-                        name = getUserName(responder);
-                        profileImg = responder.getParseFile("ProfilePhoto");
+                        requestor = owner;
+                        responder = resp;
+                        otherUsername = resp.getUsername();
+                        otherUserPhoneNumber = resp.getString("Mobile");
+                        name = getUserName(resp);
+                        profileImg = resp.getParseFile("ProfilePhoto");
 
                     } else {
+                        requestor = resp;
+                        responder = owner;
                         otherUsername = owner.getUsername();
                         otherUserPhoneNumber = owner.getString("Mobile");
                         name = getUserName(owner);
@@ -184,6 +201,11 @@ public class ChatActivity extends ActionBarActivity {
                     } else {
                         tvOtherUserUsername.setText(otherUsername);
                     }
+
+                    lvChat = (ListView) findViewById(R.id.lvChat);
+                    mMessages = new ArrayList<ChatMessage>();
+                    mAdapter = new ChatListAdapter(ChatActivity.this, thisUsername, mMessages, requestor, responder);
+                    lvChat.setAdapter(mAdapter);
 
                     subscribeToChannel();
                     refreshAndPopulateFromHistory();
@@ -303,10 +325,10 @@ public class ChatActivity extends ActionBarActivity {
 
 
 
-    /*@Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_chat, menu);
         return true;
     }
 
@@ -317,13 +339,8 @@ public class ChatActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
-    }*/
+    }
 
 
     public void onDeclineOfferClick(View v) {

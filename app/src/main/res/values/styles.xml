@@ -2,10 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
+        <item name="android:actionOverflowButtonStyle">@style/OverFlow</item>
+        <item name="android:textColorSecondary">#ffffff</item>
     </style>
     <style name="page_background">
         <item name="android:background">@drawable/ic_launcher</item>
+    </style>
+    <style name="OverFlow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
+        <item name="android:src">@drawable/ic_overflow</item>
     </style>
     <style name="spinner_style">
         <item name="android:background">@drawable/gradient_spinner</item>

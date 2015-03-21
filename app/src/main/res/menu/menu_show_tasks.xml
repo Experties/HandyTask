@@ -14,14 +14,13 @@
     <item
         android:orderInCategory="2"
         android:id="@+id/muAddTask"
-        android:icon="@drawable/ic_add_task1"
+        android:icon="@drawable/ic_add_task6"
         app:showAsAction="ifRoom"
         android:title="@string/add_task" />
     <item
         android:orderInCategory="3"
         android:id="@+id/muSignOut"
         android:icon="@drawable/ic_logout"
-        app:showAsAction="ifRoom"
+        app:showAsAction="never"
         android:title="@string/sign_out" />
-
 </menu>
