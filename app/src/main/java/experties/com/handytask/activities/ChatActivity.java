@@ -117,7 +117,7 @@ public class ChatActivity extends ActionBarActivity {
         toolbar.setNavigationIcon(R.drawable.ic_back_white);
         mTitle = (TextView) toolbar.findViewById(R.id.chat_toolbar_title);
 
-        //toolbar.setLogo(R.drawable.ic_tweets);
+        toolbar.setLogo(R.mipmap.ic_logo);
         mTitle.setTypeface(fontAngel);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

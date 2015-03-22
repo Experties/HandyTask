@@ -49,7 +49,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
             toolbar.setNavigationIcon(R.drawable.ic_back_white);
             mTitle = (TextView) toolbar.findViewById(R.id.task_toolbar_title);
 
-            //toolbar.setLogo(R.drawable.ic_tweets);
+            toolbar.setLogo(R.mipmap.ic_logo);
             mTitle.setTypeface(fontJamesFajardo);
             mTitle.setText(getResources().getString(R.string.title));
             toolbar.setNavigationOnClickListener(new View.OnClickListener() {

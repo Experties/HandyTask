@@ -79,7 +79,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             mTitle = (TextView) toolbar.findViewById(R.id.show_task_toolbar_title);
 
-            //toolbar.setLogo(R.drawable.ic_tweets);
+            toolbar.setLogo(R.mipmap.ic_logo);
             mTitle.setTypeface(fontJamesFajardo);
             mTitle.setText(getResources().getString(R.string.title));
 

@@ -60,7 +60,7 @@ public class LoginActivity extends ActionBarActivity implements LoginFragment.Ta
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             mTitle = (TextView) toolbar.findViewById(R.id.login_toolbar_title);
 
-            //toolbar.setLogo(R.drawable.ic_tweets);
+            toolbar.setLogo(R.mipmap.ic_logo);
             mTitle.setTypeface(fontJamesFajardo);
             mTitle.setText(getResources().getString(R.string.title));
 
