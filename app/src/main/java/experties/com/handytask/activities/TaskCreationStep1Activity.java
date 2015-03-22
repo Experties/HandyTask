@@ -1,6 +1,7 @@
 package experties.com.handytask.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
@@ -28,6 +29,8 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         if (getIntent().getBooleanExtra("EXIT", false)) {
             this.finish();
         }

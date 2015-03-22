@@ -1,6 +1,7 @@
 package experties.com.handytask.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.support.v4.app.FragmentTransaction;
@@ -38,6 +39,8 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             this.finish();

@@ -1,6 +1,7 @@
 package experties.com.handytask.activities;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
@@ -64,6 +65,8 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser == null) {
             this.finish();
