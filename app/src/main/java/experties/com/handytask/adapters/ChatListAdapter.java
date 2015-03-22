@@ -2,7 +2,9 @@ package experties.com.handytask.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.graphics.Palette;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -157,8 +159,14 @@ public class ChatListAdapter extends ArrayAdapter<ChatMessage> {
             } else {
                 holder.imageRight.setImageResource(R.drawable.ic_profilee);
             }
-            holder.layoutChatItem.setBackgroundColor(primaryBGColor);
+            //holder.layoutChatItem.setBackgroundColor(primaryBGColor);
             holder.text.setTextColor(primaryTxtColor);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setStroke(3, primaryTxtColor);
+            drawable.setCornerRadius(8);
+            drawable.setColor(primaryBGColor);
+            holder.layoutChatItem.setBackgroundDrawable(drawable);
         } else {
             holder.imageLeft.setVisibility(View.VISIBLE);
             holder.imageRight.setVisibility(View.GONE);
@@ -173,8 +181,15 @@ public class ChatListAdapter extends ArrayAdapter<ChatMessage> {
             } else {
                 holder.imageLeft.setImageResource(R.drawable.ic_profilee);
             }
-            holder.layoutChatItem.setBackgroundColor(secondaryBGColor);
+            //holder.layoutChatItem.setBackgroundColor(secondaryBGColor);
             holder.text.setTextColor(secondaryTxtColor);
+            GradientDrawable drawable = new GradientDrawable();
+            drawable.setShape(GradientDrawable.RECTANGLE);
+            drawable.setStroke(3, secondaryTxtColor);
+            drawable.setCornerRadius(8);
+            drawable.setColor(secondaryBGColor);
+            holder.layoutChatItem.setBackgroundDrawable(drawable);
+            //holder.layoutChatItem.setBackground(context.getResources().getDrawable(R.drawable.layout_border));
         }
         holder.text.setText(message.getMessage());
         return convertView;

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -138,7 +139,11 @@ public class ChatActivity extends ActionBarActivity {
                 return false;
             }
         });
-
+        etMessageToSend.setFocusableInTouchMode(true);
+        etMessageToSend.setFocusable(true);
+        etMessageToSend.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(etMessageToSend, InputMethodManager.SHOW_IMPLICIT);
         btnSend = (ImageView) findViewById(R.id.btnSend);
 
         pbChat = (ProgressBar) findViewById(R.id.pbChat);

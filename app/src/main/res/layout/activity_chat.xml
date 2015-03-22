@@ -110,6 +110,8 @@
                 android:layout_alignTop="@+id/btnSend"
                 android:layout_toLeftOf="@+id/btnSend"
                 android:layout_toStartOf="@+id/btnSend"
+                android:focusable="true"
+                android:windowSoftInputMode="stateVisible"
                 style="@style/editTextStyle"
                 android:layout_weight="0.8" />
 
