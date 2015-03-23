@@ -123,6 +123,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
 
         MenuItem searchItem = menu.findItem(R.id.muSearchMap);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setQueryHint("San Francisco, CA");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

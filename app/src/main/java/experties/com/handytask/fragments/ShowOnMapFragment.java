@@ -52,6 +52,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
+import com.squareup.picasso.Picasso;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class ShowOnMapFragment extends Fragment
 
     // To populate the Brief Item at the bottom of the fragment
     private View briefView;
-    private ParseImageView ivMainTaskPhoto;
+    private ImageView ivMainTaskPhoto;
     private TextView tvTitle;
     private TextView tvDescription;
     private TextView tvRelativeTime;
@@ -100,7 +101,7 @@ public class ShowOnMapFragment extends Fragment
         View v = inflater.inflate(R.layout.fragment_show_on_map, container, false);
 
         briefView = (View) v.findViewById(R.id.taskItem);
-        ivMainTaskPhoto = (ParseImageView) v.findViewById(R.id.ivMainTaskPhoto);
+        ivMainTaskPhoto = (ImageView) v.findViewById(R.id.ivMainTaskPhoto);
         tvTitle = (TextView) v.findViewById(R.id.tvTitle);
         tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
@@ -170,12 +171,14 @@ public class ShowOnMapFragment extends Fragment
                         String.format("%.1f", parseTask.getRelativeDistance());
                 tvRelativeDistance.setText(" \u2022 " + relativeDistance + " mi");
 
-                ivMainTaskPhoto.setPlaceholder(getResources().getDrawable(R.drawable.no_image_avail));
+
                 ParseFile file = parseTask.getPhoto1();
                 if (file!=null) {
-                    ivMainTaskPhoto.setParseFile(file);
-                    ivMainTaskPhoto.loadInBackground();
+                    Picasso.with(getActivity()).load(file.getUrl()).into(ivMainTaskPhoto);
+                } else {
+                    ivMainTaskPhoto.setImageResource(R.drawable.no_image_avail);
                 }
+
 
                 taskInAnim.start();
             }

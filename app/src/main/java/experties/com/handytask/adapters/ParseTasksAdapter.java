@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -41,7 +42,7 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.parse_task, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.ivMainTaskPhoto = (ParseImageView) convertView.findViewById(R.id.ivMainTaskPhoto);
+            viewHolder.ivMainTaskPhoto = (ImageView) convertView.findViewById(R.id.ivMainTaskPhoto);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
             viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             viewHolder.tvRelativeTime = (TextView) convertView.findViewById(R.id.tvRelativeTime);
@@ -62,8 +63,7 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
 
         ParseFile file = parseTask.getPhoto1();
         if (file!=null) {
-            viewHolder.ivMainTaskPhoto.setParseFile(file);
-            viewHolder.ivMainTaskPhoto.loadInBackground();
+            Picasso.with(getContext()).load(file.getUrl()).into(viewHolder.ivMainTaskPhoto);
         } else {
             viewHolder.ivMainTaskPhoto.setImageResource(R.drawable.no_image_avail);
         }
@@ -72,9 +72,9 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
     }
 
     private static class ViewHolder {
-        public ParseImageView ivMainTaskPhoto;
+        public ImageView ivMainTaskPhoto;
         public TextView tvTitle;
-        public  TextView tvDescription;
+        public TextView tvDescription;
         public TextView tvRelativeTime;
         public TextView tvLocation;
         public TextView tvRelativeDistance;
