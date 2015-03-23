@@ -79,7 +79,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
         } else {
             setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_show_tasks);
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrShowTask);
             setSupportActionBar(toolbar);
@@ -111,7 +111,6 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
             viewPager = (ViewPager) findViewById(R.id.viewpager);
             aShowTasksFragment = new ShowTasksFragmentPagerAdapter(getSupportFragmentManager());
             viewPager.setAdapter(aShowTasksFragment);
-
         }
     }
 
@@ -164,6 +163,7 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
                 this.finish();
                 Intent taskActivity = new Intent(ShowTasksActivity.this, LoginActivity.class);
                 startActivity(taskActivity);
+                overridePendingTransition(R.anim.left_in, R.anim.slide_down);
                 return true;
             case R.id.muAddTask:
                 Intent addTaskActivity = new Intent(ShowTasksActivity.this, TaskCreationStep1Activity.class);

@@ -51,7 +51,7 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
             setContentView(R.layout.activity_task_creation_step2);
             item = (TaskItem) getIntent().getExtras().getParcelable("item");
             final TaskCreationStep2Activity context = this;
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation2);
             setSupportActionBar(toolbar);
@@ -136,6 +136,7 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
             this.finish();
             Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
             startActivity(taskActivity);
+            overridePendingTransition(R.anim.left_in, R.anim.slide_down);
             return true;
         }
 

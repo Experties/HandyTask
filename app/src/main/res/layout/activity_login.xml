@@ -20,9 +20,9 @@
         app:pstsTextAllCaps="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:textColor="#29A5D8"
+        android:textColor="#FF5722"
         app:pstsDividerColor="#A8A7A8"
-        app:pstsIndicatorColor="#29A5D8"
+        app:pstsIndicatorColor="#FF5722"
         app:pstsUnderlineColor="#B5B5B5"
         app:pstsTabPaddingLeftRight="14dp">
     </com.astuetz.PagerSlidingTabStrip>

@@ -172,7 +172,7 @@ public class ShowOnMapFragment extends Fragment
 
                 ivMainTaskPhoto.setPlaceholder(getResources().getDrawable(R.drawable.no_image_avail));
                 ParseFile file = parseTask.getPhoto1();
-                if (file!=null) {
+                if (file != null) {
                     ivMainTaskPhoto.setParseFile(file);
                     ivMainTaskPhoto.loadInBackground();
                 }
@@ -194,38 +194,39 @@ public class ShowOnMapFragment extends Fragment
     }
 
     private void populateMapWithMarkers() {
-        int i;
-        int resourceId;
+        if(listener != null) {
+            int i;
+            int resourceId;
 
-        // Get all task items
-        parseTasks = listener.getParseTaskList();
+            // Get all task items
+            parseTasks = listener.getParseTaskList();
 
-
-        if (map!=null) {
-            map.clear();
-            if (!parseTasks.isEmpty()) {
+            if (map != null) {
                 map.clear();
-                for (i = 0; i < parseTasks.size(); i++) {
+                if (!parseTasks.isEmpty()) {
+                    map.clear();
+                    for (i = 0; i < parseTasks.size(); i++) {
 
-                    ParseTask parseTask = parseTasks.get(i);
+                        ParseTask parseTask = parseTasks.get(i);
 
-                    Marker marker = map.addMarker(new MarkerOptions().title(String.valueOf(i)).
-                            position(new LatLng(parseTask.getLatitude(), parseTask.getLongitude())).
-                            icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_grey_n)));
+                        Marker marker = map.addMarker(new MarkerOptions().title(String.valueOf(i)).
+                                position(new LatLng(parseTask.getLatitude(), parseTask.getLongitude())).
+                                icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_grey_n)));
 
-                    // First item is the selected item, so we need to highlight it and save it
-                    if (i==0) {
-                        selectedMarker = marker;
-                        selectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_blue_n));
+                        // First item is the selected item, so we need to highlight it and save it
+                        if (i == 0) {
+                            selectedMarker = marker;
+                            selectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_blue_n));
+                        }
                     }
-                }
-                selectedParseTask = parseTasks.get(0);
-                if (listener.getCurrentPosition()!=null) {
-                    map.animateCamera(
-                            CameraUpdateFactory.newLatLngZoom(listener.getCurrentPosition(), 11));
-                }
+                    selectedParseTask = parseTasks.get(0);
+                    if (listener.getCurrentPosition() != null) {
+                        map.animateCamera(
+                                CameraUpdateFactory.newLatLngZoom(listener.getCurrentPosition(), 11));
+                    }
 
-                populateBriefPreview(selectedParseTask);
+                    populateBriefPreview(selectedParseTask);
+                }
             }
         }
     }
