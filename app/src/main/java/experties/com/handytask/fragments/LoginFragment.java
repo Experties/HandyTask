@@ -124,6 +124,7 @@ public class LoginFragment extends Fragment {
                                             getActivity().finish();
                                             Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
                                             startActivity(taskActivity);
+                                            getActivity().overridePendingTransition(R.anim.slide_up, R.anim.left_out);
                                         } else {
                                             final TabSwitchInterface switchActivity = (TabSwitchInterface) getActivity();
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

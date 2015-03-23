@@ -111,7 +111,7 @@ public class ChatActivity extends ActionBarActivity {
         taskId = getIntent().getStringExtra("taskId");
         pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
 
-        Typeface fontAngel = Typeface.createFromAsset(this.getAssets(), "fonts/RINGM.ttf");
+        Typeface fontAngel = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrChat);
         setSupportActionBar(toolbar);
@@ -386,6 +386,7 @@ public class ChatActivity extends ActionBarActivity {
                 this.finish();
                 Intent loginActivity = new Intent(ChatActivity.this, LoginActivity.class);
                 startActivity(loginActivity);
+                overridePendingTransition(R.anim.left_in, R.anim.slide_down);
                 break;
         }
         return super.onOptionsItemSelected(item);

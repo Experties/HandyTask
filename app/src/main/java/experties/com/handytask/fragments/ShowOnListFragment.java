@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import bolts.Task;
 import experties.com.handytask.R;
@@ -89,14 +90,23 @@ public class ShowOnListFragment extends Fragment {
     }
 
     public void updateTasksList() {
-        parseTasks.clear();
+        if(parseTasks != null) {
+            parseTasks.clear();
+        } else {
+            parseTasks = new ArrayList<ParseTask>();
+        }
         ParseTaskListListener listener = (ParseTaskListListener) getActivity();
-        parseTasks.addAll(listener.getParseTaskList());
-        // [vince] TODO: Ugly solution. Because I completely overwrite parseTask instead remove/add
-        // I need to do the adapter setup and attach again.
-        aParseTasks.notifyDataSetChanged();
-        if(swipeContainer != null) {
-            swipeContainer.setRefreshing(false);
+        if(listener != null) {
+            List<ParseTask> tasks = listener.getParseTaskList();
+            if (tasks != null) {
+                parseTasks.addAll(tasks);
+                // [vince] TODO: Ugly solution. Because I completely overwrite parseTask instead remove/add
+                // I need to do the adapter setup and attach again.
+                aParseTasks.notifyDataSetChanged();
+            }
+            if (swipeContainer != null) {
+                swipeContainer.setRefreshing(false);
+            }
         }
     }
 }

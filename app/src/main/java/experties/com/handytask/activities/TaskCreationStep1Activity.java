@@ -43,7 +43,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
             setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_task_created);
             final TaskCreationStep1Activity context = this;
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation);
             setSupportActionBar(toolbar);
@@ -90,6 +90,7 @@ public class TaskCreationStep1Activity extends ActionBarActivity implements Task
             this.finish();
             Intent taskActivity = new Intent(TaskCreationStep1Activity.this, LoginActivity.class);
             startActivity(taskActivity);
+            overridePendingTransition(R.anim.left_in, R.anim.slide_down);
             return true;
         }
 

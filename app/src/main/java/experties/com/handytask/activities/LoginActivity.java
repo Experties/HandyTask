@@ -56,7 +56,7 @@ public class LoginActivity extends ActionBarActivity implements LoginFragment.Ta
             } catch (NumberParseException e) {
             }
 
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/JamesFajardo.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrLogin);
             setSupportActionBar(toolbar);

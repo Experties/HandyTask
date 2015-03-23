@@ -355,7 +355,7 @@ public class RegisterFragment extends Fragment implements UploadImageFragment.Up
                     getActivity().finish();
                     Intent taskActivity = new Intent(getActivity(), ShowTasksActivity.class);
                     startActivity(taskActivity);
-
+                    getActivity().overridePendingTransition(R.anim.slide_up, R.anim.left_out);
                     scrVwSignUp.setVisibility(ScrollView.GONE);
                     pbSignUP.setVisibility(ProgressBar.VISIBLE);
                 } else {

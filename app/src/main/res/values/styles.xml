@@ -45,7 +45,7 @@
         <item name="android:paddingLeft">20dp</item>
         <item name="android:textSize">50sp</item>
         <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#29A5D8</item>
+        <item name="android:background">#FF5722</item>
     </style>
 
     <style name="toolbar.title">
@@ -53,16 +53,18 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:textColor">#E6E6E8</item>
-        <item name="android:textSize">46sp</item>
+        <item name="android:textSize">26sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_gravity">left</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">10dp</item>
     </style>
 
     <style name="toolbar">
         <item name="android:minHeight">?attr/actionBarSize</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">#29A5D8</item>
+        <item name="android:background">#FF5722</item>
     </style>
 
     <style name="linearLayout">
