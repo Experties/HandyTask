@@ -10,11 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="#979797"/>
+
     <include android:id="@+id/taskItem"
         layout="@layout/parse_task"
         android:layout_width="match_parent"
-        android:layout_height="100dp"/>
-
-
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

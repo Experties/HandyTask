@@ -114,4 +114,12 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_alignParentEnd">true</item>
     </style>
+
+    <style name="ListViewTextTitle">
+        <item name="android:textSize">18dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">#343434</item>
+
+    </style>
+
 </resources>

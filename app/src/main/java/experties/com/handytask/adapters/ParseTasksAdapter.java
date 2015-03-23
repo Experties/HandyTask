@@ -12,6 +12,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import experties.com.handytask.R;
@@ -40,7 +42,8 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.parse_task, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.ivMainTaskPhoto = (ParseImageView) convertView.findViewById(R.id.ivMainTaskPhoto);
-            viewHolder.tvBriefDescription = (TextView) convertView.findViewById(R.id.tvBriefDescription);
+            viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tvTitle);
+            viewHolder.tvDescription = (TextView) convertView.findViewById(R.id.tvDescription);
             viewHolder.tvRelativeTime = (TextView) convertView.findViewById(R.id.tvRelativeTime);
             viewHolder.tvLocation = (TextView) convertView.findViewById(R.id.tvLocation);
             viewHolder.tvRelativeDistance = (TextView) convertView.findViewById(R.id.tvRelativeDistance);
@@ -49,12 +52,13 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.tvBriefDescription.setText(parseTask.getTitle());
-        viewHolder.tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getCreatedAt()));
-        viewHolder.tvLocation.setText(parseTask.getCity() + "," + parseTask.getState());
+        viewHolder.tvTitle.setText(parseTask.getTitle());
+        viewHolder.tvDescription.setText(parseTask.getDescription());
+        viewHolder.tvRelativeTime.setText(" " + FragmentHelpers.getDateDifferenceForDisplay(parseTask.getCreatedAt()));
+        viewHolder.tvLocation.setText(parseTask.getCity() + ", " + parseTask.getState());
         LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
         String relativeDistance = String.format("%.1f", parseTask.getRelativeDistance());
-        viewHolder.tvRelativeDistance.setText(relativeDistance + " miles");
+        viewHolder.tvRelativeDistance.setText(" \u2022 " + relativeDistance + " mi");
 
         ParseFile file = parseTask.getPhoto1();
         if (file!=null) {
@@ -69,7 +73,8 @@ public class ParseTasksAdapter extends ArrayAdapter<ParseTask> {
 
     private static class ViewHolder {
         public ParseImageView ivMainTaskPhoto;
-        public TextView tvBriefDescription;
+        public TextView tvTitle;
+        public  TextView tvDescription;
         public TextView tvRelativeTime;
         public TextView tvLocation;
         public TextView tvRelativeDistance;

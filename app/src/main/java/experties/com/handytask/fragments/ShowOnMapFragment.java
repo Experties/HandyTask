@@ -1,6 +1,8 @@
 package experties.com.handytask.fragments;
 
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +12,7 @@ import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +53,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.ParseFile;
 import com.parse.ParseImageView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -63,8 +67,10 @@ public class ShowOnMapFragment extends Fragment
     private GoogleMap map;
 
     // To populate the Brief Item at the bottom of the fragment
+    private View briefView;
     private ParseImageView ivMainTaskPhoto;
-    private TextView tvBriefDescription;
+    private TextView tvTitle;
+    private TextView tvDescription;
     private TextView tvRelativeTime;
     private TextView tvLocation;
     private TextView tvRelativeDistance;
@@ -75,8 +81,12 @@ public class ShowOnMapFragment extends Fragment
     ArrayList<ParseTask> parseTasks;
 
     ParseTask selectedParseTask;
+    Marker selectedMarker;
 
     ParseTaskListListener listener;
+
+    ObjectAnimator taskInAnim;
+    ObjectAnimator taskOutAnim;
 
     public ShowOnMapFragment() {
         // Required empty public constructor
@@ -89,8 +99,10 @@ public class ShowOnMapFragment extends Fragment
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_show_on_map, container, false);
 
+        briefView = (View) v.findViewById(R.id.taskItem);
         ivMainTaskPhoto = (ParseImageView) v.findViewById(R.id.ivMainTaskPhoto);
-        tvBriefDescription = (TextView) v.findViewById(R.id.tvBriefDescription);
+        tvTitle = (TextView) v.findViewById(R.id.tvTitle);
+        tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
         tvLocation = (TextView) v.findViewById(R.id.tvLocation);
         tvRelativeDistance = (TextView) v.findViewById(R.id.tvRelativeDistance);
@@ -108,6 +120,13 @@ public class ShowOnMapFragment extends Fragment
         setupOnClickListener();
 
         listener = (ParseTaskListListener) getActivity();
+
+        Display display = container.getDisplay();
+        taskInAnim = ObjectAnimator.ofFloat(briefView, View.TRANSLATION_X, display.getWidth(), 0);
+        taskInAnim.setDuration(1000);
+
+        taskOutAnim = ObjectAnimator.ofFloat(briefView, View.TRANSLATION_X, 0, -display.getWidth());
+        taskOutAnim.setDuration(1000);
 
         return v;
     }
@@ -127,38 +146,78 @@ public class ShowOnMapFragment extends Fragment
         }
     }
 
-    private void populateBriefPreview(ParseTask parseTask) {
-        tvBriefDescription.setText(parseTask.getTitle());
-        tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getCreatedAt()));
-        tvLocation.setText(parseTask.getCity() + "," + parseTask.getState());
+    private void populateBriefPreview(ParseTask parseTaskParam) {
+        final ParseTask parseTask = parseTaskParam;
 
-        LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
-        String relativeDistance =
-                String.format("%.1f", parseTask.getRelativeDistance());
-        tvRelativeDistance.setText(relativeDistance + " miles");
+        taskOutAnim.start();
 
-        ParseFile file = parseTask.getPhoto1();
-        if (file!=null) {
-            ivMainTaskPhoto.setParseFile(file);
-            ivMainTaskPhoto.loadInBackground();
-        } else {
-            ivMainTaskPhoto.setImageResource(R.drawable.no_image_avail);
-        }
+        taskOutAnim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                tvTitle.setText(parseTask.getTitle());
+                tvDescription.setText(parseTask.getDescription());
+                tvRelativeTime.setText(" " + FragmentHelpers.getDateDifferenceForDisplay(parseTask.getCreatedAt()));
+                //getRelativeTime(parseTask.getCreatedAt()));
+                tvLocation.setText(parseTask.getCity() + ", " + parseTask.getState());
+
+                LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
+                String relativeDistance =
+                        String.format("%.1f", parseTask.getRelativeDistance());
+                tvRelativeDistance.setText(" \u2022 " + relativeDistance + " mi");
+
+                ivMainTaskPhoto.setPlaceholder(getResources().getDrawable(R.drawable.no_image_avail));
+                ParseFile file = parseTask.getPhoto1();
+                if (file!=null) {
+                    ivMainTaskPhoto.setParseFile(file);
+                    ivMainTaskPhoto.loadInBackground();
+                }
+
+                taskInAnim.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
     }
 
     private void populateMapWithMarkers() {
         int i;
+        int resourceId;
+
+        // Get all task items
         parseTasks = listener.getParseTaskList();
+
 
         if (map!=null) {
             map.clear();
             if (!parseTasks.isEmpty()) {
                 map.clear();
                 for (i = 0; i < parseTasks.size(); i++) {
+
                     ParseTask parseTask = parseTasks.get(i);
-                    map.addMarker(new MarkerOptions().title(String.valueOf(i)).
+
+                    Marker marker = map.addMarker(new MarkerOptions().title(String.valueOf(i)).
                             position(new LatLng(parseTask.getLatitude(), parseTask.getLongitude())).
-                            icon(BitmapDescriptorFactory.fromResource(R.drawable.blu_square)));
+                            icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_grey_n)));
+
+                    // First item is the selected item, so we need to highlight it and save it
+                    if (i==0) {
+                        selectedMarker = marker;
+                        selectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_blue_n));
+                    }
                 }
                 selectedParseTask = parseTasks.get(0);
                 if (listener.getCurrentPosition()!=null) {
@@ -179,6 +238,15 @@ public class ShowOnMapFragment extends Fragment
     public boolean onMarkerClick(Marker marker) {
         selectedParseTask = parseTasks.get(Integer.parseInt(marker.getTitle()));
         populateBriefPreview(selectedParseTask);
+
+        if (!marker.equals(selectedMarker)) {
+            // previous selection become default colored
+            selectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_grey_n));
+
+            // new selection is saved and highlighted
+            selectedMarker = marker;
+            selectedMarker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.marker_blue_n));
+        }
 
         return true;
     }

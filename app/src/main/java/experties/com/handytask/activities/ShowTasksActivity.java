@@ -27,6 +27,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.FindCallback;
 import com.parse.ParseQuery;
@@ -61,6 +62,9 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
     private long UPDATE_INTERVAL = 60000;  /* 60 secs */
     private long FASTEST_INTERVAL = 5000; /* 5 secs */
     private LocationRequest mLocationRequest;
+
+    private ShowTasksFragmentPagerAdapter aShowTasksFragment;
+    ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +108,10 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
 
 
             // Get the ViewPager and set it's PagerAdapter so that it can display items
-            ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-            viewPager.setAdapter(new ShowTasksFragmentPagerAdapter(getSupportFragmentManager()));
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
+            aShowTasksFragment = new ShowTasksFragmentPagerAdapter(getSupportFragmentManager());
+            viewPager.setAdapter(aShowTasksFragment);
 
-            // Give the PagerSlidingTabStrip the ViewPager
-            PagerSlidingTabStrip tabsStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-            // Attach the view pager to the tab strip
-            tabsStrip.setViewPager(viewPager);
         }
     }
 
@@ -171,7 +172,15 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
                 return true;
             case R.id.muSearchMap:
                 return true;
-
+            case R.id.muView:
+                if (viewPager.getCurrentItem() == 0) {
+                    viewPager.setCurrentItem(1);
+                    item.setIcon(R.drawable.menu_map);
+                } else {
+                    viewPager.setCurrentItem(0);
+                    item.setIcon(R.drawable.menu_list);
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
