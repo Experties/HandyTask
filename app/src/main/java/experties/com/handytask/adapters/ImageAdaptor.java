@@ -54,8 +54,14 @@ public class ImageAdaptor extends PagerAdapter {
                 Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {
                     @Override
                     public void onGenerated(Palette palette) {
-                        int vibrant = palette.getVibrantColor(0xFFFFFF);
-                        imageView.setBackgroundColor(vibrant);
+                        Palette.Swatch mutedDarkSwatch = palette.getDarkMutedSwatch();
+                        if(mutedDarkSwatch != null) {
+                            int rgbColor = mutedDarkSwatch.getRgb();
+                            imageView.setBackgroundColor(rgbColor);
+                        } else {
+                            int vibrant = palette.getVibrantColor(0xFFFFFF);
+                            imageView.setBackgroundColor(vibrant);
+                        }
                         imageView.setImageBitmap(bitmap);
                     }
                 });

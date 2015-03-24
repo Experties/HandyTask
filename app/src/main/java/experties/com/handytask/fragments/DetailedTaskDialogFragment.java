@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseImageView;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -34,14 +33,12 @@ import java.util.ArrayList;
 
 import experties.com.handytask.R;
 import experties.com.handytask.activities.ChatActivity;
-import experties.com.handytask.activities.ShowTasksActivity;
 import experties.com.handytask.adapters.ImageAdaptor;
 import experties.com.handytask.helpers.FragmentHelpers;
 import experties.com.handytask.models.ParseTask;
-import experties.com.handytask.models.TaskItem;
 
 
-public class DetailedTaskViewFragment extends Fragment {
+public class DetailedTaskDialogFragment extends DialogFragment {
     ParseTask parseTask;
 
     TextView tvTitle;
@@ -59,8 +56,8 @@ public class DetailedTaskViewFragment extends Fragment {
     private int imgCount = 0;
     private ArrayList<String> imgURL = new ArrayList<String>();
 
-    public static DetailedTaskViewFragment newInstance(ParseTask parseTask) {
-        DetailedTaskViewFragment frag = new DetailedTaskViewFragment();
+    public static DetailedTaskDialogFragment newInstance(ParseTask parseTask) {
+        DetailedTaskDialogFragment frag = new DetailedTaskDialogFragment();
         frag.setTaskItem(parseTask);
 
         return frag;
@@ -70,7 +67,7 @@ public class DetailedTaskViewFragment extends Fragment {
         this.parseTask = parseTask;
     }
 
-    public DetailedTaskViewFragment() {
+    public DetailedTaskDialogFragment() {
         // Required empty public constructor
     }
 
@@ -134,7 +131,7 @@ public class DetailedTaskViewFragment extends Fragment {
             PagerAdapter adapter = new ImageAdaptor(getActivity(), imgURL);
             viewPager.setAdapter(adapter);
         }
-        final DetailedTaskViewFragment context = this;
+        final DetailedTaskDialogFragment context = this;
         btnChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
