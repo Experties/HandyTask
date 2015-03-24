@@ -143,8 +143,9 @@ public class TaskCreationLocationFragment extends Fragment implements
         previewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(saveTask(item,true));
-                frag.show(getFragmentManager(), "fragment_preview_dialog");
+                //TODO convert to Activity
+                /*DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(saveTask(item,true));
+                frag.show(getFragmentManager(), "fragment_preview_dialog");*/
             }
         });
     }

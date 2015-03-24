@@ -4,12 +4,16 @@ package experties.com.handytask.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -26,15 +30,18 @@ import com.parse.SendCallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import experties.com.handytask.R;
 import experties.com.handytask.activities.ChatActivity;
 import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.adapters.ImageAdaptor;
 import experties.com.handytask.helpers.FragmentHelpers;
 import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
 
-public class DetailedTaskViewFragment extends DialogFragment {
+public class DetailedTaskViewFragment extends Fragment {
     ParseTask parseTask;
 
     TextView tvTitle;
@@ -42,13 +49,15 @@ public class DetailedTaskViewFragment extends DialogFragment {
     TextView tvLocation;
     TextView tvRelativeTime;
 
-    ParseImageView ivPhoto1;
-    ParseImageView ivPhoto2;
-    ParseImageView ivPhoto3;
+    private ImageView imgVwNoPhoto;
+    private LinearLayout layoutImgPager;
+    private ViewPager viewPager;
 
     Button btnChat;
     Button btnBack;
 
+    private int imgCount = 0;
+    private ArrayList<String> imgURL = new ArrayList<String>();
     public static DetailedTaskViewFragment newInstance(ParseTask parseTask) {
         DetailedTaskViewFragment frag = new DetailedTaskViewFragment();
         frag.setTaskItem(parseTask);
@@ -75,9 +84,13 @@ public class DetailedTaskViewFragment extends DialogFragment {
         tvDescription = (TextView) v.findViewById(R.id.tvDescription);
         tvLocation = (TextView) v.findViewById(R.id.tvLocation);
         tvRelativeTime = (TextView) v.findViewById(R.id.tvRelativeTime);
-        ivPhoto1 = (ParseImageView) v.findViewById(R.id.ivPhoto1);
+
+        imgVwNoPhoto = (ImageView) v.findViewById(R.id.imgVwNoPhoto);
+        layoutImgPager = (LinearLayout) v.findViewById(R.id.layoutImgPager);
+
+        /*ivPhoto1 = (ParseImageView) v.findViewById(R.id.ivPhoto1);
         ivPhoto2 = (ParseImageView) v.findViewById(R.id.ivPhoto2);
-        ivPhoto3 = (ParseImageView) v.findViewById(R.id.ivPhoto3);
+        ivPhoto3 = (ParseImageView) v.findViewById(R.id.ivPhoto3);*/
 
         btnChat = (Button) v.findViewById(R.id.btnChat);
         btnBack = (Button) v.findViewById(R.id.btnBack);
@@ -98,23 +111,31 @@ public class DetailedTaskViewFragment extends DialogFragment {
 
         ParseFile file = parseTask.getPhoto1();
         if (file!=null) {
-            ivPhoto1.setVisibility(View.VISIBLE);
-            ivPhoto1.setParseFile(file);
-            ivPhoto1.loadInBackground();
+            imgURL.add(file.getUrl());
+            imgCount++;
         }
 
         file = parseTask.getPhoto2();
         if (file!=null) {
-            ivPhoto2.setVisibility(View.VISIBLE);
-            ivPhoto2.setParseFile(file);
-            ivPhoto2.loadInBackground();
+            imgURL.add(file.getUrl());
+            imgCount++;
         }
 
         file = parseTask.getPhoto3();
         if (file!=null) {
-            ivPhoto3.setVisibility(View.VISIBLE);
-            ivPhoto3.setParseFile(file);
-            ivPhoto3.loadInBackground();
+            imgURL.add(file.getUrl());
+            imgCount++;
+        }
+
+        if(imgCount == 0) {
+            layoutImgPager.setVisibility(View.GONE);
+            imgVwNoPhoto.setVisibility(View.VISIBLE);
+        } else {
+            imgVwNoPhoto.setVisibility(View.GONE);
+            layoutImgPager.setVisibility(View.VISIBLE);
+            viewPager = (ViewPager) v.findViewById(R.id.viewPager);
+            PagerAdapter adapter = new ImageAdaptor(getActivity(), imgURL);
+            viewPager.setAdapter(adapter);
         }
         final DetailedTaskViewFragment context = this;
         btnChat.setOnClickListener(new View.OnClickListener() {
@@ -157,7 +178,7 @@ public class DetailedTaskViewFragment extends DialogFragment {
                             i.putExtra("taskId", taskId);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             getActivity().startActivity(i);
-                            context.dismiss();
+                            //context.dismiss();
                         }
                     }
                 });

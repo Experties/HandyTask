@@ -46,12 +46,13 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
             this.finish();
             Intent taskActivity = new Intent(TaskCreationStep2Activity.this, LoginActivity.class);
             startActivity(taskActivity);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_task_creation_step2);
             item = (TaskItem) getIntent().getExtras().getParcelable("item");
             final TaskCreationStep2Activity context = this;
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/RalewayMedium.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrTaskCreation2);
             setSupportActionBar(toolbar);
@@ -141,5 +142,11 @@ public class TaskCreationStep2Activity extends ActionBarActivity  {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 }

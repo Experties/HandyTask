@@ -76,10 +76,11 @@ public class ShowTasksActivity extends ActionBarActivity implements ParseTaskLis
             this.finish();
             Intent taskActivity = new Intent(ShowTasksActivity.this, LoginActivity.class);
             startActivity(taskActivity);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
         } else {
             setTheme(R.style.AppTheme);
             setContentView(R.layout.activity_show_tasks);
-            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
+            Typeface fontJamesFajardo = Typeface.createFromAsset(this.getAssets(), "fonts/RalewayMedium.ttf");
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrShowTask);
             setSupportActionBar(toolbar);

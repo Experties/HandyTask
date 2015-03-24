@@ -88,4 +88,5 @@
     <string name="title_activity_task_creation_step2">TaskCreationStep2Activity</string>
     <string name="push_message">%1$s wants to chat with you. Lets reply about %2$s</string>
     <string name="view_change">View Change</string>
+    <string name="title_activity_detailed_task_view">DetailedTaskViewActivity</string>
 </resources>

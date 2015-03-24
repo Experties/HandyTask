@@ -1,6 +1,7 @@
 package experties.com.handytask.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,8 +18,11 @@ import java.util.List;
 
 import bolts.Task;
 import experties.com.handytask.R;
+import experties.com.handytask.activities.DetailedTaskViewActivity;
 import experties.com.handytask.activities.ParseTaskListListener;
 import experties.com.handytask.activities.ShowTasksActivity;
+import experties.com.handytask.activities.TaskCreationStep1Activity;
+import experties.com.handytask.activities.TaskCreationStep2Activity;
 import experties.com.handytask.adapters.ParseTasksAdapter;
 import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
@@ -85,8 +89,12 @@ public class ShowOnListFragment extends Fragment {
     }
 
     public void showDetailedView(ParseTask parseTask) {
-        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
-        frag.show(getFragmentManager(), "fragment_reply_dialog");
+        Intent step2 = new Intent(getActivity(), DetailedTaskViewActivity.class);
+        step2.putExtra("taskId", parseTask.getObjectId());
+        startActivity(step2);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        /*DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
+        frag.show(getFragmentManager(), "fragment_reply_dialog");*/
     }
 
     public void updateTasksList() {

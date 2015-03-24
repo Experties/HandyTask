@@ -3,6 +3,8 @@ package experties.com.handytask.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.parse.ParseFile;
+
 import java.util.Date;
 
 /**
@@ -30,12 +32,79 @@ public class TaskItem implements Parcelable {
     private Date date = new Date();
 
     // Unique ID
-    private long id;
+    private String id;
 
     private byte[] selectedImage1;
     private byte[] selectedImage2;
     private byte[] selectedImage3;
 
+    private String imgUrl1;
+    private String imgUrl2;
+    private String imgUrl3;
+
+    public TaskItem getInstance(ParseTask taskItem) {
+        TaskItem item = new TaskItem();
+        item.setType(taskItem.getType());
+        item.setBriefDescription(taskItem.getTitle());
+        item.setDetailedDescription(taskItem.getDescription());
+        item.setAddress1(taskItem.getAddress1());
+        item.setAddress2(taskItem.getAddress2());
+        item.setCity(taskItem.getCity());
+        item.setState(taskItem.getState());
+        int zipCode = (int) taskItem.getZipCode();
+        item.setZipCode(String.valueOf(zipCode > 0 ? zipCode : ""));
+        item.setLatitude(taskItem.getLatitude());
+        item.setLongitude(taskItem.getLongitude());
+        item.setDate(taskItem.getPostedDate());
+        item.setId(taskItem.getObjectId());
+        ParseFile photo1 = taskItem.getPhoto1();
+        if(photo1 != null) {
+            item.setImgUrl1(photo1.getUrl());
+        }
+
+        ParseFile photo2 = taskItem.getPhoto1();
+        if(photo2 != null) {
+            item.setImgUrl2(photo2.getUrl());
+        }
+
+        ParseFile photo3 = taskItem.getPhoto1();
+        if(photo3 != null) {
+            item.setImgUrl3(photo3.getUrl());
+        }
+        return item;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getImgUrl1() {
+        return imgUrl1;
+    }
+
+    public void setImgUrl1(String imgUrl1) {
+        this.imgUrl1 = imgUrl1;
+    }
+
+    public String getImgUrl2() {
+        return imgUrl2;
+    }
+
+    public void setImgUrl2(String imgUrl2) {
+        this.imgUrl2 = imgUrl2;
+    }
+
+    public String getImgUrl3() {
+        return imgUrl3;
+    }
+
+    public void setImgUrl3(String imgUrl3) {
+        this.imgUrl3 = imgUrl3;
+    }
 
     public String getType() {
         return type;
@@ -157,7 +226,7 @@ public class TaskItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStringArray(new String[] {
-                String.valueOf(this.id),
+                this.id,
                 this.type,
                 this.briefDescription,
                 this.detailedDescription,
@@ -167,7 +236,10 @@ public class TaskItem implements Parcelable {
                 this.zipCode,
                 this.state,
                 String.valueOf(this.longitude),
-                String.valueOf(this.latitude)
+                String.valueOf(this.latitude),
+                imgUrl1,
+                imgUrl2,
+                imgUrl3
         });
         if(selectedImage1 != null) {
             dest.writeInt(selectedImage1.length);
@@ -193,10 +265,10 @@ public class TaskItem implements Parcelable {
     public TaskItem() {}
     // Parcelling part
     public TaskItem(Parcel in){
-        String[] data = new String[11];
+        String[] data = new String[14];
 
         in.readStringArray(data);
-        this.id = Long.parseLong(data[0]);
+        this.id = data[0];
         this.type = data[1];
         this.briefDescription = data[2];
         this.detailedDescription = data[3];
@@ -207,6 +279,10 @@ public class TaskItem implements Parcelable {
         this.state = data[8];
         this.longitude = Double.parseDouble(data[9]);
         this.latitude = Double.parseDouble(data[10]);
+        this.imgUrl1 = data[11];
+        this.imgUrl2 = data[12];
+        this.imgUrl3 = data[13];
+
         int length = in.readInt();
         if(length > 0) {
             this.selectedImage1 = new byte[length];

@@ -103,6 +103,7 @@ public class ChatActivity extends ActionBarActivity {
             i.putExtra("next", "chat");
             i.putExtra("taskId", taskId);
             startActivity(i);
+            overridePendingTransition(R.anim.right_in, R.anim.left_out);
             return;
         }
 
@@ -111,7 +112,7 @@ public class ChatActivity extends ActionBarActivity {
         taskId = getIntent().getStringExtra("taskId");
         pubnub = new Pubnub("pub-c-b0ac15ff-9430-4b40-a2f5-919cf57bf1c4", "sub-c-6b77ceae-c35f-11e4-b54a-0619f8945a4f");
 
-        Typeface fontAngel = Typeface.createFromAsset(this.getAssets(), "fonts/hotpizza.ttf");
+        Typeface fontAngel = Typeface.createFromAsset(this.getAssets(), "fonts/RalewayMedium.ttf");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.tolBrChat);
         setSupportActionBar(toolbar);

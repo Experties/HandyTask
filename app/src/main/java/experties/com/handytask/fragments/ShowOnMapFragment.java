@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import bolts.Task;
 import experties.com.handytask.R;
+import experties.com.handytask.activities.DetailedTaskViewActivity;
 import experties.com.handytask.activities.ParseTaskListListener;
 import experties.com.handytask.activities.ShowTasksActivity;
 import experties.com.handytask.helpers.FragmentHelpers;
@@ -267,8 +268,12 @@ public class ShowOnMapFragment extends Fragment
     }
 
     public void showDetailedView(ParseTask parseTask) {
-        DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
-        frag.show(getFragmentManager(), "Nothing");
+        Intent step2 = new Intent(getActivity(), DetailedTaskViewActivity.class);
+        step2.putExtra("taskId", parseTask.getObjectId());
+        startActivity(step2);
+        getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
+        /*DetailedTaskViewFragment  frag = DetailedTaskViewFragment.newInstance(parseTask);
+        frag.show(getFragmentManager(), "Nothing");*/
     }
 
     public void focusMapOn(LatLng pos) {
