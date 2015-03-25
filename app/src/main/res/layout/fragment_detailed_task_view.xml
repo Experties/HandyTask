@@ -103,6 +103,8 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="false"
+                    android:autoLink="all"
+                    android:linksClickable="true"
                     android:text="Title / Brief Description"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -113,8 +115,9 @@
                     android:layout_below="@+id/tvTitle"
                     android:padding="10dp"
                     android:maxLines="5"
-                    android:linksClickable="true"
                     android:text="Description"
+                    android:autoLink="all"
+                    android:linksClickable="true"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
             </RelativeLayout>
         </RelativeLayout>

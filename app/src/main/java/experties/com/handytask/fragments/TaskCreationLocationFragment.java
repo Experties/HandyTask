@@ -1,6 +1,8 @@
 package experties.com.handytask.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -377,15 +379,25 @@ public class TaskCreationLocationFragment extends Fragment implements
         installation.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
-                if(e == null) {
-                    pbSaveTask.setVisibility(View.GONE);
-                    saveTaskStep2.setVisibility(View.VISIBLE);
-                    getActivity().finish();
-                    Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("EXIT", true);
-                    startActivity(intent);
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Task Creation Successful")
+                        .setMessage("Your Task created successfully. Lets keep up the good work...")
+                        .setCancelable(true)
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                pbSaveTask.setVisibility(View.GONE);
+                                saveTaskStep2.setVisibility(View.VISIBLE);
+                                getActivity().finish();
+                                Intent intent = new Intent(getActivity(),TaskCreationStep1Activity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.putExtra("EXIT", true);
+                                startActivity(intent);
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

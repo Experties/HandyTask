@@ -27,7 +27,10 @@ public class DataHolder {
 
     public Object retrieve(String id) {
         WeakReference<Object> objectWeakReference = data.get(id);
-        data.remove(id);
-        return objectWeakReference.get();
+        if(objectWeakReference != null) {
+            data.remove(id);
+            return objectWeakReference.get();
+        }
+        return null;
     }
 }
