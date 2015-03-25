@@ -82,6 +82,7 @@ public class ImageAdaptor extends PagerAdapter {
         //holder.imageRight.setTag(target);
         Picasso.with(context)
                 .load(imageURL.get(position))
+                .placeholder(R.mipmap.ic_loading)
                 //.fit().centerInside()
                 .into(target);
 
