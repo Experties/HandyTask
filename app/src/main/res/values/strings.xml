@@ -89,4 +89,5 @@
     <string name="push_message">%1$s wants to chat with you. Lets reply about %2$s</string>
     <string name="view_change">View Change</string>
     <string name="title_activity_detailed_task_view">DetailedTaskViewActivity</string>
+    <string name="chat_btn_txt">Chat with %1$s</string>
 </resources>

@@ -3,6 +3,7 @@ package experties.com.handytask.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseInstallation;
@@ -37,7 +39,7 @@ import experties.com.handytask.helpers.FragmentHelpers;
 import experties.com.handytask.models.ParseTask;
 
 
-public class DetailedTaskViewFragment extends Fragment {
+public class DetailedTaskDialogFragment extends DialogFragment {
     ParseTask parseTask;
 
     TextView tvTitle;
@@ -54,10 +56,9 @@ public class DetailedTaskViewFragment extends Fragment {
     private int imgCount = 0;
     private ArrayList<String> imgURL = new ArrayList<String>();
 
-    public static DetailedTaskViewFragment newInstance(ParseTask parseTask) {
-        DetailedTaskViewFragment frag = new DetailedTaskViewFragment();
+    public static DetailedTaskDialogFragment newInstance(ParseTask parseTask) {
+        DetailedTaskDialogFragment frag = new DetailedTaskDialogFragment();
         frag.setTaskItem(parseTask);
-
         return frag;
     }
 
@@ -65,7 +66,7 @@ public class DetailedTaskViewFragment extends Fragment {
         this.parseTask = parseTask;
     }
 
-    public DetailedTaskViewFragment() {
+    public DetailedTaskDialogFragment() {
         // Required empty public constructor
     }
 
@@ -127,55 +128,6 @@ public class DetailedTaskViewFragment extends Fragment {
             PagerAdapter adapter = new ImageAdaptor(getActivity(), imgURL);
             viewPager.setAdapter(adapter);
         }
-        final DetailedTaskViewFragment context = this;
-        btnChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String taskId = parseTask.getObjectId();
-                JSONObject object = new JSONObject();
-                String message = getActivity().getString(R.string.push_message, ParseUser.getCurrentUser().get("FirstName"), parseTask.getTitle());
-                try {
-
-                    object.putOpt("taskId", taskId);
-                    object.putOpt("alert", message);
-                    object.putOpt("badge", "Increment");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                // Create our Installation query
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-                pushQuery.whereEqualTo("taskId", taskId);
-                pushQuery.whereEqualTo("username", parseTask.getOwner().getUsername());
-                // Send push notification to query
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                push.setMessage(message);
-                push.setData(object);
-                push.sendInBackground(new SendCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        Log.i("ParseReceiver", "Sending message:");
-                    }
-                });
-
-                parseTask.setResponder(ParseUser.getCurrentUser());
-                parseTask.setCurrentState("pending");
-                parseTask.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null) {
-                            Intent i = new Intent(getActivity(), ChatActivity.class);
-                            i.putExtra("taskId", taskId);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getActivity().startActivity(i);
-                            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
-                            //context.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
         return v;
 
     }

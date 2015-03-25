@@ -34,6 +34,7 @@ import experties.com.handytask.activities.TaskCreationStep1Activity;
 import experties.com.handytask.adapters.AddressArrayAdapter;
 import experties.com.handytask.helpers.AddressFinderHelper;
 import experties.com.handytask.models.AddressData;
+import experties.com.handytask.models.DataHolder;
 import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
@@ -143,9 +144,16 @@ public class TaskCreationLocationFragment extends Fragment implements
         previewBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO convert to Activity
-                /*DetailedTaskViewFragment frag = DetailedTaskViewFragment.newInstance(saveTask(item,true));
-                frag.show(getFragmentManager(), "fragment_preview_dialog");*/
+                if(selectedAddress == null) {
+                    selectedAddress = helper.getSelectedAddress();
+                }
+                if(selectedAddress != null) {
+                    item.setAddress(selectedAddress.getAddress());
+                    item.setLongitude(selectedAddress.getLongitude());
+                    item.setLatitude(selectedAddress.getLatitude());
+                }
+                DetailedTaskDialogFragment frag = DetailedTaskDialogFragment.newInstance(saveTask(item,true));
+                frag.show(getFragmentManager(), "fragment_preview_dialog");
             }
         });
     }
@@ -153,8 +161,9 @@ public class TaskCreationLocationFragment extends Fragment implements
     private ParseTask saveTask(TaskItem item, final boolean isConverting) {
         int countImgUpload = 0;
         final ParseTask task = new ParseTask();
+        String title = item.getBriefDescription();
         task.setType(item.getType());
-        task.setTitle(item.getBriefDescription());
+        task.setTitle(title);
         task.setDescription(item.getDetailedDescription());
         task.setLatitude(item.getLatitude());
         task.setLongitude(item.getLongitude());
@@ -186,102 +195,105 @@ public class TaskCreationLocationFragment extends Fragment implements
             }
         } catch(Exception e) {}
 
-        byte[] selectedImage1 = item.getSelectedImage1();
-        byte[] selectedImage2 = item.getSelectedImage2();
-        byte[] selectedImage3 = item.getSelectedImage3();
-        if(selectedImage1 != null || selectedImage2 != null || selectedImage3 != null) {
-            if(selectedImage1 != null && selectedImage2 != null && selectedImage3 != null ) {
-                countImgUpload = 3;
-            } else if((selectedImage1 != null && selectedImage2 != null) ||
-                    (selectedImage1 != null && selectedImage3 != null) ||
-                    (selectedImage2 != null && selectedImage3 != null)) {
-                countImgUpload = 2;
+        if(!isConverting) {
+            byte[] selectedImage1 = (byte[]) DataHolder.getInstance().retrieve(title + "-1");
+            byte[] selectedImage2 = (byte[]) DataHolder.getInstance().retrieve(title + "-2");
+            byte[] selectedImage3 = (byte[]) DataHolder.getInstance().retrieve(title + "-3");
+
+            if (selectedImage1 != null || selectedImage2 != null || selectedImage3 != null) {
+                if (selectedImage1 != null && selectedImage2 != null && selectedImage3 != null) {
+                    countImgUpload = 3;
+                } else if ((selectedImage1 != null && selectedImage2 != null) ||
+                        (selectedImage1 != null && selectedImage3 != null) ||
+                        (selectedImage2 != null && selectedImage3 != null)) {
+                    countImgUpload = 2;
+                } else {
+                    countImgUpload = 1;
+                }
+                final int[] saveCount = {0};
+                final int finalCountImgUpload = countImgUpload;
+                if (selectedImage1 != null) {
+                    final ParseFile selectedImg1 = new ParseFile("profileImg.jpeg", selectedImage1);
+                    selectedImg1.saveInBackground(new SaveCallback() {
+
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null && !isConverting) {
+                                saveCount[0]++;
+                                task.setPhoto1(selectedImg1);
+                                if (finalCountImgUpload == saveCount[0]) {
+                                    task.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                saveTaskCallBack(task);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (selectedImage2 != null) {
+                    final ParseFile selectedImg2 = new ParseFile("profileImg.jpeg", selectedImage2);
+                    selectedImg2.saveInBackground(new SaveCallback() {
+
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null && !isConverting) {
+                                saveCount[0]++;
+                                task.setPhoto2(selectedImg2);
+                                if (finalCountImgUpload == saveCount[0]) {
+                                    task.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                saveTaskCallBack(task);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
+
+                if (selectedImage3 != null) {
+                    final ParseFile selectedImg3 = new ParseFile("profileImg.jpeg", selectedImage3);
+                    selectedImg3.saveInBackground(new SaveCallback() {
+
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null && !isConverting) {
+                                saveCount[0]++;
+                                task.setPhoto3(selectedImg3);
+                                if (finalCountImgUpload == saveCount[0]) {
+                                    task.saveInBackground(new SaveCallback() {
+                                        @Override
+                                        public void done(ParseException e) {
+                                            if (e == null) {
+                                                saveTaskCallBack(task);
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
+                }
             } else {
-                countImgUpload = 1;
-            }
-            final int[] saveCount = {0};
-            final int finalCountImgUpload = countImgUpload;
-            if(selectedImage1 != null) {
-                final ParseFile selectedImg1 = new ParseFile("profileImg.jpeg", selectedImage1);
-                selectedImg1.saveInBackground(new SaveCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null && !isConverting) {
-                            saveCount[0]++;
-                            task.setPhoto1(selectedImg1);
-                            if (finalCountImgUpload == saveCount[0]) {
-                                task.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if (e == null) {
-                                            saveTaskCallBack(task);
-                                        }
-                                    }
-                                });
+                if (!isConverting) {
+                    task.saveInBackground(new SaveCallback() {
+                        @Override
+                        public void done(ParseException e) {
+                            if (e == null) {
+                                saveTaskCallBack(task);
                             }
                         }
-                    }
-                });
-            }
-
-            if(selectedImage2 != null) {
-                final ParseFile selectedImg2 = new ParseFile("profileImg.jpeg", selectedImage2);
-                selectedImg2.saveInBackground(new SaveCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null && !isConverting) {
-                            saveCount[0]++;
-                            task.setPhoto2(selectedImg2);
-                            if (finalCountImgUpload == saveCount[0]) {
-                                task.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if(e == null) {
-                                            saveTaskCallBack(task);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-
-            if(selectedImage3 != null) {
-                final ParseFile selectedImg3 = new ParseFile("profileImg.jpeg", selectedImage3);
-                selectedImg3.saveInBackground(new SaveCallback() {
-
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null && !isConverting) {
-                            saveCount[0]++;
-                            task.setPhoto3(selectedImg3);
-                            if (finalCountImgUpload == saveCount[0]) {
-                                task.saveInBackground(new SaveCallback() {
-                                    @Override
-                                    public void done(ParseException e) {
-                                        if(e == null) {
-                                            saveTaskCallBack(task);
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            }
-        } else {
-            if(!isConverting) {
-                task.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            saveTaskCallBack(task);
-                        }
-                    }
-                });
+                    });
+                }
             }
         }
 

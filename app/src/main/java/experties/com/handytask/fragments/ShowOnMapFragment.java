@@ -125,10 +125,10 @@ public class ShowOnMapFragment extends Fragment
 
         Display display = container.getDisplay();
         taskInAnim = ObjectAnimator.ofFloat(briefView, View.TRANSLATION_X, display.getWidth(), 0);
-        taskInAnim.setDuration(1000);
+        taskInAnim.setDuration(300);
 
         taskOutAnim = ObjectAnimator.ofFloat(briefView, View.TRANSLATION_X, 0, -display.getWidth());
-        taskOutAnim.setDuration(1000);
+        taskOutAnim.setDuration(300);
 
         return v;
     }

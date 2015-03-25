@@ -20,6 +20,7 @@ import android.widget.Spinner;
 
 import experties.com.handytask.R;
 import experties.com.handytask.helpers.FragmentHelpers;
+import experties.com.handytask.models.DataHolder;
 import experties.com.handytask.models.ParseTask;
 import experties.com.handytask.models.TaskItem;
 
@@ -184,17 +185,21 @@ public class TaskCreationFragment extends Fragment implements UploadImageFragmen
             @Override
             public void onClick(View v) {
                 if(isMandatoryFilled == true) {
-                    item.setBriefDescription(edTxtTitle.getText().toString());
+                    String title = edTxtTitle.getText().toString();
+                    item.setBriefDescription(title);
                     item.setDetailedDescription(edTxtComment.getText().toString());
                     item.setType(sprTaskType.getSelectedItem().toString());
                     if(selectedImage1 != null) {
-                        item.setSelectedImage1(selectedImage1);
+                        DataHolder.getInstance().save(title + "-1", selectedImage1);
+                        //item.setSelectedImage1(selectedImage1);
                     }
                     if(selectedImage2 != null) {
-                        item.setSelectedImage2(selectedImage2);
+                        DataHolder.getInstance().save(title + "-2", selectedImage2);
+                        //item.setSelectedImage2(selectedImage2);
                     }
                     if(selectedImage3 != null) {
-                        item.setSelectedImage3(selectedImage3);
+                        DataHolder.getInstance().save(title + "-3", selectedImage3);
+                        //item.setSelectedImage3(selectedImage3);
                     }
 
                     TaskCreationNextStep listner = (TaskCreationNextStep)getActivity();

@@ -11,6 +11,7 @@ import com.google.i18n.phonenumbers.AsYouTypeFormatter;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.parse.ParseUser;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -165,5 +166,14 @@ public class FragmentHelpers {
 
             return todate.format(inputdate);
         }
+    }
+
+    public static String getUserName(ParseUser responder) {
+        if(responder != null) {
+            StringBuilder name = new StringBuilder(responder.getString("FirstName"));
+            name.append(" ").append(responder.getString("LastName").substring(0,1).toUpperCase()).append(".");
+            return name.toString();
+        }
+        return null;
     }
 }

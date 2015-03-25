@@ -6,11 +6,20 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/ic_launcher"/>
+        android:layout_height="match_parent"/>
     <TextView
+        android:minWidth="50dp"
+        android:minHeight="50dp"
         android:id="@+id/txtVwImgInx"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:text=""/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="1 / 2"
+        android:padding="10dp"
+        android:layout_margin="10dp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/image_count_style"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
