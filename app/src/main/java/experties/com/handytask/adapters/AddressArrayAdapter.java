@@ -13,6 +13,7 @@ import java.util.List;
 
 import experties.com.handytask.R;
 import experties.com.handytask.models.AddressData;
+import experties.com.handytask.models.TaskItem;
 
 /**
  * Created by hetashah on 3/14/15.

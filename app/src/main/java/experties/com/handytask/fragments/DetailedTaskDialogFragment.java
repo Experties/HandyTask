@@ -26,6 +26,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SendCallback;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,7 +52,6 @@ public class DetailedTaskDialogFragment extends DialogFragment {
     private ViewPager viewPager;
 
     Button btnChat;
-    Button btnBack;
 
     private int imgCount = 0;
     private ArrayList<String> imgURL = new ArrayList<String>();
@@ -59,7 +59,6 @@ public class DetailedTaskDialogFragment extends DialogFragment {
     public static DetailedTaskDialogFragment newInstance(ParseTask parseTask) {
         DetailedTaskDialogFragment frag = new DetailedTaskDialogFragment();
         frag.setTaskItem(parseTask);
-
         return frag;
     }
 
@@ -87,20 +86,18 @@ public class DetailedTaskDialogFragment extends DialogFragment {
         layoutImgPager = (LinearLayout) v.findViewById(R.id.layoutImgPager);
 
         btnChat = (Button) v.findViewById(R.id.btnChat);
-        btnBack = (Button) v.findViewById(R.id.btnBack);
 
         try {
             parseTask.getOwner().fetchIfNeeded();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tvTitle.setText(parseTask.getTitle());
+
+        btnChat.setText(getActivity().getString(R.string.chat_btn_txt, FragmentHelpers.getUserName(parseTask.getOwner())));
+        tvTitle.setText(WordUtils.capitalizeFully(parseTask.getTitle()));
         tvDescription.setText(parseTask.getDescription());
-        LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
-        String relativeDistance =
-                String.format("%.1f", parseTask.getRelativeDistance());
-        tvLocation.setText(relativeDistance + " mi from your current location in " +
-                    parseTask.getCity() + "," + parseTask.getState());
+
+        tvLocation.setText(parseTask.getCity() + "," + parseTask.getState());
         tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getPostedDate()));
 
         ParseFile file = parseTask.getPhoto1();
@@ -131,54 +128,6 @@ public class DetailedTaskDialogFragment extends DialogFragment {
             PagerAdapter adapter = new ImageAdaptor(getActivity(), imgURL);
             viewPager.setAdapter(adapter);
         }
-        final DetailedTaskDialogFragment context = this;
-        btnChat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String taskId = parseTask.getObjectId();
-                JSONObject object = new JSONObject();
-                String message = getActivity().getString(R.string.push_message, ParseUser.getCurrentUser().get("FirstName"), parseTask.getTitle());
-                try {
-
-                    object.putOpt("taskId", taskId);
-                    object.putOpt("alert", message);
-                    object.putOpt("badge", "Increment");
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                // Create our Installation query
-                ParseQuery pushQuery = ParseInstallation.getQuery();
-                pushQuery.whereEqualTo("taskId", taskId);
-                pushQuery.whereEqualTo("username", parseTask.getOwner().getUsername());
-                // Send push notification to query
-                ParsePush push = new ParsePush();
-                push.setQuery(pushQuery); // Set our Installation query
-                push.setMessage(message);
-                push.setData(object);
-                push.sendInBackground(new SendCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        Log.i("ParseReceiver", "Sending message:");
-                    }
-                });
-
-                parseTask.setResponder(ParseUser.getCurrentUser());
-                parseTask.setCurrentState("pending");
-                parseTask.saveInBackground(new SaveCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if(e == null) {
-                            Intent i = new Intent(getActivity(), ChatActivity.class);
-                            i.putExtra("taskId", taskId);
-                            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            getActivity().startActivity(i);
-                            //context.dismiss();
-                        }
-                    }
-                });
-
-            }
-        });
         return v;
 
     }

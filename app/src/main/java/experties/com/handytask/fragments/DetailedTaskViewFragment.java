@@ -3,7 +3,6 @@ package experties.com.handytask.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -16,10 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseImageView;
 import com.parse.ParseInstallation;
 import com.parse.ParsePush;
 import com.parse.ParseQuery;
@@ -27,6 +24,7 @@ import com.parse.ParseUser;
 import com.parse.SaveCallback;
 import com.parse.SendCallback;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,11 +32,9 @@ import java.util.ArrayList;
 
 import experties.com.handytask.R;
 import experties.com.handytask.activities.ChatActivity;
-import experties.com.handytask.activities.ShowTasksActivity;
 import experties.com.handytask.adapters.ImageAdaptor;
 import experties.com.handytask.helpers.FragmentHelpers;
 import experties.com.handytask.models.ParseTask;
-import experties.com.handytask.models.TaskItem;
 
 
 public class DetailedTaskViewFragment extends Fragment {
@@ -54,7 +50,6 @@ public class DetailedTaskViewFragment extends Fragment {
     private ViewPager viewPager;
 
     Button btnChat;
-    Button btnBack;
 
     private int imgCount = 0;
     private ArrayList<String> imgURL = new ArrayList<String>();
@@ -90,20 +85,18 @@ public class DetailedTaskViewFragment extends Fragment {
         layoutImgPager = (LinearLayout) v.findViewById(R.id.layoutImgPager);
 
         btnChat = (Button) v.findViewById(R.id.btnChat);
-        btnBack = (Button) v.findViewById(R.id.btnBack);
 
         try {
             parseTask.getOwner().fetchIfNeeded();
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        tvTitle.setText(parseTask.getTitle());
+
+        btnChat.setText(getActivity().getString(R.string.chat_btn_txt, FragmentHelpers.getUserName(parseTask.getOwner())));
+        tvTitle.setText(WordUtils.capitalizeFully(parseTask.getTitle()));
         tvDescription.setText(parseTask.getDescription());
-        LatLng p = new LatLng(parseTask.getLatitude(), parseTask.getLongitude());
-        String relativeDistance =
-                String.format("%.1f", parseTask.getRelativeDistance());
-        tvLocation.setText(relativeDistance + " mi from your current location in " +
-                    parseTask.getCity() + "," + parseTask.getState());
+
+        tvLocation.setText(parseTask.getCity() + "," + parseTask.getState());
         tvRelativeTime.setText(FragmentHelpers.getRelativeTime(parseTask.getPostedDate()));
 
         ParseFile file = parseTask.getPhoto1();
@@ -175,6 +168,7 @@ public class DetailedTaskViewFragment extends Fragment {
                             i.putExtra("taskId", taskId);
                             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             getActivity().startActivity(i);
+                            getActivity().overridePendingTransition(R.anim.right_in, R.anim.left_out);
                             //context.dismiss();
                         }
                     }

@@ -53,6 +53,7 @@ import java.util.List;
 
 import experties.com.handytask.R;
 import experties.com.handytask.adapters.ChatListAdapter;
+import experties.com.handytask.helpers.FragmentHelpers;
 import experties.com.handytask.models.ChatMessage;
 import experties.com.handytask.models.ParseTask;
 
@@ -126,6 +127,7 @@ public class ChatActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 context.finish();
+                overridePendingTransition(R.anim.left_in, R.anim.right_out);
             }
         });
 
@@ -185,7 +187,7 @@ public class ChatActivity extends ActionBarActivity {
                         responder = resp;
                         otherUsername = resp.getUsername();
                         otherUserPhoneNumber = String.valueOf(resp.getLong("Mobile"));
-                        name = getUserName(resp);
+                        name = FragmentHelpers.getUserName(resp);
                         profileImg = resp.getParseFile("ProfilePhoto");
 
                     } else {
@@ -193,7 +195,7 @@ public class ChatActivity extends ActionBarActivity {
                         responder = owner;
                         otherUsername = owner.getUsername();
                         otherUserPhoneNumber = String.valueOf(owner.getLong("Mobile"));
-                        name = getUserName(owner);
+                        name = FragmentHelpers.getUserName(owner);
                         profileImg = owner.getParseFile("ProfilePhoto");
                     }
 
@@ -231,15 +233,6 @@ public class ChatActivity extends ActionBarActivity {
                 }
             }
         });
-    }
-
-    private String getUserName(ParseUser responder) {
-        if(responder != null) {
-            StringBuilder name = new StringBuilder(responder.getString("FirstName"));
-            name.append(" ").append(responder.getString("LastName").substring(0,1).toUpperCase()).append(".");
-            return name.toString();
-        }
-        return null;
     }
 
     public void subscribeToChannel() {
@@ -294,7 +287,7 @@ public class ChatActivity extends ActionBarActivity {
                 Log.e("XXXXXXXXXXXX",error.toString());
             }
         };
-        pubnub.publish(this.chatChannel, thisUsername + CHAT_DIV + etMessageToSend.getText().toString() , callback);
+        pubnub.publish(this.chatChannel, thisUsername + CHAT_DIV + etMessageToSend.getText().toString(), callback);
         etMessageToSend.setText(""); // blank out text field
     }
 
@@ -480,5 +473,11 @@ public class ChatActivity extends ActionBarActivity {
         } catch (Exception e) {
             // Ignore any exceptions, either it works or it doesn't
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+        overridePendingTransition(R.anim.left_in, R.anim.right_out);
     }
 }
