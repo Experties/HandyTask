@@ -128,7 +128,12 @@ public class DetailedTaskViewActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.muSignOut) {
+            ParseUser.logOut();
+            this.finish();
+            Intent taskActivity = new Intent(DetailedTaskViewActivity.this, LoginActivity.class);
+            startActivity(taskActivity);
+            overridePendingTransition(R.anim.left_in, R.anim.slide_down);
             return true;
         }
 
