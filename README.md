@@ -23,20 +23,5 @@ Optional stories:
  * [ ] Experts also can provide feedback about the whole process after responding to user need.
  * [ ] Needs to build payment system to exchange money between user and expert after completing.
 
-# Wireframes:
-
- ![Profile creation](elderly_profile_creation.png)
- ![Seniors posting a task](elderly_senior_create_task.png)
- ![Volunteers finding a task](elderly_volunteer_find_task.png)
- ![Chat screen to accept help offer](elderly_chat.png)
-
-# Week1 Progress:
-### Hetang's Work
- ![Hetang's Work](HandyTaskLogin.gif)
-### Vince's Work
- ![Vince's Work](HandyTask_MapTask.gif)
-### Al's Work
- ![Al's Work](chat.gif)
- 
-#Week2 Progress:
- ![Team's Work](HandyTaskSprint2.gif)
+#Project Walkthrough
+ ![Team's Work](HandyTaskFinal.gif)
