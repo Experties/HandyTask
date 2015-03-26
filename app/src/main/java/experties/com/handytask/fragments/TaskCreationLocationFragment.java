@@ -374,7 +374,6 @@ public class TaskCreationLocationFragment extends Fragment implements
 
     private void saveTaskCallBack(ParseTask task) {
         ParseInstallation installation = ParseInstallation.getCurrentInstallation();
-        installation.put("taskId",task.getObjectId());
         installation.put("username",ParseUser.getCurrentUser().getUsername());
         installation.saveInBackground(new SaveCallback() {
             @Override

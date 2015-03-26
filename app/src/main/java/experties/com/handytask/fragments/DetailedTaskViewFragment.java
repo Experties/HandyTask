@@ -144,7 +144,6 @@ public class DetailedTaskViewFragment extends Fragment {
                 }
                 // Create our Installation query
                 ParseQuery pushQuery = ParseInstallation.getQuery();
-                pushQuery.whereEqualTo("taskId", taskId);
                 pushQuery.whereEqualTo("username", parseTask.getOwner().getUsername());
                 // Send push notification to query
                 ParsePush push = new ParsePush();
